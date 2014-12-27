@@ -1,0 +1,331 @@
+/* CSS */
+
+/* HACKS para IE
+--------------------------------------
+	/nombre-estilo: para IE 6 y 7;
+	_nombre-estilo: sÃ³lo para IE 6;
+*/
+
+.imagen_publicidad {
+	width:727px;
+	height:85px;
+	float:left;
+	z-index:3;
+	margin-left:10px;	
+}
+
+#segundo {
+	margin:0.5em auto 0 auto;
+	padding:0;
+    width:1000px;
+	height:90px;
+	background:#fff;
+
+}
+html {
+	font-size: 98%; /* IE Hack */
+
+}
+
+
+body {
+	padding:0;
+	font-family:Arial, Helvetica, sans-serif;
+	margin-bottom:0;
+	margin-left:0;
+	margin-right:0;
+	margin-top:0;
+	background-image:url(/vol/img2/tapiz04.png);
+	background-repeat:repeat-x;	
+}
+
+/* CABECERA 
+------------------------------------------------*/
+
+#cabeceraventav2 {
+	margin:0 auto 0 auto;
+	padding:20px 0 0 0;
+    width:1000px;
+	background:#fff;
+	height:140px; 
+	background-image:url(/vol/img2/cabecera04.jpg);
+	background-repeat:no-repeat;
+		
+}
+
+
+* html #cabeceraventav2 {
+	margin:0 auto 0 auto;
+	padding:0;
+	width:1000px; /* Aumento tamaÃ±o para que la cabecera ocupe el mismo ancho que el contenido en IE 6 */
+	height:140px;	
+	background-image:url(/vol/img2/cabecera04.jpg);
+	background-repeat:no-repeat;	
+	}
+
+*:first-child+html html #cabeceraventav2 {
+	margin:-20px auto 0 auto;
+	padding:0;
+	width:1000px;
+	height: 135px;
+	padding-bottom:1px;
+}
+
+#cabeceraventav2 h1 {
+	float:left;
+	width:499px;
+	height:105px;
+	margin:0;
+}
+
+* html #cabeceraventav2 h1 {
+	float:left;
+	width:499px;
+	height:105px;
+	margin:0 0 -8px 0;
+	padding:0;
+}
+
+*:first-child+html #cabeceraventav2 h1 {
+	float:left;
+	width:499px;
+	height:105px;
+	margin:0 0 -5px 0;
+	padding:0;
+}
+
+#cabeceraventav2 h1 a {
+	text-indent:-1000px;
+	width:499px;
+	height:105px;
+	display:block;
+}
+
+/* NAVEGACIÃ“N RECURRENTE
+------------------------------------------------*/
+
+/*
+ La navegaciÃ³n esta estaba flotada a la derecha. Lo he quitado ya que no era necesario y dificultaba el maquetado de la parte inferior
+ Alineo el texto a la derecha para que quede maquetado como antes
+ */
+#nav_recventa { 
+	margin:-25px 0  0.7em 0;
+	text-align:right;
+	
+}
+
+*:first-child+html #nav_recventa {
+	margin:-15px 0  0.7em 0;
+	padding:0;
+	text-align:right;
+}
+
+#nav_recventaVacio { 
+	padding-top:10px;
+	text-align:right;
+	}
+
+*:first-child+html #nav_recventaVacio {
+	margin:-3px 0  0.7em 0;
+	text-align:right;
+}
+
+* html #nav_recventa {
+	margin: 0.5em 0 0 0; 
+	padding:0;
+	text-align:right;
+}
+
+
+#nav_reventac ul {
+	margin:0 -0.2em 0 0;
+	padding:0;
+}
+
+#nav_recventa ul li {
+	display:inline;
+	margin-top:-50px;
+	padding:0 0.5em 0 0.7em;
+	border-left:1px solid #f0e8c0;
+	font-size:0.85em;
+}
+
+#nav_recventa ul li.primero {
+	border-left:none;
+}
+
+#nav_recventa ul li.active {
+	font-weight:bold;
+}
+
+#nav_recventa ul li.link a:link, #nav_recventa ul li.link a:visited {
+	text-decoration:underline; color:#8a0072;
+}
+
+#nav_recventa ul li.link a:hover { color:#666666; text-decoration:underline;  }
+
+#nav_recventa ul li.link {
+	
+	color:#8a0072;
+}
+
+
+#nav_recventa a:link, #nav_rec a:visited { 
+	color:#666666; 
+	font-family:Arial, Helvetica, sans-serif; 
+	text-decoration:underline;
+
+}
+
+#nav_recventa a:hover 
+{ 
+	color:#8a0072; 
+	font-family:Arial, Helvetica, sans-serif; 
+	text-decoration:underline;
+}
+
+
+
+
+/* NAVEGACIÃ“N PRINCIPAL
+------------------------------------------------*/
+/*
+ Quito los clear:right para que no "salte" por debajo del buscador. Ajusto el padding superior para IE6
+ */
+#nav_ppalventa {
+	margin:35px 0 0 600px;
+	padding:8px;
+ 	width:500px;
+ 	
+}
+
+
+*:first-child+html #nav_ppalventa {
+	margin:15px 0 0 580px;
+	padding-top:37px;
+ 	width:400px; 
+
+}
+
+#nav_ppalventa ul {
+	margin:2px 110px 10px 50px;
+	padding:0;
+	float:right;
+
+}
+
+* html #nav_ppalventa ul {
+	margin:0;
+	height:30px;
+	padding:0;
+}
+
+*:first-child+html #nav_ppalventa ul {
+	margin:0; /* Quito el margen superior negativo que no es necesario */
+	padding:0;
+}
+
+#nav_ppalventa ul li {
+	display:inline;
+	margin:0 0 0 0;
+	padding:0 0.2em 0 0;
+	font-size:1.1em; 
+}
+
+#nav_ppalventa ul li.active, #nav_ppalventa ul li.active a:link, #nav_ppalventa ul li.active a:visited {
+	color:#fff;
+	font-weight:bold;
+}
+
+
+.nav_ppal_txtventa {
+	color:#fff;
+	font-weight:bold;
+	margin:0 5px 0 10px;	
+	}
+
+/*#nav_ppal a:link, #nav_ppal a:visited { color:#c6c6c6; text-decoration:none; } */
+#nav_ppalventa a:link, #nav_ppal a:visited 
+{ 
+	color:#ffffff; 
+	text-decoration:none;
+}
+#nav_ppalventa a:hover 
+{ 
+	color:#fff; 
+	text-decoration:underline;
+}
+
+
+.homren {padding-left:20px;}
+
+/* NAVEGACIÃ“N RECURRENTE 2
+------------------------------------------------*/
+
+#nav_rec2venta {
+	clear:right; 
+	float:right;
+	margin:22px 0 0 0;
+	text-align:right;
+}
+
+#nav_rec2venta ul {
+	margin:0;
+	padding:0;
+	height: 26px;
+}
+
+#nav_rec2venta ul li {
+	display:inline;
+	padding:0;
+	font-size:0.85em;
+	
+}
+
+
+/* Fin CABECERA 
+------------------------------------------------*/
+
+
+
+/* ENLACES
+------------------------------------------------*/
+
+a.asistenteventa { background:url(/vol/img2/venta_ico_asistente.png) top left no-repeat; color:#8a0072; padding:2px 0.5em 0.5em 23px; text-decoration:underline;}
+a.faqventa { background:url(/vol/img2/venta_ico_faq.png) top left no-repeat; color:#8a0072; padding:2px 0.5em 0.5em 20px; text-decoration:underline; }
+a.iniciocompraventa { background:url(/vol/img2/venta_ico30x30_compra.png) top left no-repeat; margin-top:10px; padding:8px 10px 0.5em 30px;  color:#ffffff; text-decoration:none; }
+a.homerenfeventa { background:url(/vol/img2/venta_ico30x30_home.png) top left no-repeat; margin-top:10px; padding:8px 10px 0.5em 30px; color:#ffffff; text-decoration:none; margin-top:5px; }
+a.billetemovilventa { background:url(/vol/img2/venta_ico_movilidad.png) top left no-repeat; padding:5px 0.5em 0.5em 23px; color:#8a0072; text-decoration:underline;}
+a.atendoventa { background:url(/vol/img2/venta_ico_atendo.png) top left no-repeat; padding:2px 0.5em 0.5em 23px; color:#8a0072; text-decoration:underline;}
+a.avisosventa { background:url(/vol/img2/venta_ico_avisos.png) top left no-repeat; padding:2px 0.5em 0.5em 23px; color:#8a0072; text-decoration:underline;}
+
+*:first-child+html a.billetemovilventa { 
+	padding:3px 0.5em 0.5em 23px; 
+}
+
+
+.cont07 {
+	font-size: 0.7em;
+}
+.cont08 {
+	font-size: 0.8em;
+}	
+.cont09 {
+	font-size: 0.9em;
+}	
+.cont11 {
+	font-size: 1.1em;
+}	
+.cont12 {
+	font-size: 1.2em;
+}	
+.cont13 {
+	font-size: 1.3em;
+}	
+.cont14 {
+	font-size: 1.4em;
+}	
+.cont15 {
+	font-size: 1.5em;
+}
+

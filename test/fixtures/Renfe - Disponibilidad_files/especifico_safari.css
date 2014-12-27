@@ -1,0 +1,221 @@
+.caja_texto {
+	BORDER-RIGHT: #cccccc 0.1em solid; 
+	BORDER-TOP: #cccccc 1px solid; 
+	FONT-SIZE: 0.9em; 
+	BORDER-LEFT: #cccccc 1px solid; 
+	BORDER-BOTTOM: #cccccc 0.1em solid; 
+	FONT-FAMILY: Arial, Helvetica, sans-serif; 
+	HEIGHT: auto; 
+	BACKGROUND-COLOR: #ffffff;
+	margin-left:15px;
+	}
+
+.select_texto {
+	BORDER-RIGHT: #cccccc 0.1em solid; 
+	BORDER-TOP: #cccccc 1px solid; 
+	FONT-SIZE: 0.9em; 
+	BORDER-LEFT: #cccccc 1px solid; 
+	BORDER-BOTTOM: #cccccc 0.1em solid; 
+	FONT-FAMILY: Arial, Helvetica, sans-serif; 
+	HEIGHT: auto; 
+	BACKGROUND-COLOR: #ffffff;
+	margin-left:15px;
+	}
+
+.select_texto1 {
+	BORDER-RIGHT: #cccccc 0.1em solid; 
+	BORDER-TOP: #cccccc 1px solid; 
+	BORDER-LEFT: #cccccc 1px solid; 
+	BORDER-BOTTOM: #cccccc 0.1em solid; 
+	HEIGHT: auto; 
+	BACKGROUND-COLOR: #ffffff;
+	margin-left:15px;
+	line-height:25px;
+	width:auto;
+	font-size:0.9em;	
+	}
+		
+.caja_texto1 {
+	BORDER-RIGHT: #cccccc 0.1em solid; 
+	BORDER-TOP: #cccccc 1px solid; 
+	FONT-SIZE: 0.9em; 
+	BORDER-LEFT: #cccccc 1px solid; 
+	BORDER-BOTTOM: #cccccc 0.1em solid; 
+	FONT-FAMILY: Arial, Helvetica, sans-serif; 
+	HEIGHT: auto; 
+	BACKGROUND-COLOR: #ffffff;
+	margin-left:15px;
+	line-height:25px;
+	font-size:0.9em;			
+	}
+
+.caja_pa {
+	BORDER-RIGHT: #cccccc 0.1em solid; 
+	BORDER-TOP: #cccccc 1px solid; 
+	BORDER-LEFT: #cccccc 1px solid; 
+	BORDER-BOTTOM: #cccccc 0.1em solid; 
+	FONT-FAMILY: Arial, Helvetica, sans-serif; 
+	HEIGHT: auto; 
+	BACKGROUND-COLOR: #ffffff;
+	line-height:25px;
+	font-size:0.9em;
+	float:right;
+	margin-right:25%;	
+	}
+
+.select_texto1 {
+	BORDER-RIGHT: #cccccc 0.1em solid; 
+	BORDER-TOP: #cccccc 1px solid; 
+	FONT-SIZE: 0.9em; 
+	BORDER-LEFT: #cccccc 1px solid; 
+	BORDER-BOTTOM: #cccccc 0.1em solid; 
+	FONT-FAMILY: Arial, Helvetica, sans-serif; 
+	HEIGHT: auto; 
+	BACKGROUND-COLOR: #ffffff;
+	margin-left:15px;
+	line-height:25px;		
+	}	
+	
+#caja_relacion{
+	BORDER-RIGHT: #cccccc 0.1em solid; 
+	BORDER-TOP: #cccccc 1px solid; 
+	FONT-SIZE: 1em; 
+	BORDER-LEFT: #cccccc 1px solid; 
+	BORDER-BOTTOM: #cccccc 0.1em solid; 
+	FONT-FAMILY: Arial, Helvetica, sans-serif; 
+	margin-left:15px;
+	margin:0 0 0 0;
+	padding:0;
+    width:980px;
+	float:left;
+	margin-left:15px;
+	margin-top:10px;
+}	
+
+
+
+.borde_tablas{
+	BORDER-RIGHT: #cccccc 0.1em solid; 
+	BORDER-TOP: #cccccc 1px solid; 
+	BORDER-LEFT: #cccccc 1px solid; 
+	BORDER-BOTTOM: #cccccc 0.1em solid; 
+}
+
+.contenedor_opciones {
+	width:300px;
+	float:left;
+	margin-top:-14px;
+	
+	position:inherit;
+}
+
+.contenedor_opciones1 {
+	width:300px;
+	float:left;
+	margin-top:25px;
+	position:inherit;
+}
+
+
+.caja_fecha {
+	BORDER-RIGHT: #cccccc 0.1em solid; 
+	BORDER-TOP: #cccccc 1px solid; 
+	BORDER-LEFT: #cccccc 1px solid; 
+	BORDER-BOTTOM: #cccccc 0.1em solid; 
+	FONT-FAMILY: Arial, Helvetica, sans-serif; 
+	HEIGHT: auto; 
+	BACKGROUND-COLOR: #ffffff;
+	margin-left:15px;
+	width:15px;
+	line-height:25px;
+	}
+	
+.caja_cvv {
+	BORDER-RIGHT: #cccccc 0.1em solid; 
+	BORDER-TOP: #cccccc 1px solid; 
+	BORDER-LEFT: #cccccc 1px solid; 
+	BORDER-BOTTOM: #cccccc 0.1em solid; 
+	FONT-FAMILY: Arial, Helvetica, sans-serif; 
+	HEIGHT: auto; 
+	BACKGROUND-COLOR: #ffffff;
+	margin-left:15px;
+	width:25px;
+	line-height:25px;
+	}
+	
+.margen_login {
+	height: 24px;
+}
+
+.opcionesusuario1_login {
+	margin-top:7px;
+	padding-top:7px;
+}
+
+.opcionesusuario2_login {
+	margin-top:2px;
+	padding-top:2px;
+}
+
+.txtos_plastonsupHome {
+	padding-top:9px;
+	padding-left:20px;
+	position:absolute;
+}
+
+.txt_negro_pijama34 {
+	background:#dddfec;
+	text-align: center;
+	color:#000000;
+	padding-left:5px;
+	padding-top:10px;
+	line-height:25px;
+	font-size:0.9em;
+	font-weight:normal;
+	width:40px;
+	vertical-align:top;
+
+}
+
+.txt_negro_pijama0 {
+	background: #c0c0d0;
+	text-align: center;
+	color:#000000;
+	padding-left:5px;
+	padding-top:10px;
+	line-height:25px;
+	font-size:0.9em;
+	font-weight:normal;
+	width:40px;
+	vertical-align:top;
+
+}
+
+.txt_negro_pijama800 {
+	background: #ffffff;
+	text-align: center;
+	color:#000000;
+	padding-left:5px;
+	padding-top:10px;
+	line-height:25px;
+	font-size:0.9em;
+	font-weight:normal;
+	width:40px;
+	vertical-align:top;
+
+}
+
+
+.txt_negro_pijama900 {
+	background: #e1e1e1;
+	text-align: center;
+	color:#000000;
+	padding-left:5px;
+	padding-top:10px;
+	line-height:25px;
+	font-size:0.9em;
+	font-weight:normal;
+	width:40px;
+	vertical-align:top;
+
+}

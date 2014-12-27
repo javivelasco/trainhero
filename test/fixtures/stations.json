@@ -1,0 +1,15 @@
+[ { "admon" : "0071",
+    "c" : "0071,31209,31209",
+    "cdgoEsta" : "31209",
+    "cdgoUic" : "31209",
+    "d" : "A Albergueria-Prado",
+    "p" : false
+  },
+  { "admon" : "0071",
+    "c" : "0071,31311,31311",
+    "cdgoEsta" : "31311",
+    "cdgoUic" : "31311",
+    "d" : "A Bandeira",
+    "p" : false
+  }
+]

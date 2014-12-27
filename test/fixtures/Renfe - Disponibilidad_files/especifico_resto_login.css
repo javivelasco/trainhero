@@ -1,0 +1,33 @@
+.margenLogin {
+	margin-right:-10px;
+	width:200px;
+	text-align: right;
+}
+
+.margenLoginTop {
+	margin-top:-2px;
+} 
+
+.margenLoginTop2 {
+	margin-top:-8px;
+}
+
+.formulario1 {
+	margin-top:-4px;
+}
+
+.boton_entrarLT {
+	padding:0.5em 0.7em 0 0;
+	width:82px;
+	height:30px;
+	background-image:url(/vol/img2/boton_entrar01.gif);
+	background-repeat:no-repeat;
+	background-position:inherit;
+	float:right;
+	line-height:15px;
+	margin-right:0px; 
+	TEXT-DECORATION: none;
+	margin-top:-60px;
+	text-align:center;
+}
+

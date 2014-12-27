@@ -1,0 +1,192 @@
+table.calendar {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 1.0em;
+	border-collapse: collapse;
+	background-color: white;
+	border: solid #cccccc 1px;
+	background-color: #ffffff;
+	width: 200px;
+	text-align: center;
+	 
+	
+	/*prevent user from selecting text in Mozilla & Safari - check calendar constructor for IE code)*/
+	-moz-user-select: none;
+    /*-khtml-user-select: none;*/ 
+
+}
+table.calendar input, table.calendar select {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 1.2em;
+}
+table.calendar td {
+	border: 0;
+	font-size: 10px;
+	text-align: center;	
+}
+div.mainheading {
+	margin: 2px;
+}
+table.caldayheading {
+	border-collapse: collapse;
+	cursor: pointer;
+	empty-cells: show;
+	margin: 0 6px 0 6px;
+	
+}
+table.caldayheading td {
+	/*border: solid #CCCCCC 1px;
+	text-align: left;
+	color: #ff9a00;
+	font-weight: bold;
+	width: 22px;*/ /*should match calendar cell's width*/
+
+	FONT-WEIGHT: normal; 
+	FONT-SIZE: 11px; 
+	COLOR: #8A0072; 	
+	LINE-HEIGHT: 20px; 
+	MARGIN-RIGHT: 1em; 
+	FONT-STYLE: normal; 
+	FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; 
+	TEXT-DECORATION: none; 
+	BORDER-RIGHT: #cccccc 0.1em solid; 
+	BORDER-TOP: #cccccc 0.1em solid; 
+	BORDER-LEFT: #cccccc 0.1em solid; 
+	BORDER-BOTTOM: #cccccc 0.1em solid; 
+	BACKGROUND-COLOR: #ECDDE9;
+	width: 22px;
+	text-align: left;
+}
+table.caldayheading td.wkhead {
+	border-right: double #CCCCCC 3px;
+}
+table.calcells {
+	border-collapse: collapse;
+	cursor: pointer;
+	margin: 0 6px 0 6px;
+}
+table.calcells td {
+	border: solid #CCCCCC 1px;
+	vertical-align: top;
+	text-align: left;
+	font-weight: bold;
+	width: 22px;
+	height: 20px; /*IE doesn't like ems*/
+}
+table.calcells td div {
+	padding: 1px;
+	margin: 0;
+}
+table.calcells td.wkhead {
+	background-color: white;
+	text-align: center;
+	border-right: double #CCCCCC 3px;
+	color: #ff9a00;
+}
+table.calcells td.wkday {
+	background-color: #ffffff;
+	color:#666666;
+}
+table.calcells td.wkend {
+	background-color: #E4E2E7;
+	color:#666666;
+}
+
+table.calcells td.cell_selected {
+	BACKGROUND-COLOR: #fbeec2;
+	COLOR: #ff9a00; 
+}
+table.calcells td.notmnth {
+	BACKGROUND-COLOR: #eeeeee;
+	COLOR: #000000; 
+	font-style: italic;
+}
+table.calcells td.notallowed {
+	background-color: green;
+	color: #EEEEEE;
+	font-style: italic;
+}
+table.calcells td.hover {
+	BACKGROUND-COLOR: #fbeec2;
+	COLOR: #8A0072; 
+}
+
+table.calcells td.disabledDate {
+	FONT-WEIGHT: normal; 
+	FONT-SIZE: 10px; 
+	COLOR: #eeeeee; 
+	LINE-HEIGHT: 1.3em; 
+	MARGIN-RIGHT: 1em; 
+	FONT-STYLE: normal; 
+	FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; 
+	TEXT-DECORATION: none; 
+	BACKGROUND-COLOR: #eeeeee;
+	BORDER-RIGHT: #cccccc 0.1em solid; 
+	BORDER-TOP: #cccccc 0.1em solid; 
+	BORDER-LEFT: #cccccc 0.1em solid; 
+	BORDER-BOTTOM: #cccccc 0.1em solid; 
+	font-style: italic;
+	cursor: default;
+}
+
+table.calcells td.hoverDisabled {
+	FONT-WEIGHT: normal; 
+	FONT-SIZE: 10px; 
+	COLOR: #eeeeee; 
+	LINE-HEIGHT: 1.3em; 
+	MARGIN-RIGHT: 1em; 
+	FONT-STYLE: normal; 
+	FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; 
+	TEXT-DECORATION: none; 
+	BACKGROUND-COLOR: #eeeeee;
+	BORDER-RIGHT: #cccccc 0.1em solid; 
+	BORDER-TOP: #cccccc 0.1em solid; 
+	BORDER-LEFT: #cccccc 0.1em solid; 
+	BORDER-BOTTOM: #cccccc 0.1em solid; 
+	font-style: italic;
+	cursor: default;
+}
+
+#calendario_mes_izquierda
+{
+	width: 20px;
+	display: inherit;
+	float: left;
+	position: absolute;
+	top: 3px;
+	left: 23px;
+}
+
+#calendario_mes_derecha
+{
+	width: 20px;
+	display: inherit;
+	position: absolute;
+	top: 3px;
+	left: 155px;
+}
+
+#calendario_cerrar
+{
+	width: 60px;
+	display: block;
+}
+
+#div_cerrar
+{
+	width: 60px;
+	
+	
+} 
+#calendario_select_mes
+{
+	width: 55px;
+	
+
+}
+
+#calendario_select_year
+{
+	width: 55px;
+	
+
+}

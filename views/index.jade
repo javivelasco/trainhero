@@ -1,0 +1,10 @@
+extend layout
+block content
+  ul
+    each train in trains
+      li
+        ul
+          li Tren #{train.name}
+          li Salida #{train.departure}
+          li Llegada #{train.arrival}
+          li Price #{train.price}

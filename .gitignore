@@ -1,0 +1,15 @@
+tmp
+log
+.DS_Store
+.sass-cache/**
+.sublime-project
+.zshenv
+.env
+.env.*
+tmp/**
+.loadpath
+.project
+spike*.rb
+public/**
+node_modules/**
+coverage/**

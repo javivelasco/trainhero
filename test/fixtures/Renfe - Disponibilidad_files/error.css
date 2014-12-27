@@ -1,0 +1,124 @@
+.errorPlastonHome {
+    display: none;
+    height: auto;
+    margin-left: 175px;
+    overflow: hidden;
+    position: absolute;
+    top: 325px;
+    width: 660px;
+    z-index: 6;
+}
+
+.errorPlastonHomeFondo {
+  	background-image: url("/vol/img/home/hv_errorfondo.png");
+    background-position: center top;
+    background-repeat: no-repeat;
+    height: 225px;
+    opacity: 1;
+    overflow: hidden;
+    width: 660px;
+}
+
+.errorPlastonHomeContainer  {
+    background: none repeat scroll 0 0 #FFFFFF;
+    display: none;
+    height: 100%;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0px;
+    width: 850px;
+    z-index: 5;
+    filter:alpha(opacity=0);
+    width:1130px;
+ }
+
+*:first-child+html .errorPlastonHomeContainer  {
+    width:1000px;
+ }
+
+ 
+
+.errorPlastonHomeFondo a {
+    background-image: url("/vol/img/home/hv_errorbtnoff.png");
+    background-position: right top;
+    background-repeat: no-repeat;
+    float: right;
+    height: 26px;
+    margin-right: 18px;
+    margin-top: -10px;
+    padding-top: 8px;
+    width: 36px;
+}
+
+.errorPlastonHomeFondo a:hover {
+    background-image: url("/vol/img/home/hv_errorbtnon.png");
+    background-position: right top;
+    background-repeat: no-repeat;
+    float: right;
+    height: 26px;
+    margin-right: 18px;
+    margin-top: -10px;
+    padding-top: 8px;
+    width: 36px;
+}
+
+.posicion_listacuadradorosa {
+	margin-left:20px;
+	margin-top:20px;
+	font-size:1em;
+}
+
+
+.textoErrorContainer {
+	font-size: 1.05em;
+    height: 148px;
+    margin-left: 8px;
+    margin-top: 67px;
+    text-align: center;
+    width: 643px;
+}
+	
+.bModalStyle {
+	
+	background-color: rgb(255, 255, 255); 
+	height: 100%; 
+	left: 0px; 
+	opacity:0.8; 
+	position: fixed; 
+	top: 0px; 
+	width: 100%; 
+	z-index: 4; 
+	display:none;
+
+}
+
+
+*:first-child+html .bModalStyle {
+	filter:alpha(opacity=80); 
+}
+
+.bModalStyle_MSIE8.0 {
+	background-color: rgb(255, 255, 255); 
+	height: 100%; 
+	left: 0px; 
+	opacity:0;
+	position: fixed; 
+	top: 0px; 
+	width: 100%; 
+	z-index: 4; 
+	display:none;
+}
+
+*:first-child+html .bModalStyle_MSIE8.0 {
+	filter:alpha(opacity=80); 
+	
+}
+
+
+.capa_error {
+	clear: both;
+	margin: 0 auto 0 auto;
+	padding: 0;
+	width: 1000px;
+}

@@ -1,0 +1,12 @@
+extend layout
+block content
+  h1 Search for trains
+  form(action="/search", method="POST")
+    select(name="fromId")
+      for station, index in stations
+        option(value=station.id) #{station.name}
+    select(name="toId")
+      for station, index in stations
+        option(value=station.id) #{station.name}
+    input(type="text", name="departureDate", placeholder="dd/mm/yyyy")
+    button(type="submit") Search

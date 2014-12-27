@@ -1,0 +1,93 @@
+/* CSS */
+/* PIE
+------------------------------------------------*/
+#piev2 {
+	clear: both;
+	margin: 0;
+	padding: 0;
+	background: url(/vol/img/home/fd_pieh_02.gif) repeat-x;
+	border-bottom: 5px solid #878286;
+	height: 75px;
+}
+
+*:first-child+html #piev2 {
+	height: 75px;
+	margin-top:45px;
+}
+
+* html #piev2 {
+	clear: both;
+	margin: 1em auto 0 auto;
+	padding: 0.5em 0 0 0;
+	background: url(/vol/img/home/fd_pieh_02.gif) repeat-x;
+	border-bottom: 5px solid #878286;
+	width: 100%; /* SÃ³lo para IE 6 */
+}
+
+*:first-child+html #piev2 p {
+	height: 75px;
+	margin: 10px 30px 0 0;
+	/* padding-top:-5px;    */
+	padding-right: 170px;
+}
+
+#piev2 p {
+    color: #000000;
+    font-size: 0.9em;
+    height: 10px;
+    margin-right: 130px;
+    padding-top: 40px;
+    text-align: right;
+}
+
+#piev2 a:link,#piev2 a:visited {
+	font-size: 0.95em;
+	color: #810072;
+	text-decoration: underline;
+}
+
+#piev2 a:hover {
+	font-size: 0.95em;
+	color: #810072;
+	text-decoration: underline;
+}
+
+.resaltado {
+	color: #810072;
+	font-weight: bolder;
+}
+
+#resaltado {
+	color: #810072;
+	font-weight: bolder;
+}
+
+#piev2 .logo_ministerio {
+	width: 150px;
+	margin-top: -18px;
+	padding-left: 140px;
+	float: left;
+}
+
+*:first-child+html #piev2 .logo_ministerio {
+	float: left;
+	width: 150px;
+	margin-top: 0;
+	padding-left: 140px;
+}
+
+#piev2 .redessociales {
+	width: 450px;
+	height: 10px;
+	margin-top: 0;
+	font-size: 0.9em;
+}
+
+#piev2 .redessociales ul li {
+	list-style: none;
+	display: inline;
+	font-size: 0.9em;
+}
+
+/* Fin PIE
+------------------------------------------------*/
