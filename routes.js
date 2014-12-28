@@ -7,7 +7,6 @@ var renfe   = require('./core/services/renfe_service');
 
 // Route middleware that will happen on every request
 router.use(function(req, res, next) {
-  console.log(req.method, req.url);
   next();
 });
 

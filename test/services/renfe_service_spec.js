@@ -40,7 +40,6 @@ describe('RenfeService', function() {
       findStation.withArgs(to.id).returns(to);
 
       getRenfe.callsArgWith( 1, null, null, "Renfe main page content");
-
     });
 
     describe("when Renfe responds", function() {
@@ -64,6 +63,13 @@ describe('RenfeService', function() {
           done();
         });
       });
+
+      it("gives empty array when the stations doesn't exist", function(done) {
+        service.search(20, 30, date, function(trains) {
+          expect(trains.length).to.eql(0);
+          done();
+        });
+      })
     });
 
     describe("when Renfe does not respond", function() {

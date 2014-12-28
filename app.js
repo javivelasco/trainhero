@@ -3,6 +3,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var errorhandler = require('errorhandler');
 var Promise = require("bluebird");
+var morgan = require("morgan");
 var routes  = require('./routes');
 
 var app = express();
@@ -16,6 +17,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
+app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(__dirname + '/public'))
 
