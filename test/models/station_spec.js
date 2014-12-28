@@ -1,5 +1,4 @@
 var expect  = require('chai').expect,
-    _       = require('lodash'),
     actions = require('../actions'),
     dummies = require('../dummies'),
     Station = require("../../core/models/station"),

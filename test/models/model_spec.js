@@ -1,8 +1,6 @@
 var expect   = require('chai').expect,
     assert   = require('chai').assert,
-    sinon    = require('sinon'),
-    Model    = require("../../core/models/model")
-    validate = require("../../core/validators");
+    Model    = require("../../core/models/model");
 
 describe("models/model.js", function() {
   describe("#constructor", function() {

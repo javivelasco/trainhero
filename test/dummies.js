@@ -33,7 +33,8 @@ dummies.dummyUser = function() {
     id:       1,
     name:     'Omar',
     lastname: 'Little',
-    email:    'omarlittle@thewire.com'
+    email:    'omarlittle@thewire.com',
+    password: 'super-secret'
   }
 };
 
