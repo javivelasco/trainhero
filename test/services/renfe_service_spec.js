@@ -33,7 +33,7 @@ describe('RenfeService', function() {
     before(function() {
       from = actions.newStation({id: 1, code: '1234'});
       to   = actions.newStation({id: 2, code: '5678'});
-      date = '18/12/2014';
+      date = '2014-12-18';
 
       findStation = sinon.stub(StationsRepository, 'findOneById');
       findStation.withArgs(from.id).returns(from);

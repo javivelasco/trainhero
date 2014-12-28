@@ -16,20 +16,25 @@ dummies.dummyStation2 = function() {
   };
 };
 
-dummies.dummyDate = function() {
-  return new Date('12/25/2015');
-}
-
 dummies.dummyTrain = function() {
   return {
     id:        1,
     name:      'AVE Hobbiton',
+    date:      '2013-12-20',
     departure: '18:30',
     arrival:   '20:34',
     fromId:    dummies.dummyStation().id,
-    toId:      dummies.dummyStation2().id,
-    date:      dummies.dummyDate()
+    toId:      dummies.dummyStation2().id
   };
-}
+};
+
+dummies.dummyUser = function() {
+  return {
+    id:       1,
+    name:     'Omar',
+    lastname: 'Little',
+    email:    'omarlittle@thewire.com'
+  }
+};
 
 module.exports = dummies;

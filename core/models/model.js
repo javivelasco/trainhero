@@ -1,4 +1,6 @@
-var _ = require('lodash');
+var _        = require('lodash'),
+    moment   = require('moment'),
+    validate = require("../validators");
 
 function Model() {
   var self   = this;
@@ -6,24 +8,22 @@ function Model() {
 
   // Public attributes
   self.attributes || (self.attributes = []);
-  self.errors = [];
 
   for (var i=0; i<self.attributes.length; i++) {
     key = self.attributes[i]
     self[key] = values[key];
   };
+
+  self.validate();
 };
 
 _.extend(Model.prototype, {
-  addError: function(attribute, message) {
-    this.errors.push({
-      attribute: attribute,
-      message: message
-    });
+  validate: function() {
+    this.errors = validate(this, this.constraints);
   },
 
   isValid: function() {
-    return this.errors.length == 0
+    return this.errors == undefined
   },
 
   toJSON: function() {

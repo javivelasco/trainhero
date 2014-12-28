@@ -10,28 +10,9 @@ _.extend(Helper.prototype, {
 								 .replace(/\s/g, ' ');
 	},
 
-	validHour: function(originalHour) {
-		var hourArray = originalHour.split(':'),
-		hours     = hourArray[0],
-		minutes   = hourArray[1];
-		return (validHours(hours) && validMinutes(minutes) ? true : false)
-	},
-
 	parseHour: function(hour) {
 		return hour.replace(/\./, ':');
 	}
 });
-
-function validHours(hours) {
-	if (parseInt(hours) < 0 || parseInt(hours) >= 24)
-	return false
-	return true
-}
-
-function validMinutes(minutes) {
-	if (parseInt(minutes) < 0 || parseInt(minutes) >= 60)
-		return false
-	return true
-}
 
 module.exports = new Helper();

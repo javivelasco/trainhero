@@ -1,6 +1,8 @@
-var expect = require('chai').expect,
-    assert = require('chai').assert,
-    Model  = require("../../core/models/model");
+var expect   = require('chai').expect,
+    assert   = require('chai').assert,
+    sinon    = require('sinon'),
+    Model    = require("../../core/models/model")
+    validate = require("../../core/validators");
 
 describe("models/model.js", function() {
   describe("#constructor", function() {
@@ -32,20 +34,11 @@ describe("models/model.js", function() {
     });
   });
 
-  describe("#addError", function() {
-    it("adds just one error", function() {
+  describe("#validate", function() {
+    it("assign validation value to errors internal variable", function() {
       var model = new (Model.extend());
-      model.addError('name', 'Mandatory');
-      assert.equal(model.errors.length, 1);
-    });
-
-    it("adds the proper values for errors", function() {
-      var model = new (Model.extend());
-      model.addError('name', 'Mandatory');
-      expect(model.errors[0]).to.eql({
-        attribute: 'name',
-        message: 'Mandatory'
-      });
+      model.validate();
+      expect(model.isValid()).to.eql(true);
     });
   });
 
@@ -57,7 +50,7 @@ describe("models/model.js", function() {
 
     it("returns false if there are errors", function() {
       var model = new (Model.extend());
-      model.addError('name', 'Mandatory');
+      model.errors = {attr: ["Error"]};
       expect(model.isValid()).to.eql(false);
     });
   });

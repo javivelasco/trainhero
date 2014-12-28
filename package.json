@@ -17,12 +17,14 @@
     "errorhandler": "^1.2.2",
     "express": "^4.10.2",
     "jade": "^1.7.0",
+    "moment": "^2.8.4",
     "mongodb": "^1.4.20",
     "mongoskin": "^1.4.4",
     "morgan": "^1.5.0",
     "passport": "^0.2.1",
     "request": "^2.48.0",
-    "tough-cookie": "^0.12.1"
+    "tough-cookie": "^0.12.1",
+    "validate.js": "^0.3.2"
   },
   "devDependencies": {
     "gulp": "^3.8.10",

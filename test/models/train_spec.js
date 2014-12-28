@@ -1,5 +1,4 @@
 var expect  = require('chai').expect,
-    _       = require('lodash'),
     actions = require('../actions'),
     dummies = require('../dummies'),
     Train   = require("../../core/models/train"),
@@ -19,15 +18,13 @@ describe("models/train.js", function() {
       expect(train.toJSON()).to.eql(dummies.dummyTrain());
     });
 
-    it("is not valid with invalid arrival hour", function() {
-      var train = actions.newTrain({arrival: '190'});
+    it("is not valid with no fromId", function() {
+      var train = actions.newTrain({fromId: undefined});
       expect(train.isValid()).to.eql(false);
     });
 
-    it("is not valid with invalid departure hour", function() {
-      var train = actions.newTrain({departure: '28:30'});
-      expect(train.isValid()).to.eql(false);
-      var train = actions.newTrain({departure: '12:99'});
+    it("is not valid with no toId", function() {
+      var train = actions.newTrain({toId: undefined});
       expect(train.isValid()).to.eql(false);
     });
 
@@ -42,25 +39,20 @@ describe("models/train.js", function() {
     });
 
     it("is not valid with not date object date", function() {
-      var train = actions.newTrain({date: 'bablabla'});
+      var train = actions.newTrain({date: undefined});
       expect(train.isValid()).to.eql(false);
     });
 
-    it("is not valid with no fromId", function() {
-      var train = actions.newTrain({fromId: undefined});
+    it("is not valid with invalid arrival hour", function() {
+      var train = actions.newTrain({arrival: '190'});
       expect(train.isValid()).to.eql(false);
     });
 
-    it("is not valid with no toId", function() {
-      var train = actions.newTrain({toId: undefined});
+    it("is not valid with invalid departure hour", function() {
+      var train = actions.newTrain({departure: '28:30'});
+      expect(train.isValid()).to.eql(false);
+      var train = actions.newTrain({departure: '12:99'});
       expect(train.isValid()).to.eql(false);
     });
-
-    it("has a public method to run validations", function() {
-      var train = actions.newTrain();
-      expect(train.validate()).to.eql(true);
-      train.departure = undefined;
-      expect(train.validate()).to.eql(false);
-    })
   });
 });
