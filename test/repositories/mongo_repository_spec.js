@@ -1,5 +1,4 @@
 var expect = require('chai').expect,
-    assert = require('chai').assert,
     sinon  = require('sinon'),
     db     = require('../../mongo').db,
     Train  = require('../../core/models/train'),

@@ -1,10 +1,8 @@
 var expect  = require('chai').expect,
-    assert  = require('chai').assert,
     sinon   = require('sinon'),
     actions = require('../actions'),
     request = require('request'),
     fs      = require('fs'),
-    Train   = require('../../core/models/train'),
     StationsRepository = require('../../core/repositories/station_repository');
 
 describe('RenfeService', function() {
@@ -19,11 +17,18 @@ describe('RenfeService', function() {
     renfeSearchPage = fs.readFileSync(__dirname + "/../fixtures/renfe_search_results.html", 'UTF8');
   });
 
+  after(function() {
+    request.defaults.restore();
+    requestAgent.get.restore();
+    requestAgent.post.restore();
+  });
+
   describe('#getAllStations', function() {
     it("search for all stations in the repository", function() {
       var findAllStations = sinon.spy(StationsRepository, 'findAll');
       service.getAllStations();
       expect(findAllStations.called).to.eql(true);
+      StationsRepository.findAll.restore();
     });
   });
 
@@ -40,6 +45,10 @@ describe('RenfeService', function() {
       findStation.withArgs(to.id).returns(to);
 
       getRenfe.callsArgWith( 1, null, null, "Renfe main page content");
+    });
+
+    after(function() {
+      StationsRepository.findOneById.restore();
     });
 
     describe("when Renfe responds", function() {

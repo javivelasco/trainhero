@@ -1,5 +1,4 @@
 var expect = require('chai').expect,
-    db     = require('../../mongo').db,
     Train  = require('../../core/models/train'),
     MongoRepository = require('../../core/repositories/mongo_repository'),
     repository = require('../../core/repositories/train_repository');
