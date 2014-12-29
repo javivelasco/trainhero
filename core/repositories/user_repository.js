@@ -5,8 +5,8 @@ var UserRepository = MongoRepository.extend({
   collection: 'users',
   model: User,
 
-  findOneByEmail: function(email, cb) {
-    this.findOneBy({email: email}, cb);
+  findOneByEmail: function(email) {
+    return this.findOneBy({email: email});
   }
 });
 

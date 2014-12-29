@@ -1,5 +1,6 @@
 var expect          = require('chai').expect,
     sinon           = require('sinon'),
+    Promise         = require('bluebird').Promise,
     actions         = require('../actions'),
     User            = require('../../core/models/user'),
     MongoRepository = require('../../core/repositories/mongo_repository'),
@@ -28,18 +29,22 @@ describe("UserRepository", function() {
     });
 
     it("finds users by email if the user exists", function(done) {
-      sinon.stub(repository, 'findOneBy').withArgs({email: dummyUser.email}).callsArgWith(1, {}, dummyUser);
-      repository.findOneByEmail(dummyUser.email, function(err, user) {
+      sinon.stub(repository, 'findOneBy').withArgs({email: dummyUser.email}).returns(Promise.resolve(dummyUser));
+      repository.findOneByEmail(dummyUser.email).then(function(user) {
         expect(user.toJSON()).to.eql(dummyUser.toJSON());
         done();
+      }).catch(function(err) {
+        done(err);
       });
     });
 
     it("calls the callback with null if user is not found", function(done) {
-      sinon.stub(repository, 'findOneBy').withArgs({email: dummyUser.email}).callsArgWith(1, null, null);
-      repository.findOneByEmail(dummyUser.email, function(err, user) {
-        expect(user).to.eql(null);
+      sinon.stub(repository, 'findOneBy').withArgs({email: dummyUser.email}).returns(Promise.resolve(null));
+      repository.findOneByEmail(dummyUser.email).then(function(result) {
+        expect(result).to.eql(null);
         done();
+      }).catch(function(err) {
+        done(err);
       });
     });
   });
