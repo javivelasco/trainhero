@@ -4,61 +4,56 @@ var _       = require('lodash'),
 
 function MongoRepository() {
   var self = this;
-
   self._collection = db.collection(self.collection);
   self._model      = self.model;
 };
 
 _.extend(MongoRepository.prototype, {
-  findOneBy: function(args, callback) {
+  findOneBy: function(args) {
     var instance = this;
-    this._collection.findOne(args, function(err, result) {
-      if (err) return callback(err);
-      if (result) result = build(result, instance)
-      callback(null, result);
+    return this._collection.findOneAsync(args).then(function(result) {
+      return Promise.resolve(build(result, instance));
     });
   },
 
-  put: function(item, callback) {
-    var instance   = this;
-    var attributes = item.toJSON()
+  put: function(item) {
+    var instance   = this,
+        attributes = item.toJSON();
     delete attributes['id']
 
-    instance._collection.find({_id: item.id}, function(err, result) {
-      if (err) return callback(err);
-      result.count(function(err, result) {
-        if (err) return callback(err);
+    return instance._collection.findAsync({_id: item.id}).then(function(result) {
+      Promise.promisifyAll(result);
+      return result.countAsync().then(function(result) {
         if (result === 0) {
-          createRecord(item.id, attributes, instance, callback);
+          return createRecord(item.id, attributes, instance);
         } else {
-          updateRecord(item.id, attributes, instance, callback);
+          return updateRecord(item.id, attributes, instance);
         };
       });
     });
   }
 });
 
-var createRecord = function(id, attributes, instance, callback) {
+var createRecord = function(id, attributes, instance) {
   if (id)  attributes['_id'] = id;
-  instance._collection.insert(attributes, function(err, result) {
-    err ? callback(err) : callback(null, build(result[0], instance))
+  return instance._collection.insertAsync(attributes).then(function(result) {
+    return Promise.resolve(build(result[0], instance));
   });
 };
 
-var updateRecord = function(id, attributes, instance, callback) {
-  instance._collection.update({_id: id}, {$set: attributes}, function(err, result, item) {
+var updateRecord = function(id, attributes, instance) {
+  return instance._collection.updateAsync({_id: id}, {$set: attributes}).then(function(result) {
     attributes['_id'] = id
-    err ? callback(err) : callback(null, build(attributes, instance))
+    return Promise.resolve(build(attributes, instance));
   });
 };
 
 var build = function(record, instance) {
+  if (record == null) return null;
   record['id'] = record['_id'];
   delete record['_id'];
   return new instance._model(record);
 };
-
-Promise.promisifyAll(MongoRepository.prototype);
 
 MongoRepository.extend = require('simple-extend');
 module.exports         = MongoRepository;
