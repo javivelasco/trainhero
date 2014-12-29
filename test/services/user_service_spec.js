@@ -1,5 +1,6 @@
 var expect  = require('chai').expect,
     sinon   = require('sinon'),
+    Promise = require('bluebird').Promise,
     dummies = require('../dummies'),
     actions = require('../actions'),
     service = require('../../core/services/user_service'),
@@ -15,7 +16,7 @@ describe('UserService', function() {
         dummyUser = actions.newUser();
 
     beforeEach(function() {
-      sinon.stub(users, 'put').callsArgWith(1, null, dummyUser)
+      sinon.stub(users, 'put').returns(Promise.resolve(dummyUser));
     });
 
     afterEach(function() {
@@ -23,41 +24,43 @@ describe('UserService', function() {
       users.findOneByEmail.restore();
     });
 
-		it("creates a user if the user does not exists", function() {
-      sinon.stub(users, "findOneByEmail").withArgs(email).callsArgWith(1, null, null);
-      service.emailSignup(name, email, password, passwordRepeat, function(err, user) {
+		it("creates a user if the user does not exists", function(done) {
+      sinon.stub(users, "findOneByEmail").returns(Promise.resolve(null));
+      service.emailSignup(name, email, password, passwordRepeat).then(function(user) {
         expect(users.put.getCall(0).args[0]).to.be.an.instanceof(User);
+        expect(user).to.be.an.instanceof(User);
         expect(users.put.called).to.eql(true);
-        expect(user).to.be.an.instanceof(User);
         expect(user).to.eql(dummyUser);
+        done();
+      }).catch(function(err) {
+        done(err);
       });
     });
 
-    it("does not create a user if the user is not valid", function() {
-      sinon.stub(users, "findOneByEmail").withArgs(email).callsArgWith(1, null, null);
-      service.emailSignup(null, email, password, passwordRepeat, function(err, user) {
-        expect(user).to.be.an.instanceof(User);
+    it("does not create a user if the user is not valid", function(done) {
+      sinon.stub(users, "findOneByEmail").returns(Promise.resolve(null));
+      service.emailSignup(null, email, password, passwordRepeat).catch(function(err) {
         expect(users.put.called).to.eql(false);
-        expect(err).not.to.eql(null);
+        expect(err).to.not.eql(null);
+        done();
       });
     });
 
-		it("does not create a user if the user already exists", function() {
-      sinon.stub(users, "findOneByEmail").withArgs(email).callsArgWith(1, null, dummyUser);
-      service.emailSignup(name, email, password, passwordRepeat, function(err, user) {
-        expect(user).to.eql(null);
+		it("does not create a user if the user already exists", function(done) {
+      sinon.stub(users, "findOneByEmail").returns(Promise.resolve(dummyUser));
+      service.emailSignup(name, email, password, passwordRepeat).catch(function(err) {
+        expect(err).to.eql("Email is taken");
         expect(users.put.called).to.eql(false);
-        expect(err).not.to.eql(null);
+        done();
       });
     });
 
-		it("does not create a user if the passwords does not match", function() {
-      sinon.stub(users, "findOneByEmail").withArgs(email).callsArgWith(1, null, dummyUser);
-      service.emailSignup(name, email, password, 'wrongpassword', function(err, user) {
-        expect(user).to.eql(null);
-        expect(err).not.to.eql(null);
+		it("does not create a user if the passwords does not match", function(done) {
+      sinon.stub(users, "findOneByEmail").returns(Promise.resolve(null));
+      service.emailSignup(name, email, password, 'wrongpassword').catch(function(err) {
+        expect(err).to.eql("Password repeat does not match");
         expect(users.put.called).to.eql(false);
-        expect(users.findOneByEmail.called).to.eql(false);
+        done();
       });
     });
 	});

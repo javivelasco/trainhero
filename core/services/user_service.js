@@ -1,25 +1,24 @@
-var _     = require('lodash'),
-    User  = require('../models/user'),
-		users = require('../repositories/user_repository');
+var _       = require('lodash'),
+    Promise = require('bluebird').Promise,
+    User    = require('../models/user'),
+		users   = require('../repositories/user_repository');
 
 function UserService() {};
 
 _.extend(UserService.prototype, {
-	emailSignup: function(name, email, password, passwordRepeat, cb) {
-		var user;
+	emailSignup: function(name, email, password, passwordRepeat) {
+    var user = new User({name: name, email: email, password: password});
 
-		if (password !== passwordRepeat)
-			return cb("Passwords doesn't match", null);
+    if (password !== passwordRepeat)
+      return Promise.reject("Password repeat does not match");
 
-		user = new User({name: name, email: email, password: password});
-		if (!user.isValid()) return cb("User is not valid", user);
+    if (!user.isValid())
+      return Promise.reject(user.errors);
 
-		users.findOneByEmail(email, function(err, userExists) {
-			if (userExists) return cb("Email is taken", null);
-			users.put(user, function(err, user) {
-				cb(null, user);
-			});
-		});
+    return users.findOneByEmail(email).then(function(result) {
+      if (result) return Promise.reject("Email is taken");
+      return users.put(user);
+    });
 	}
 });
 
