@@ -3,7 +3,11 @@ var MongoRepository = require('./mongo_repository'),
 
 var UserRepository = MongoRepository.extend({
   collection: 'users',
-  model: User
+  model: User,
+
+  findOneByEmail: function(email, cb) {
+    this.findOneBy({email: email}, cb);
+  }
 });
 
 module.exports = new UserRepository();

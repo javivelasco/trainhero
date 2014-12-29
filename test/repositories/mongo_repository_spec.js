@@ -27,19 +27,18 @@ describe("Mongo Repository", function() {
   describe("#find", function() {
     var storedRecord, findMongo;
 
-    before(function() {
+    beforeEach(function() {
       storedRecord = { _id: 1, from: "Springfield", to: "Quahog"}
       findMongo = sinon.stub(repository._collection, 'findOne');
     });
 
-    after(function() {
+    afterEach(function() {
       repository._collection.findOne.restore();
     });
 
     it("handles an Mongo find error", function(done) {
       findMongo.callsArgWith(1, {}, null);
-
-      repository.findOneById(12, function(err, result) {
+      repository.findOneBy({_id: 12}, function(err, result) {
         expect(err).to.exist;
         done();
       });
@@ -47,8 +46,7 @@ describe("Mongo Repository", function() {
 
     it("returns null if there is no result", function(done) {
       findMongo.callsArgWith(1, null, null);
-
-      repository.findOneById(12, function(err, result) {
+      repository.findOneBy({_id: 12}, function(err, result) {
         expect(result).to.eql(null);
         done();
       });
@@ -56,8 +54,7 @@ describe("Mongo Repository", function() {
 
     it("finds existent record if exists", function(done) {
       findMongo.callsArgWith(1, null, storedRecord);
-
-      repository.findOneById(storedRecord['_id'], function(err, result) {
+      repository.findOneBy({_id: storedRecord['_id']}, function(err, result) {
         expect(result.id).to.eql(1);
         done();
       });
@@ -65,12 +62,19 @@ describe("Mongo Repository", function() {
 
     it("returns an instance of the model", function(done) {
       findMongo.callsArgWith(1, null, storedRecord);
-
-      repository.findOneById(storedRecord['_id'], function(err, result) {
+      repository.findOneBy({_id: storedRecord['_id']}, function(err, result) {
         expect(result).to.be.an.instanceof(Train);
         done();
       });
-    })
+    });
+
+    it("gives the proper parameters to the driver", function(done) {
+      findMongo.callsArgWith(1, null, storedRecord);
+      repository.findOneBy({email: 'omar@thewire.com'}, function(err, result) {
+        expect(findMongo.getCall(0).args[0]).to.eql({email: 'omar@thewire.com'});
+        done();
+      });
+    });
   });
 
   describe("#put", function() {

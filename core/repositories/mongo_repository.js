@@ -10,9 +10,9 @@ function MongoRepository() {
 };
 
 _.extend(MongoRepository.prototype, {
-  findOneById: function(id, callback) {
+  findOneBy: function(args, callback) {
     var instance = this;
-    this._collection.findOne({_id: id}, function(err, result) {
+    this._collection.findOne(args, function(err, result) {
       if (err) return callback(err);
       if (result) result = build(result, instance)
       callback(null, result);
