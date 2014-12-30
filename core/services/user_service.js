@@ -17,6 +17,7 @@ _.extend(UserService.prototype, {
 
     return users.findOneByEmail(email).then(function(result) {
       if (result) return Promise.reject("Email is taken");
+      user.password = user.generateHash(user.password);
       return users.put(user);
     });
 	}

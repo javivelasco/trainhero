@@ -37,6 +37,17 @@ describe('UserService', function() {
       });
     });
 
+    it("stores the user with the bcrypted password", function(done) {
+      sinon.stub(users, "findOneByEmail").returns(Promise.resolve(null));
+      service.emailSignup(name, email, password, passwordRepeat).then(function(user) {
+        dummyUser.password = users.put.getCall(0).args[0].password;
+        expect(dummyUser.validPassword(password)).to.eql(true);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
     it("does not create a user if the user is not valid", function(done) {
       sinon.stub(users, "findOneByEmail").returns(Promise.resolve(null));
       service.emailSignup(null, email, password, passwordRepeat).catch(function(err) {
