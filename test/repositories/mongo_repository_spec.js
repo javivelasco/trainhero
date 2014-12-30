@@ -27,7 +27,7 @@ describe("Mongo Repository", function() {
     });
   });
 
-  describe("#find", function() {
+  describe("#findOneBy", function() {
     var storedRecord, findMongo;
 
     beforeEach(function() {
@@ -63,6 +63,26 @@ describe("Mongo Repository", function() {
       findMongo.returns(Promise.resolve(null));
       repository.findOneBy({email: 'omar@thewire.com'}).then(function(result) {
         expect(result).to.eql(null);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+  });
+
+  describe("#findOneById", function() {
+    before(function() {
+      sinon.stub(repository, "findOneBy").returns(Promise.resolve('example'))
+    });
+
+    after(function() {
+      repository.findOneBy.restore();
+    })
+
+    it("calls properly the find function", function(done) {
+      repository.findOneById(1).then(function(result) {
+        expect(repository.findOneBy.called).to.eql(true);
+        expect(result).to.eql('example')
         done();
       }).catch(function(err) {
         done(err);

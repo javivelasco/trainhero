@@ -16,6 +16,10 @@ _.extend(MongoRepository.prototype, {
     });
   },
 
+  findOneById: function(id) {
+    return this.findOneBy({id: id})
+  },
+
   put: function(item) {
     var instance   = this,
         attributes = item.toJSON();
