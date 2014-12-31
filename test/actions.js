@@ -2,7 +2,8 @@ var _       = require("lodash"),
     dummies = require("./dummies"),
     Station = require("../core/models/station"),
     Train   = require("../core/models/train"),
-    User    = require("../core/models/user");
+    User    = require("../core/models/user"),
+    Authorization = require("../core/models/authorization");
 
 var Actions = function() {};
 
@@ -17,6 +18,10 @@ _.extend(Actions.prototype, {
 
   newUser: function(args) {
     return new User(_.extend(dummies.dummyUser(), args));
+  },
+
+  newAuthorization: function(args) {
+    return new Authorization(_.extend(dummies.dummyAuthorization(), args));
   }
 });
 

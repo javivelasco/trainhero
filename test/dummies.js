@@ -38,4 +38,12 @@ dummies.dummyUser = function() {
   }
 };
 
+dummies.dummyAuthorization = function() {
+  return {
+    uid:      'UIDfromVendor',
+    token:    'TokenFromVendor',
+    provider: 'facebook'
+  }
+};
+
 module.exports = dummies;

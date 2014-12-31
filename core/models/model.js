@@ -6,35 +6,69 @@ function Model() {
   var self   = this;
   var values = arguments[0] || {};
 
-  // Public attributes
   self.attributes || (self.attributes = []);
-
-  for (var i=0; i<self.attributes.length; i++) {
-    key = self.attributes[i]
-    self[key] = values[key];
-  };
-
+  setAttributes(self, values);
+  setEmbebbedModels(self, values);
   self.validate();
 };
 
 _.extend(Model.prototype, {
   validate: function() {
     this.errors = validate(this, this.constraints);
+    validateEmbebbedModels(this);
   },
 
   isValid: function() {
-    return this.errors == undefined
+    return (this.errors == undefined);
   },
 
   toJSON: function() {
-    var json = {};
-    for (var i=0; i<this.attributes.length; i++) {
-      key = this.attributes[i]
-      json[key] = this[key]
-    };
+    var self = this, json = {};
+
+    _.forEach(self.attributes, function(key) {
+      json[key] = self[key]
+    });
+
+    _.forIn(self.embebbed, function(model, key) {
+      json[key] = self[key].toJSON();
+    });
+
     return json;
   }
 });
+
+function setAttributes(self, values) {
+  for (var i=0; i<self.attributes.length; i++) {
+    key = self.attributes[i]
+    self[key] = values[key];
+  };
+};
+
+function setEmbebbedModels(self, values) {
+  var attributes = Object.keys(self.embebbed || {}),
+      attribute = null,
+      value = null;
+
+  for (var i=0; i<attributes.length; i++) {
+    attribute = attributes[i];
+    value     = values[attribute]
+    self[attribute] = value ? new self.embebbed[attribute](value) : null
+  };
+};
+
+function validateEmbebbedModels(self) {
+  var model;
+
+  _.forIn(self.embebbed, function(model, key) {
+    if (model = self[key]) {
+      model.validate();
+      if (!model.isValid()) {
+        self.errors || (self.errors = {});
+        self.errors[key] = model.errors;
+      };
+    };
+  });
+}
 
 Model.extend   = require('simple-extend');
 module.exports = Model;
