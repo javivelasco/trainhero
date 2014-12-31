@@ -30,7 +30,7 @@ _.extend(Model.prototype, {
     });
 
     _.forIn(self.embebbed, function(model, key) {
-      json[key] = self[key].toJSON();
+      if (self[key]) json[key] = self[key].toJSON();
     });
 
     return json;
@@ -45,15 +45,10 @@ function setAttributes(self, values) {
 };
 
 function setEmbebbedModels(self, values) {
-  var attributes = Object.keys(self.embebbed || {}),
-      attribute = null,
-      value = null;
-
-  for (var i=0; i<attributes.length; i++) {
-    attribute = attributes[i];
-    value     = values[attribute]
-    self[attribute] = value ? new self.embebbed[attribute](value) : null
-  };
+  _.forIn(self.embebbed, function(Model, key) {
+    value = values[key];
+    self[key] = value ? new Model(value) : null
+  });
 };
 
 function validateEmbebbedModels(self) {

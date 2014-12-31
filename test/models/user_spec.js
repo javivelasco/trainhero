@@ -4,7 +4,8 @@ var expect  = require('chai').expect,
 		actions = require('../actions'),
 		dummies = require('../dummies'),
 		User    = require("../../core/models/user"),
-		Model   = require("../../core/models/model");
+		Model   = require("../../core/models/model"),
+		Authorization = require("../../core/models/authorization");
 
 describe("models/user.js", function() {
 	var user;
@@ -20,6 +21,7 @@ describe("models/user.js", function() {
 		it("has the right attributes", function() {
 			user = actions.newUser();
 			expect(user.toJSON()).to.eql(dummies.dummyUser());
+			expect(user.facebook).to.be.an.instanceof(Authorization);
 		});
 
 		it("is not valid with no email", function() {

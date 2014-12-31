@@ -1,9 +1,11 @@
 var bcrypt = require('bcrypt-nodejs'),
     Model  = require("./model"),
-    helper = require("../helper");
+    helper = require("../helper"),
+    Authorization = require("./authorization");
 
 var User = Model.extend({
 	attributes: ['id', 'name', 'lastname', 'email', 'password'],
+  embebbed:   { facebook: Authorization },
 
 	constructor: function() {
 		Model.prototype.constructor.call(this, arguments[0]);

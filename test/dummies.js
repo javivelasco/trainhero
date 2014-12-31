@@ -34,7 +34,8 @@ dummies.dummyUser = function() {
     name:     'Omar',
     lastname: 'Little',
     email:    'omarlittle@thewire.com',
-    password: 'super-secret'
+    password: 'super-secret',
+    facebook: dummies.dummyAuthorization()
   }
 };
 
