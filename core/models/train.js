@@ -1,5 +1,4 @@
-var Model  = require("./model"),
-    helper = require("../helper");
+var Model  = require("./model");
 
 var Train = Model.extend({
   attributes: ['id', 'name', 'fromId', 'toId', 'departure', 'arrival', 'date'],
