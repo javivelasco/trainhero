@@ -1,6 +1,7 @@
-var _       = require('lodash'),
-    Promise = require("bluebird"),
-    db      = require('../../mongo').db;
+var _         = require('lodash'),
+    Promise   = require("bluebird"),
+    mongoskin = require('mongoskin'),
+    db        = require('../../mongo').db;
 
 function MongoRepository() {
   var self = this;
@@ -17,7 +18,7 @@ _.extend(MongoRepository.prototype, {
   },
 
   findOneById: function(id) {
-    return this.findOneBy({id: id})
+    return this.findOneBy({_id: mongoskin.ObjectID(id)})
   },
 
   put: function(item) {

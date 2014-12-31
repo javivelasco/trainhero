@@ -1,5 +1,6 @@
 var expect     = require('chai').expect,
     sinon      = require('sinon'),
+    mongoskin  = require('mongoskin'),
     Promise    = require('bluebird').Promise,
     db         = require('../../mongo').db,
     actions    = require('../actions'),
@@ -72,7 +73,10 @@ describe("Mongo Repository", function() {
 
   describe("#findOneById", function() {
     before(function() {
-      sinon.stub(repository, "findOneBy").returns(Promise.resolve('example'))
+      sinon.stub(mongoskin, "ObjectID").returns("object_id")
+      sinon.stub(repository, "findOneBy")
+           .withArgs({_id: "object_id"})
+           .returns(Promise.resolve('example'))
     });
 
     after(function() {
