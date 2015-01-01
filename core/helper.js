@@ -1,6 +1,6 @@
 var _       = require('lodash');
 
-function Helper () {};
+function Helper () {}
 
 _.extend(Helper.prototype, {
 	trimSpacesAndNewlines: function(string) {

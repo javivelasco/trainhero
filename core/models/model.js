@@ -6,11 +6,11 @@ function Model() {
   var self   = this;
   var values = arguments[0] || {};
 
-  self.attributes || (self.attributes = []);
+  self.attributes = self.attributes || [];
   setAttributes(self, values);
   setEmbebbedModels(self, values);
   self.validate();
-};
+}
 
 _.extend(Model.prototype, {
   validate: function() {
@@ -19,14 +19,14 @@ _.extend(Model.prototype, {
   },
 
   isValid: function() {
-    return (this.errors == undefined);
+    return (this.errors === undefined);
   },
 
   toJSON: function() {
     var self = this, json = {};
 
     _.forEach(self.attributes, function(key) {
-      json[key] = self[key]
+      json[key] = self[key];
     });
 
     _.forIn(self.embebbed, function(model, key) {
@@ -39,29 +39,30 @@ _.extend(Model.prototype, {
 
 function setAttributes(self, values) {
   for (var i=0; i<self.attributes.length; i++) {
-    key = self.attributes[i]
+    key = self.attributes[i];
     self[key] = values[key];
-  };
-};
+  }
+}
 
 function setEmbebbedModels(self, values) {
   _.forIn(self.embebbed, function(Model, key) {
     value = values[key];
-    self[key] = value ? new Model(value) : null
+    self[key] = value ? new Model(value) : null;
   });
-};
+}
 
 function validateEmbebbedModels(self) {
   var model;
 
   _.forIn(self.embebbed, function(model, key) {
-    if (model = self[key]) {
+    model = self[key];
+    if (model) {
       model.validate();
       if (!model.isValid()) {
-        self.errors || (self.errors = {});
+        self.errors = self.errors || {};
         self.errors[key] = model.errors;
-      };
-    };
+      }
+    }
   });
 }
 

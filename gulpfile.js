@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
+var jshint = require('gulp-jshint');
 
 gulp.task('mocha', function() {
   process.env.NODE_ENV = 'test';
@@ -31,4 +32,10 @@ gulp.task('coverage', function (cb) {
         .pipe(istanbul.writeReports())
         .on('end', cb);
     });
+});
+
+gulp.task('lint', function() {
+  return gulp.src('./core/**/*.js')
+  .pipe(jshint())
+  .pipe(jshint.reporter('jshint-stylish'));
 });

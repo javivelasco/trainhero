@@ -15,7 +15,7 @@ var Authorization = Model.extend({
 });
 
 var defaults = function(self) {
-	self.provider || (self.provider = 'facebook');
-}
+	self.provider = (self.provider || 'facebook');
+};
 
 module.exports = Authorization;

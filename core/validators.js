@@ -2,14 +2,14 @@ var validate = require('validate.js');
 
 function validHours(hours) {
 	if (parseInt(hours) < 0 || parseInt(hours) >= 24)
-		return false
-	return true
+		return false;
+	return true;
 }
 
 function validMinutes(minutes) {
 	if (parseInt(minutes) < 0 || parseInt(minutes) >= 60)
-		return false
-	return true
+		return false;
+	return true;
 }
 
 validate.validators.hour = function(value, options, key, attributes) {

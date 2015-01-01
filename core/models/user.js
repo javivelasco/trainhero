@@ -25,9 +25,12 @@ var User = Model.extend({
   },
 
   setFacebookAuthorization: function(args) {
-    if (!args) return this.facebook = null;
-    args['provider'] = 'facebook';
-    this.facebook = new Authorization(args);
+    if (!args) {
+      this.facebook = null;
+    } else {
+      args.provider = 'facebook';
+      this.facebook = new Authorization(args);
+    }
   }
 });
 

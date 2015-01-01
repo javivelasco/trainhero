@@ -4,7 +4,7 @@ var _  = require('lodash'),
 
 function StationRepository() {
   this.items = loadStations();
-};
+}
 
 _.extend(StationRepository.prototype, {
   findOneById: function(id) {
