@@ -10,7 +10,6 @@ var Authorization = Model.extend({
 
 	constraints: {
 		uid:      { presence: true },
-		token:    { presence: true },
 		provider: { inclusion: { within: ['facebook'] }}
 	}
 });

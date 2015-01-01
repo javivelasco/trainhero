@@ -23,9 +23,9 @@ describe("models/authorization.js", function() {
 			expect(authorization.isValid()).to.eql(false);
 		});
 
-		it("is not valid with no token", function() {
+		it("is valid with no token", function() {
 			var authorization = actions.newAuthorization({token: null});
-			expect(authorization.isValid()).to.eql(false);
+			expect(authorization.isValid()).to.eql(true);
 		});
 
 		it("is not valid with strange provider", function() {
