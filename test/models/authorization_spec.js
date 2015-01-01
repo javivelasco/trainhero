@@ -29,8 +29,14 @@ describe("models/authorization.js", function() {
 		});
 
 		it("is not valid with strange provider", function() {
-			var train = actions.newAuthorization({provider: 'renfe'});
-			expect(train.isValid()).to.eql(false);
+			var authorization = actions.newAuthorization({provider: 'renfe'});
+			expect(authorization.isValid()).to.eql(false);
 		});
+
+    it("sets as default facebook as provider", function() {
+      var authorization = actions.newAuthorization({provider: null});
+      expect(authorization.provider).to.eql('facebook');
+      expect(authorization.isValid()).to.eql(true);
+    });
 	});
 });
