@@ -113,9 +113,10 @@ describe('UserService', function() {
         expect(users.put.called).to.eql(true);
         expect(users.put.getCall(0).args[0].facebook.toJSON()).to.eql(dummies.dummyAuthorization());
         expect(result).to.eql(dummyUser);
+        users.findOneByEmail.restore();
         done();
       });
-      users.findOneByEmail.restore();
+
     });
 
     it("creates a new user if he didn't exist by email or uid", function(done) {
@@ -132,9 +133,9 @@ describe('UserService', function() {
         expect(arg.facebook.token).to.eql(token);
         expect(arg.facebook.provider).to.eql('facebook');
         expect(result).to.eql(dummyUser);
+        users.findOneByEmail.restore();
         done();
       });
-      users.findOneByEmail.restore();
     });
   });
 });

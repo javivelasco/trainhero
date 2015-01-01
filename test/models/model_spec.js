@@ -83,8 +83,16 @@ describe("models/model.js", function() {
       expect(model.toJSON()).to.eql(hash);
     });
 
-    it("includes the embebbed models", function(){
+    it("includes the embebbed models when they have data", function(){
       var hash = { foo: 1, bar: { baz: 2 }};
+      var EmbebbedModel = Model.extend({attributes: ['baz']});
+      var TestModel = Model.extend({attributes: ['foo'], embebbed: {bar: EmbebbedModel}});
+      var model = new TestModel(hash);
+      expect(model.toJSON()).to.eql(hash);
+    });
+
+    it("not include the embebbed models when they dont have data", function(){
+      var hash = { foo: 1 };
       var EmbebbedModel = Model.extend({attributes: ['baz']});
       var TestModel = Model.extend({attributes: ['foo'], embebbed: {bar: EmbebbedModel}});
       var model = new TestModel(hash);
