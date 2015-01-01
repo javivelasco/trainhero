@@ -5,25 +5,28 @@ var expect   = require('chai').expect,
 describe("models/model.js", function() {
   describe("#constructor", function() {
     it("has no attributes when no attributes specified", function() {
-      var model = new (Model.extend({}))
+      var TestModel = Model.extend({});
+      var model = new TestModel();
       assert.isArray(model.attributes);
       assert.lengthOf(model.attributes, 0);
     });
 
     it("has attributes when specified", function() {
-      var model = new (Model.extend({attributes: ['foo', 'bar']}));
+      var TestModel = Model.extend({attributes: ['foo', 'bar']});
+      var model = new TestModel();
       assert.isArray(model.attributes);
       assert.lengthOf(model.attributes, 2);
     });
 
     it("has no properties for attributes when no values given", function() {
-      var model = new (Model.extend({attributes: ['foo', 'bar']}));
+      var TestModel = Model.extend({attributes: ['foo', 'bar']});
+      var model = new TestModel();
       assert.notProperty(model, 'foo');
       assert.notProperty(model, 'bar');
     });
 
     it("has properties for attributes when values given", function() {
-      var TestModel = Model.extend({attributes: ['foo', 'bar']})
+      var TestModel = Model.extend({attributes: ['foo', 'bar']});
       var model     = new TestModel({foo: 1, bar: 2});
 
       assert.isArray(model.attributes);
@@ -46,12 +49,13 @@ describe("models/model.js", function() {
       var model = new TestModel({foo: 1, bar: {baz: null}});
       expect(model.bar).to.be.an.instanceof(EmbebbedModel);
       expect(model.isValid()).to.eql(false);
-    })
+    });
   });
 
   describe("#validate", function() {
     it("assign validation value to errors internal variable", function() {
-      var model = new (Model.extend());
+      var TestModel = Model.extend();
+      var model = new TestModel();
       model.validate();
       expect(model.isValid()).to.eql(true);
     });
@@ -59,12 +63,14 @@ describe("models/model.js", function() {
 
   describe("#isValid", function() {
     it("returns true is there is no error", function() {
-      var model = new (Model.extend());
+      var TestModel = Model.extend();
+      var model = new TestModel();
       expect(model.isValid()).to.eql(true);
     });
 
     it("returns false if there are errors", function() {
-      var model = new (Model.extend());
+      var TestModel = Model.extend();
+      var model = new TestModel();
       model.errors = {attr: ["Error"]};
       expect(model.isValid()).to.eql(false);
     });
@@ -72,7 +78,8 @@ describe("models/model.js", function() {
 
   describe("#toJSON", function() {
     it("returns empty object if model has no attributes", function() {
-      var model = new (Model.extend());
+      var TestModel = Model.extend();
+      var model = new TestModel();
       expect(model.toJSON()).to.eql({});
     });
 

@@ -1,6 +1,6 @@
 var expect          = require('chai').expect,
     sinon           = require('sinon'),
-    Promise         = require('bluebird').Promise,
+    P               = require('bluebird'),
     actions         = require('../actions'),
     User            = require('../../core/models/user'),
     MongoRepository = require('../../core/repositories/mongo_repository'),
@@ -15,7 +15,7 @@ describe("UserRepository", function() {
     });
 
     it('has a user collection', function() {
-      expect(repository.collection).to.eql('users')
+      expect(repository.collection).to.eql('users');
     });
 
     it('has a User model reference', function() {
@@ -29,7 +29,7 @@ describe("UserRepository", function() {
     });
 
     it("finds users by email if the user exists", function(done) {
-      sinon.stub(repository, 'findOneBy').withArgs({email: dummyUser.email}).returns(Promise.resolve(dummyUser));
+      sinon.stub(repository, 'findOneBy').withArgs({email: dummyUser.email}).returns(P.resolve(dummyUser));
       repository.findOneByEmail(dummyUser.email).then(function(user) {
         expect(user.toJSON()).to.eql(dummyUser.toJSON());
         done();
@@ -39,7 +39,7 @@ describe("UserRepository", function() {
     });
 
     it("resolves the promise with null if user is not found", function(done) {
-      sinon.stub(repository, 'findOneBy').withArgs({email: dummyUser.email}).returns(Promise.resolve(null));
+      sinon.stub(repository, 'findOneBy').withArgs({email: dummyUser.email}).returns(P.resolve(null));
       repository.findOneByEmail(dummyUser.email).then(function(result) {
         expect(result).to.eql(null);
         done();
@@ -55,7 +55,7 @@ describe("UserRepository", function() {
     });
 
     it("finds users by email if the user exists", function(done) {
-      sinon.stub(repository, 'findOneBy').withArgs({'facebook.uid': dummyUser.facebook.uid}).returns(Promise.resolve(dummyUser));
+      sinon.stub(repository, 'findOneBy').withArgs({'facebook.uid': dummyUser.facebook.uid}).returns(P.resolve(dummyUser));
       repository.findOneByFacebookUID(dummyUser.facebook.uid).then(function(user) {
         expect(user.toJSON()).to.eql(dummyUser.toJSON());
         done();
@@ -65,7 +65,7 @@ describe("UserRepository", function() {
     });
 
     it("resolves the promise with null if user is not found", function(done) {
-      sinon.stub(repository, 'findOneBy').withArgs({'facebook.uid': dummyUser.facebook.uid}).returns(Promise.resolve(null));
+      sinon.stub(repository, 'findOneBy').withArgs({'facebook.uid': dummyUser.facebook.uid}).returns(P.resolve(null));
       repository.findOneByFacebookUID(dummyUser.facebook.uid).then(function(result) {
         expect(result).to.eql(null);
         done();

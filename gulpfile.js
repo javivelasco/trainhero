@@ -35,7 +35,11 @@ gulp.task('coverage', function (cb) {
 });
 
 gulp.task('lint', function() {
-  return gulp.src('./core/**/*.js')
+  return gulp.src([
+    'core/**/*.js',
+    'test/models/**/*.js',
+    'test/repositories/**/*.js',
+    'test/services/**/*.js'])
   .pipe(jshint())
   .pipe(jshint.reporter('jshint-stylish'));
 });

@@ -27,7 +27,7 @@ describe("models/station.js", function() {
     });
 
     it("has the right attributes", function() {
-      var station = actions.newStation()
+      var station = actions.newStation();
       expect(station.toJSON()).to.eql(dummies.dummyStation());
     });
   });

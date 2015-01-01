@@ -1,5 +1,5 @@
 var _       = require('lodash'),
-    P = require('bluebird'),
+    P       = require('bluebird'),
     User    = require('../models/user'),
 		users   = require('../repositories/user_repository');
 

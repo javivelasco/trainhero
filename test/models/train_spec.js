@@ -51,7 +51,7 @@ describe("models/train.js", function() {
     it("is not valid with invalid departure hour", function() {
       var train = actions.newTrain({departure: '28:30'});
       expect(train.isValid()).to.eql(false);
-      var train = actions.newTrain({departure: '12:99'});
+      train = actions.newTrain({departure: '12:99'});
       expect(train.isValid()).to.eql(false);
     });
   });

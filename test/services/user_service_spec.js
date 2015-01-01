@@ -1,6 +1,6 @@
 var expect  = require('chai').expect,
     sinon   = require('sinon'),
-    Promise = require('bluebird').Promise,
+    P       = require('bluebird'),
     dummies = require('../dummies'),
     actions = require('../actions'),
     service = require('../../core/services/user_service'),
@@ -8,10 +8,10 @@ var expect  = require('chai').expect,
     users   = require('../../core/repositories/user_repository');
 
 describe('UserService', function() {
-  var dummyUser = dummyUser = actions.newUser();
+  var dummyUser = actions.newUser();
 
   beforeEach(function() {
-    sinon.stub(users, 'put').returns(Promise.resolve(dummyUser));
+    sinon.stub(users, 'put').returns(P.resolve(dummyUser));
   });
 
   afterEach(function() {
@@ -29,7 +29,7 @@ describe('UserService', function() {
     });
 
 		it("creates a user if the user does not exists", function(done) {
-      sinon.stub(users, "findOneByEmail").returns(Promise.resolve(null));
+      sinon.stub(users, "findOneByEmail").returns(P.resolve(null));
       service.emailSignup(name, email, password, passwordRepeat).then(function(user) {
         expect(users.put.getCall(0).args[0]).to.be.an.instanceof(User);
         expect(user).to.be.an.instanceof(User);
@@ -42,7 +42,7 @@ describe('UserService', function() {
     });
 
     it("stores the user with the bcrypted password", function(done) {
-      sinon.stub(users, "findOneByEmail").returns(Promise.resolve(null));
+      sinon.stub(users, "findOneByEmail").returns(P.resolve(null));
       service.emailSignup(name, email, password, passwordRepeat).then(function(user) {
         dummyUser.password = users.put.getCall(0).args[0].password;
         expect(dummyUser.validPassword(password)).to.eql(true);
@@ -53,7 +53,7 @@ describe('UserService', function() {
     });
 
     it("does not create a user if the user is not valid", function(done) {
-      sinon.stub(users, "findOneByEmail").returns(Promise.resolve(null));
+      sinon.stub(users, "findOneByEmail").returns(P.resolve(null));
       service.emailSignup(null, email, password, passwordRepeat).catch(function(err) {
         expect(users.put.called).to.eql(false);
         expect(err).to.not.eql(null);
@@ -62,7 +62,7 @@ describe('UserService', function() {
     });
 
 		it("does not create a user if the user already exists", function(done) {
-      sinon.stub(users, "findOneByEmail").returns(Promise.resolve(dummyUser));
+      sinon.stub(users, "findOneByEmail").returns(P.resolve(dummyUser));
       service.emailSignup(name, email, password, passwordRepeat).catch(function(err) {
         expect(err).to.eql("Email is taken");
         expect(users.put.called).to.eql(false);
@@ -71,7 +71,7 @@ describe('UserService', function() {
     });
 
 		it("does not create a user if the passwords does not match", function(done) {
-      sinon.stub(users, "findOneByEmail").returns(Promise.resolve(null));
+      sinon.stub(users, "findOneByEmail").returns(P.resolve(null));
       service.emailSignup(name, email, password, 'wrongpassword').catch(function(err) {
         expect(err).to.eql("Password repeat does not match");
         expect(users.put.called).to.eql(false);
@@ -95,9 +95,9 @@ describe('UserService', function() {
     });
 
     it("updates the user authorization when it existed", function(done) {
-      sinon.stub(users, "findOneByFacebookUID").returns(Promise.resolve(dummyUser));
+      sinon.stub(users, "findOneByFacebookUID").returns(P.resolve(dummyUser));
       service.facebookConnect(name, email, uid, token).then(function(result) {
-        expect(users.findOneByFacebookUID.called).to.exist;
+        expect(users.findOneByFacebookUID.called).to.exist();
         expect(users.put.getCall(0).args[0].facebook.toJSON()).to.eql(dummies.dummyAuthorization());
         expect(result).to.eql(dummyUser);
         done();
@@ -107,8 +107,8 @@ describe('UserService', function() {
     });
 
     it("updates the user authorization when user existed but auth didn't", function(done) {
-      sinon.stub(users, "findOneByFacebookUID").returns(Promise.resolve(null));
-      sinon.stub(users, "findOneByEmail").returns(Promise.resolve(dummyUser));
+      sinon.stub(users, "findOneByFacebookUID").returns(P.resolve(null));
+      sinon.stub(users, "findOneByEmail").returns(P.resolve(dummyUser));
       service.facebookConnect(name, email, uid, token).then(function(result) {
         expect(users.put.called).to.eql(true);
         expect(users.put.getCall(0).args[0].facebook.toJSON()).to.eql(dummies.dummyAuthorization());
@@ -120,8 +120,8 @@ describe('UserService', function() {
     });
 
     it("creates a new user if he didn't exist by email or uid", function(done) {
-      sinon.stub(users, "findOneByFacebookUID").returns(Promise.resolve(null));
-      sinon.stub(users, "findOneByEmail").returns(Promise.resolve(null));
+      sinon.stub(users, "findOneByFacebookUID").returns(P.resolve(null));
+      sinon.stub(users, "findOneByEmail").returns(P.resolve(null));
       var arg;
 
       service.facebookConnect(name, email, uid, token).then(function(result) {

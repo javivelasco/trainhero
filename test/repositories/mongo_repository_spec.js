@@ -1,7 +1,7 @@
 var expect     = require('chai').expect,
     sinon      = require('sinon'),
     mongoskin  = require('mongoskin'),
-    Promise    = require('bluebird').Promise,
+    P          = require('bluebird'),
     db         = require('../../config/mongo').db,
     actions    = require('../actions'),
     testHelper = require('../helper'),
@@ -12,10 +12,11 @@ describe("Mongo Repository", function() {
   var repository;
 
   before(function() {
-    repository = new (MongoRepository.extend({
+    var TestRepository = MongoRepository.extend({
       collection: 'trains',
       model: Train
-    }));
+    });
+    repository = new TestRepository();
   });
 
   describe("#configure", function() {
@@ -32,7 +33,7 @@ describe("Mongo Repository", function() {
     var storedRecord, findMongo;
 
     beforeEach(function() {
-      storedRecord = { _id: 1, from: "Springfield", to: "Quahog"}
+      storedRecord = { _id: 1, from: "Springfield", to: "Quahog"};
       findMongo = sinon.stub(repository._collection, 'findOneAsync');
     });
 
@@ -41,8 +42,8 @@ describe("Mongo Repository", function() {
     });
 
     it("returns an instance of the model", function(done) {
-      findMongo.returns(Promise.resolve(storedRecord));
-      repository.findOneBy({_id: storedRecord['_id']}).then(function(result) {
+      findMongo.returns(P.resolve(storedRecord));
+      repository.findOneBy({_id: storedRecord._id}).then(function(result) {
         expect(result).to.be.an.instanceof(Train);
         done();
       }).catch(function(err) {
@@ -51,7 +52,7 @@ describe("Mongo Repository", function() {
     });
 
     it("gives the proper parameters to the driver", function(done) {
-      findMongo.returns(Promise.resolve(storedRecord));
+      findMongo.returns(P.resolve(storedRecord));
       repository.findOneBy({email: 'omar@thewire.com'}).then(function() {
         expect(findMongo.getCall(0).args[0]).to.eql({email: 'omar@thewire.com'});
         done();
@@ -61,7 +62,7 @@ describe("Mongo Repository", function() {
     });
 
     it("returns null if there are no records", function(done) {
-      findMongo.returns(Promise.resolve(null));
+      findMongo.returns(P.resolve(null));
       repository.findOneBy({email: 'omar@thewire.com'}).then(function(result) {
         expect(result).to.eql(null);
         done();
@@ -73,20 +74,20 @@ describe("Mongo Repository", function() {
 
   describe("#findOneById", function() {
     before(function() {
-      sinon.stub(mongoskin, "ObjectID").returns("object_id")
+      sinon.stub(mongoskin, "ObjectID").returns("object_id");
       sinon.stub(repository, "findOneBy")
            .withArgs({_id: "object_id"})
-           .returns(Promise.resolve('example'))
+           .returns(P.resolve('example'));
     });
 
     after(function() {
       repository.findOneBy.restore();
-    })
+    });
 
     it("calls properly the find function", function(done) {
       repository.findOneById(1).then(function(result) {
         expect(repository.findOneBy.called).to.eql(true);
-        expect(result).to.eql('example')
+        expect(result).to.eql('example');
         done();
       }).catch(function(err) {
         done(err);
@@ -114,13 +115,13 @@ describe("Mongo Repository", function() {
     it("stores a new record when there is no id for model", function(done) {
       cursor = testHelper.generateCursorWithResult(0);
       train.id = null;
-      findMongo.returns(Promise.resolve(cursor));
-      insertMongo.returns(Promise.resolve([storedRecord]));
+      findMongo.returns(P.resolve(cursor));
+      insertMongo.returns(P.resolve([storedRecord]));
 
       repository.put(train).then(function(result) {
         expect(result).to.be.an.instanceof(Train);
-        expect(result.id).to.exist;
-        expect(result._id).to.not.exist;
+        expect(result.id).to.exist();
+        expect(result._id).to.not.exist();
         expect(result.fromId).to.eql(train.fromId);
         done();
       }).catch(function(err) {
@@ -130,12 +131,12 @@ describe("Mongo Repository", function() {
 
     it("stores record when there is an id for model", function(done) {
       cursor = testHelper.generateCursorWithResult(0);
-      findMongo.returns(Promise.resolve(cursor));
-      insertMongo.returns(Promise.resolve([storedRecord]));
+      findMongo.returns(P.resolve(cursor));
+      insertMongo.returns(P.resolve([storedRecord]));
 
       repository.put(train).then(function(result) {
         expect(result).to.be.an.instanceof(Train);
-        expect(result.id).to.exist;
+        expect(result.id).to.exist();
         expect(result.fromId).to.eql(train.fromId);
         done();
       }).catch(function(err) {
@@ -145,11 +146,11 @@ describe("Mongo Repository", function() {
 
     it("saves changes if the record existed", function(done) {
       cursor = testHelper.generateCursorWithResult(1);
-      findMongo.returns(Promise.resolve(cursor));
-      updateMongo.returns(Promise.resolve([storedRecord]));
+      findMongo.returns(P.resolve(cursor));
+      updateMongo.returns(P.resolve([storedRecord]));
 
       repository.put(train).then(function(result) {
-        expect(result.id).to.exist;
+        expect(result.id).to.exist();
         expect(result.fromId).to.eql(train.fromId);
         done();
       }).catch(function(err) {

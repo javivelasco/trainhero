@@ -10,7 +10,7 @@ describe('RenfeService', function() {
 
   before(function() {
     requestAgent = request.defaults({jar: true, headers: { 'User-Agent': 'Chrome/38.0.2125.122' }});
-    sinon.stub(request, 'defaults').returns(requestAgent)
+    sinon.stub(request, 'defaults').returns(requestAgent);
     getRenfe  = sinon.stub(requestAgent, 'get');
     postRenfe = sinon.stub(requestAgent, 'post');
     service   = require('../../core/services/renfe_service');
@@ -78,7 +78,7 @@ describe('RenfeService', function() {
           expect(trains.length).to.eql(0);
           done();
         });
-      })
+      });
     });
 
     describe("when Renfe does not respond", function() {
