@@ -38,9 +38,35 @@ describe("UserRepository", function() {
       });
     });
 
-    it("calls the callback with null if user is not found", function(done) {
+    it("resolves the promise with null if user is not found", function(done) {
       sinon.stub(repository, 'findOneBy').withArgs({email: dummyUser.email}).returns(Promise.resolve(null));
       repository.findOneByEmail(dummyUser.email).then(function(result) {
+        expect(result).to.eql(null);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+  });
+
+  describe("#findOneByFacebookUID", function() {
+    afterEach(function() {
+      repository.findOneBy.restore();
+    });
+
+    it("finds users by email if the user exists", function(done) {
+      sinon.stub(repository, 'findOneBy').withArgs({'facebook.uid': dummyUser.facebook.uid}).returns(Promise.resolve(dummyUser));
+      repository.findOneByFacebookUID(dummyUser.facebook.uid).then(function(user) {
+        expect(user.toJSON()).to.eql(dummyUser.toJSON());
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it("resolves the promise with null if user is not found", function(done) {
+      sinon.stub(repository, 'findOneBy').withArgs({'facebook.uid': dummyUser.facebook.uid}).returns(Promise.resolve(null));
+      repository.findOneByFacebookUID(dummyUser.facebook.uid).then(function(result) {
         expect(result).to.eql(null);
         done();
       }).catch(function(err) {

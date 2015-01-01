@@ -7,6 +7,10 @@ var UserRepository = MongoRepository.extend({
 
   findOneByEmail: function(email) {
     return this.findOneBy({email: email});
+  },
+
+  findOneByFacebookUID: function(uid) {
+    return this.findOneBy({'facebook.uid': uid})
   }
 });
 
