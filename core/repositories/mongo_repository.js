@@ -1,7 +1,7 @@
 var _         = require('lodash'),
     Promise   = require("bluebird"),
     mongoskin = require('mongoskin'),
-    db        = require('../../mongo').db;
+    db        = require('../../config/mongo').db;
 
 function MongoRepository() {
   var self = this;
