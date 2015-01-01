@@ -23,15 +23,23 @@ _.extend(UserService.prototype, {
 	},
 
   facebookConnect: function(name, email, uid, token) {
-    return users.findOneByEmail(email).then(function(result) {
+    return users.findOneByFacebookUID(uid).then(function(result) {
       if (result) {
         result.setFacebookAuthorization({uid: uid, token: token});
         return users.put(result);
-      }
-      return users.put(new User({
-        name: name, email: email,
-        facebook: { uid: uid, token: token }
-      }));
+      };
+
+      return users.findOneByEmail(email).then(function(result) {
+        if (result) {
+          result.setFacebookAuthorization({uid: uid, token: token});
+          return users.put(result);
+        }
+
+        return users.put(new User({
+          name: name, email: email,
+          facebook: { uid: uid, token: token }
+        }));
+      });
     });
   }
 });

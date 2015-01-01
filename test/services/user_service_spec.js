@@ -16,7 +16,6 @@ describe('UserService', function() {
 
   afterEach(function() {
     users.put.restore();
-    users.findOneByEmail.restore();
   });
 
 	describe('#emailSignup', function() {
@@ -25,6 +24,9 @@ describe('UserService', function() {
         password = dummies.dummyUser().password,
         passwordRepeat = dummies.dummyUser().password;
 
+    afterEach(function() {
+      users.findOneByEmail.restore();
+    });
 
 		it("creates a user if the user does not exists", function(done) {
       sinon.stub(users, "findOneByEmail").returns(Promise.resolve(null));
@@ -82,30 +84,45 @@ describe('UserService', function() {
     var name = dummies.dummyUser().name,
         email = dummies.dummyUser().email,
         uid = dummies.dummyAuthorization().uid,
-        token = dummies.dummyAuthorization().token,
-        arg;
+        token = dummies.dummyAuthorization().token;
 
     beforeEach(function() {
       dummyUser.facebook = null;
     });
 
-    it("adds an authorization to the user if user existed", function(done) {
-      sinon.stub(users, "findOneByEmail").returns(Promise.resolve(dummyUser));
+    afterEach(function() {
+      users.findOneByFacebookUID.restore();
+    });
+
+    it("updates the user authorization when it existed", function(done) {
+      sinon.stub(users, "findOneByFacebookUID").returns(Promise.resolve(dummyUser));
       service.facebookConnect(name, email, uid, token).then(function(result) {
-        expect(users.put.called).to.eql(true);
-        arg = users.put.getCall(0).args[0];
-        expect(arg.name).to.eql(name);
-        expect(arg.email).to.eql(email);
-        expect(arg.facebook.uid).to.eql(uid);
-        expect(arg.facebook.token).to.eql(token);
-        expect(arg.facebook.provider).to.eql('facebook');
+        expect(users.findOneByFacebookUID.called).to.exist;
+        expect(users.put.getCall(0).args[0].facebook.toJSON()).to.eql(dummies.dummyAuthorization());
         expect(result).to.eql(dummyUser);
         done();
+      }).catch(function(err) {
+        done(err);
       });
     });
 
-    it("creates a new user if he didn't exist", function(done) {
+    it("updates the user authorization when user existed but auth didn't", function(done) {
+      sinon.stub(users, "findOneByFacebookUID").returns(Promise.resolve(null));
+      sinon.stub(users, "findOneByEmail").returns(Promise.resolve(dummyUser));
+      service.facebookConnect(name, email, uid, token).then(function(result) {
+        expect(users.put.called).to.eql(true);
+        expect(users.put.getCall(0).args[0].facebook.toJSON()).to.eql(dummies.dummyAuthorization());
+        expect(result).to.eql(dummyUser);
+        done();
+      });
+      users.findOneByEmail.restore();
+    });
+
+    it("creates a new user if he didn't exist by email or uid", function(done) {
+      sinon.stub(users, "findOneByFacebookUID").returns(Promise.resolve(null));
       sinon.stub(users, "findOneByEmail").returns(Promise.resolve(null));
+      var arg;
+
       service.facebookConnect(name, email, uid, token).then(function(result) {
         expect(users.put.called).to.eql(true);
         arg = users.put.getCall(0).args[0];
@@ -117,6 +134,7 @@ describe('UserService', function() {
         expect(result).to.eql(dummyUser);
         done();
       });
+      users.findOneByEmail.restore();
     });
   });
 });
