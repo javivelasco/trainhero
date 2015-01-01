@@ -20,7 +20,20 @@ _.extend(UserService.prototype, {
       user.password = user.generateHash(user.password);
       return users.put(user);
     });
-	}
+	},
+
+  facebookConnect: function(name, email, uid, token) {
+    return users.findOneByEmail(email).then(function(result) {
+      if (result) {
+        result.setFacebookAuthorization({uid: uid, token: token});
+        return users.put(result);
+      }
+      return users.put(new User({
+        name: name, email: email,
+        facebook: { uid: uid, token: token }
+      }));
+    });
+  }
 });
 
 module.exports = new UserService();
