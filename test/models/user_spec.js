@@ -81,4 +81,27 @@ describe("models/user.js", function() {
 			expect(bcrypt.compareSync.called).to.eql(true);
 		});
 	});
+
+	describe("#setFacebookAuthorization", function() {
+		it("sets the authorization when it didn't have one", function() {
+			user.facebook = null;
+			user.setFacebookAuthorization(dummies.dummyAuthorization());
+			expect(user.facebook).to.be.an.instanceof(Model);
+			expect(user.facebook).to.be.an.instanceof(Authorization);
+			expect(user.isValid()).to.eql(true);
+		});
+
+		it("updates the authorization when it had one", function() {
+			user.facebook = new Authorization(dummies.dummyAuthorization());
+			user.setFacebookAuthorization(dummies.dummyAuthorization());
+			expect(user.facebook).to.be.an.instanceof(Model);
+			expect(user.facebook).to.be.an.instanceof(Authorization);
+			expect(user.isValid()).to.eql(true);
+		});
+
+		it("sets the authorization to null if arg is null", function() {
+			user.setFacebookAuthorization(null);
+			expect(user.facebook).to.eql(null);
+		});
+	});
 });

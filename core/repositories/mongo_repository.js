@@ -24,7 +24,7 @@ _.extend(MongoRepository.prototype, {
   put: function(item) {
     var instance   = this,
         attributes = item.toJSON();
-    delete attributes['id']
+    delete attributes['id'];
 
     return instance._collection.findAsync({_id: item.id}).then(function(result) {
       Promise.promisifyAll(result);

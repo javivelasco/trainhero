@@ -22,6 +22,12 @@ var User = Model.extend({
 
   validPassword: function(password) {
     return bcrypt.compareSync(password, this.password);
+  },
+
+  setFacebookAuthorization: function(args) {
+    if (!args) return this.facebook = null;
+    args['provider'] = 'facebook';
+    this.facebook = new Authorization(args);
   }
 });
 
