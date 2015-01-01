@@ -1,6 +1,6 @@
-extend layout
+extend ../layout
 block content
-  h1 Search for trains
+  h1 Search for trains, #{user.name}
   form(action="/search", method="POST")
     select(name="fromId")
       for station, index in stations

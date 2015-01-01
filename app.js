@@ -1,14 +1,16 @@
-var dotenv = require('dotenv');
-var express = require('express');
-var bodyParser = require('body-parser');
-var errorhandler = require('errorhandler');
-var Promise = require("bluebird");
-var morgan = require("morgan");
-var routes  = require('./routes');
+var dotenv       = require('dotenv').load(),
+    express      = require('express'),
+    cookieParser = require('cookie-parser'),
+    bodyParser   = require('body-parser'),
+    errorhandler = require('errorhandler'),
+    Promise      = require('bluebird'),
+    morgan       = require('morgan'),
+    session      = require('express-session'),
+    passport     = require('./config/passport'),
+    routes       = require('./routes');
 
-var app = express();
-
-dotenv.load();
+var app  = express();
+var port = process.env.PORT || 3000;
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 if (process.env.NODE_ENV === 'development') {
@@ -18,9 +20,14 @@ if (process.env.NODE_ENV === 'development') {
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(__dirname + '/public'))
-
 app.use(routes);
-app.listen('3000');
-console.log("We took the stage on port 3000 nigga!");
+
+app.listen(port);
+console.log("We took the stage on port " + port + " nigga!");

@@ -1,27 +1,21 @@
-'use strict'
+var router         = require('express').Router(),
+    authentication = require('./routes/authentication'),
+    search         = require('./routes/search');
 
-var express = require('express');
-var router  = express.Router();
+router.get('/signup', authentication.signupPage);
+router.post('/signup', authentication.emailSignup);
+router.get('/login', authentication.loginPage);
+router.post('/login', authentication.emailLogin);
+router.get('/auth/facebook', authentication.facebookConnect);
+router.get('/auth/facebook/callback', authentication.facebookCallback);
+router.get('/logout', authentication.logout);
+router.get('/search', isLoggedIn, search.searchPage);
+router.post('/search', isLoggedIn, search.search);
 
-var renfe   = require('./core/services/renfe_service');
-
-// Route middleware that will happen on every request
-router.use(function(req, res, next) {
-  next();
-});
-
-router.get('/search', function (req, res) {
-  res.render('search', {stations: renfe.getAllStations()});
-});
-
-router.post('/search', function (req, res) {
-  var fromId        = req.body.fromId;
-  var toId          = req.body.toId;
-  var departureDate = req.body.departureDate;
-
-  renfe.search(fromId, toId, departureDate, function(trains) {
-    res.render('index', {trains: trains});
-  });
-});
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated())
+    return next();
+  res.redirect('/');
+};
 
 module.exports = router;
