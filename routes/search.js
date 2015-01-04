@@ -1,12 +1,12 @@
-var renfeService = require('../core/services/renfe_service');
+var trainService = require('../core/services/train_service');
 
 var search = {
 	search: function (req, res) {
-		var fromId        = req.body.fromId;
-		var toId          = req.body.toId;
-		var departureDate = req.body.departureDate;
+		var fromId        = req.body.fromId,
+		    toId          = req.body.toId,
+		    departureDate = req.body.departureDate;
 
-		renfeService.search(fromId, toId, departureDate, function(trains) {
+		trainService.searchAtRenfe(fromId, toId, departureDate, function(trains) {
 			res.render('search/results', { trains: trains });
 		});
 	},
@@ -14,7 +14,7 @@ var search = {
 	searchPage: function (req, res) {
 		res.render('search/search', {
 			user: req.user,
-			stations: renfeService.getAllStations()
+			stations: trainService.allStations()
 		});
 	}
 };

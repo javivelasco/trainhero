@@ -6,14 +6,14 @@ var _       = require('lodash'),
     Train   = require('../models/train'),
     StationsRepository = require('../repositories/station_repository');
 
-function RenfeService () {}
+function TrainService () {}
 
-_.extend(RenfeService.prototype, {
-  getAllStations: function() {
+_.extend(TrainService.prototype, {
+  allStations: function() {
     return StationsRepository.findAll();
   },
 
-  search: function (fromId, toId, departureDate, cb) {
+  searchAtRenfe: function (fromId, toId, departureDate, cb) {
     from   = StationsRepository.findOneById(fromId);
     to     = StationsRepository.findOneById(toId);
     if (!from || !to) return cb([]);
@@ -94,4 +94,4 @@ var configureSearch = function (from, to, departure) {
 };
 
 // Export module
-module.exports = new RenfeService();
+module.exports = new TrainService();

@@ -6,7 +6,7 @@ var expect  = require('chai').expect,
     fs      = require('fs'),
     StationsRepository = require('../../core/repositories/station_repository');
 
-describe('RenfeService', function() {
+describe('TrainService', function() {
   var service, getRenfe, postRenfe, renfeSearchPage;
 
   before(function() {
@@ -14,7 +14,7 @@ describe('RenfeService', function() {
     sinon.stub(request, 'defaults').returns(requestAgent);
     getRenfe  = sinon.stub(requestAgent, 'get');
     postRenfe = sinon.stub(requestAgent, 'post');
-    service   = require('../../core/services/renfe_service');
+    service   = require('../../core/services/train_service');
     renfeSearchPage = fs.readFileSync(__dirname + "/../fixtures/renfe_search_results.html", 'UTF8');
   });
 
@@ -24,16 +24,16 @@ describe('RenfeService', function() {
     requestAgent.post.restore();
   });
 
-  describe('#getAllStations', function() {
+  describe('#allStations', function() {
     it("search for all stations in the repository", function() {
       var findAllStations = sinon.spy(StationsRepository, 'findAll');
-      service.getAllStations();
+      service.allStations();
       expect(findAllStations.called).to.eql(true);
       StationsRepository.findAll.restore();
     });
   });
 
-  describe('#search', function() {
+  describe('#searchAtRenfe', function() {
     var from, to, date;
 
     before(function() {
@@ -58,14 +58,14 @@ describe('RenfeService', function() {
       });
 
       it("sets an array of trains in the callback", function(done) {
-        service.search(from.id, to.id, date, function(trains) {
+        service.searchAtRenfe(from.id, to.id, date, function(trains) {
           expect(trains.length).to.eql(3);
           done();
         });
       });
 
       it("parses the trains from the request properly", function(done) {
-        service.search(from.id, to.id, date, function(trains) {
+        service.searchAtRenfe(from.id, to.id, date, function(trains) {
           expect(trains[0].name).to.eql("AV City 02262");
           expect(trains[0].departure).to.eql("06:20");
           expect(trains[0].arrival).to.eql("08:27");
@@ -76,7 +76,7 @@ describe('RenfeService', function() {
       });
 
       it("gives empty array when the stations doesn't exist", function(done) {
-        service.search(20, 30, date, function(trains) {
+        service.searchAtRenfe(20, 30, date, function(trains) {
           expect(trains.length).to.eql(0);
           done();
         });
@@ -89,7 +89,7 @@ describe('RenfeService', function() {
       });
 
       it("throws an error", function() {
-        expect(service.search.bind(service.search,
+        expect(service.searchAtRenfe.bind(service.searchAtRenfe,
           from.id, to.id, date, function(trains) {}
         )).to.throw("Error connecting with Renfe");
       });
