@@ -1,4 +1,5 @@
 var expect  = require('chai').expect,
+    dotenv  = require('dotenv').load(),
     sinon   = require('sinon'),
     actions = require('../actions'),
     request = require('request'),
@@ -68,7 +69,8 @@ describe('RenfeService', function() {
           expect(trains[0].name).to.eql("AV City 02262");
           expect(trains[0].departure).to.eql("06:20");
           expect(trains[0].arrival).to.eql("08:27");
-          expect(trains[0].price).to.eql("18,80");
+          expect(trains[0].price).to.eql("18.80");
+          expect(trains[0].signature).to.eql("6e691381791f42a9d6d8d61f2b6d6f1f");
           done();
         });
       });

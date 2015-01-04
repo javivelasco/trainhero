@@ -7,7 +7,8 @@ _.extend(Helper.prototype, {
 		return string.replace(/(\r\n|\n|\r)/gm,"")
          	       .replace(/^\s\s*/, '')
 					       .replace(/\s\s*$/, '')
-								 .replace(/\s/g, ' ');
+								 .replace(/\s/g, ' ')
+								 .replace(/,/g, '.');
 	},
 
 	parseHour: function(hour) {
