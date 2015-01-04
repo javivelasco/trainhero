@@ -14,8 +14,8 @@ _.extend(TrainService.prototype, {
   },
 
   searchAtRenfe: function (fromId, toId, departureDate, cb) {
-    from   = StationsRepository.findOneById(fromId);
-    to     = StationsRepository.findOneById(toId);
+    from = StationsRepository.findOneById(fromId);
+    to   = StationsRepository.findOneById(toId);
     if (!from || !to) return cb([]);
     params = configureSearch(from, to, departureDate);
     performRequest(params, cb);
@@ -53,7 +53,6 @@ var parseResultsPage = function (htmlPage) {
         arrival:     helper.parseHour(helper.trimSpacesAndNewlines(element.find('th,td').eq(2).text())),
         price:       helper.trimSpacesAndNewlines(element.find('th,td').eq(4).find("img[title*='Mesa']").eq(0).parent().text())
       };
-
       train.signature = calculateTrainSignature(train);
       return train;
     }
