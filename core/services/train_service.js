@@ -1,7 +1,6 @@
 var _        = require('lodash'),
     cheerio  = require('cheerio'),
     P        = require('bluebird'),
-    md5      = require('blueimp-md5').md5,
     request  = require('../../config/request'),
     helper   = require('../helper'),
     Train    = require('../models/train'),
@@ -18,11 +17,8 @@ _.extend(TrainService.prototype, {
   searchAtRenfe: function (fromId, toId, departureDate) {
     var from   = stations.findOneById(fromId),
         to     = stations.findOneById(toId);
-        params = null;
-
     if (!from || !to) return P.resolve([]);
-    params = configureSearch(from, to, departureDate);
-    return performRequest(params, fromId, toId, departureDate);
+    return renfeSearch(from, to, departureDate);
   },
 
   findOrCreateTrain: function(name, fromId, toId, date, departure, arrival, signature) {
@@ -38,38 +34,9 @@ _.extend(TrainService.prototype, {
   }
 });
 
-var performRequest = function (params, fromId, toId, date, cb) {
-  var init   = "https://venta.renfe.com/vol/index.do";
-  var search = "https://venta.renfe.com/vol/buscarTren.do";
-
-  return request.get({url: init}).then(function() {
-    return request.post({url: search, form: params})
-  }).then(function(body) {
-    return P.resolve(parseResultsPage(body, fromId, toId, date));
-  });
-};
-
-var parseResultsPage = function (htmlPage, fromId, toId, date) {
-  var $ = cheerio.load(htmlPage), train;
-  var trains = _.map($('.tablaTrenes > tbody > tr:not([id])'), function(val) {
-    var element = $(val);
-    if (element.find('th,td').eq(4).find("img[title*='Mesa']").length > 0) {
-      train = {
-        name:        helper.trimSpacesAndNewlines(element.find('th,td').eq(0).text()),
-        departure:   helper.parseHour(helper.trimSpacesAndNewlines(element.find('th,td').eq(1).text())),
-        arrival:     helper.parseHour(helper.trimSpacesAndNewlines(element.find('th,td').eq(2).text())),
-        price:       helper.trimSpacesAndNewlines(element.find('th,td').eq(4).find("img[title*='Mesa']").eq(0).parent().text())
-      };
-      train.signature = helper.signArguments(train.name, fromId, toId, date, train.departure, train.arrival);
-      return train;
-    }
-  });
-  return _.compact(trains);
-};
-
-var isValidTrainSignature = function(name, fromId, toId, date, departure, arrival, signature) {
-  var validSignature = helper.signArguments(name, fromId, toId, date, departure, arrival);
-  return validSignature === signature;
+var renfeSearch = function(from, to, date) {
+  var params = configureSearch(from, to, date);
+  return performRequest(params, from.id, to.id, date);
 };
 
 var configureSearch = function (from, to, departure) {
@@ -98,6 +65,40 @@ var configureSearch = function (from, to, departure) {
     adultos: 1,
     codPromocional: ""
   };
+};
+
+var performRequest = function (params, fromId, toId, date, cb) {
+  var init   = "https://venta.renfe.com/vol/index.do";
+  var search = "https://venta.renfe.com/vol/buscarTren.do";
+
+  return request.get({uri: init}).then(function(page) {
+    return request.post({uri: search, form: params})
+  }).then(function(body) {
+    return P.resolve(parseResultsPage(body, fromId, toId, date));
+  });
+};
+
+var parseResultsPage = function (htmlPage, fromId, toId, date) {
+  var $ = cheerio.load(htmlPage), train;
+  var trains = _.map($('.tablaTrenes > tbody > tr:not([id])'), function(val) {
+    var element = $(val);
+    if (element.find('th,td').eq(4).find("img[title*='Mesa']").length > 0) {
+      train = {
+        name:        helper.trimSpacesAndNewlines(element.find('th,td').eq(0).text()),
+        departure:   helper.parseHour(helper.trimSpacesAndNewlines(element.find('th,td').eq(1).text())),
+        arrival:     helper.parseHour(helper.trimSpacesAndNewlines(element.find('th,td').eq(2).text())),
+        price:       helper.trimSpacesAndNewlines(element.find('th,td').eq(4).find("img[title*='Mesa']").eq(0).parent().text())
+      };
+      train.signature = helper.signArguments(train.name, fromId, toId, date, train.departure, train.arrival);
+      return train;
+    }
+  });
+  return _.compact(trains);
+};
+
+var isValidTrainSignature = function(name, fromId, toId, date, departure, arrival, signature) {
+  var validSignature = helper.signArguments(name, fromId, toId, date, departure, arrival);
+  return validSignature === signature;
 };
 
 // Export module

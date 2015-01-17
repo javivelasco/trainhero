@@ -6,7 +6,7 @@ var search = {
 		    toId          = req.body.toId,
 		    departureDate = req.body.departureDate;
 
-		trainService.searchAtRenfe(fromId, toId, departureDate, function(trains) {
+		trainService.searchAtRenfe(fromId, toId, departureDate).then(function(trains) {
 			res.render('search/results', { trains: trains });
 		});
 	},
