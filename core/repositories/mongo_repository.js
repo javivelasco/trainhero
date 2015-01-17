@@ -36,6 +36,10 @@ _.extend(MongoRepository.prototype, {
         }
       });
     });
+  },
+
+  clear: function() {
+    return this._collection.removeAsync();
   }
 });
 

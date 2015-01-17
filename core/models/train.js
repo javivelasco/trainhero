@@ -8,6 +8,7 @@ var Train = Model.extend({
   },
 
   constraints: {
+    name:      { presence: true },
     fromId:    { presence: true },
     toId:      { presence: true },
     arrival:   { presence: true, hour: true },
