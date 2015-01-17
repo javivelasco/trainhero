@@ -158,4 +158,16 @@ describe("Mongo Repository", function() {
       });
     });
   });
+
+  describe("#clear", function() {
+    it("clears the collection", function(done) {
+      sinon.stub(repository._collection, 'removeAsync').returns(P.resolve('done'));
+      repository.clear().then(function(result) {
+        expect(result).to.eql('done');
+        expect(repository._collection.removeAsync.called).to.eql(true);
+        done();
+        repository._collection.removeAsync.restore();
+      });
+    });
+  });
 });

@@ -6,7 +6,7 @@ var TrainRepository = MongoRepository.extend({
   model: Train,
 
   findOneByNameAndRoute: function(query) {
-    return this.findOneBy({name: query.name, fromId: query.fromId, toId: query.toId});
+    return this.findOneBy({name: query.name, fromId: query.fromId, toId: query.toId, date: query.date});
   }
 });
 

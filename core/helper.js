@@ -1,4 +1,5 @@
-var _ = require('lodash');
+var _   = require('lodash'),
+    md5 = require("blueimp-md5").md5;
 
 function Helper () {}
 
@@ -13,6 +14,12 @@ _.extend(Helper.prototype, {
 
 	parseHour: function(hour) {
 		return hour.replace(/\./, ':');
+	},
+
+	signArguments: function() {
+		return md5(_.reduce(arguments, function(result, item) {
+			return result + item;
+		}, process.env.MD5SECRET));
 	}
 });
 

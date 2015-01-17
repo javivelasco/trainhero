@@ -21,7 +21,7 @@ describe("TrainRepository", function() {
     it('has a Train model reference', function() {
       expect(repository.model).to.eql(Train);
     });
-  }),
+  });
 
   describe("#findOneByNameAndRoute", function() {
     var searchParams;
@@ -30,7 +30,8 @@ describe("TrainRepository", function() {
       searchParams = {
         name:   dummyTrain.name,
         fromId: dummyTrain.fromId,
-        toId:   dummyTrain.toId
+        toId:   dummyTrain.toId,
+        date:   dummyTrain.date
       };
     });
 

@@ -1,24 +1,40 @@
-var _       = require('lodash'),
-    request = require('request'),
-    cheerio = require('cheerio'),
-    helper  = require('../helper'),
-    md5     = require("blueimp-md5").md5,
-    Train   = require('../models/train'),
-    StationsRepository = require('../repositories/station_repository');
+var _        = require('lodash'),
+    request  = require('request'),
+    cheerio  = require('cheerio'),
+    helper   = require('../helper'),
+    P        = require('bluebird'),
+    md5      = require('blueimp-md5').md5,
+    Train    = require('../models/train'),
+    stations = require('../repositories/station_repository'),
+    trains   = require('../repositories/train_repository');
 
 function TrainService () {}
 
 _.extend(TrainService.prototype, {
   allStations: function() {
-    return StationsRepository.findAll();
+    return stations.findAll();
   },
 
   searchAtRenfe: function (fromId, toId, departureDate, cb) {
-    from = StationsRepository.findOneById(fromId);
-    to   = StationsRepository.findOneById(toId);
+    var from = stations.findOneById(fromId),
+        to   = stations.findOneById(toId);
+
     if (!from || !to) return cb([]);
-    params = configureSearch(from, to, departureDate);
-    performRequest(params, cb);
+    var params = configureSearch(from, to, departureDate);
+    performRequest(params, fromId, toId, departureDate, cb);
+  },
+
+  findOrCreateTrain: function(name, fromId, toId, date, departure, arrival, signature) {
+    if (!isValidTrainSignature(name, fromId, toId, date, departure, arrival, signature)) {
+      return P.reject({signature: "Invalid signature for train data"});
+    }
+
+    return trains.findOneByNameAndRoute({name: name, fromId: fromId, toId: toId, date: date}).then(function(result) {
+      if (result) return P.resolve(result);
+      var train = new Train({name: name, fromId: fromId, toId: toId, date: date, departure: departure, arrival: arrival});
+      if (!train.isValid()) return P.reject(train.errors);
+      return trains.put(train);
+    });
   }
 });
 
@@ -27,14 +43,14 @@ request = request.defaults({
   headers: { 'User-Agent': 'Chrome/38.0.2125.122' }
 });
 
-var performRequest = function (params, cb) {
+var performRequest = function (params, fromId, toId, date, cb) {
   var init   = "https://venta.renfe.com/vol/index.do";
   var search = "https://venta.renfe.com/vol/buscarTren.do";
 
   request.get({url: init}, function (error, response, html) {
     request.post({url: search, form: params}, function (error, response, html) {
       if (!error) {
-        cb(parseResultsPage(html));
+        cb(parseResultsPage(html, fromId, toId, date));
       } else {
         throw new Error("Error connecting with Renfe");
       }
@@ -42,7 +58,7 @@ var performRequest = function (params, cb) {
   });
 };
 
-var parseResultsPage = function (htmlPage) {
+var parseResultsPage = function (htmlPage, fromId, toId, date) {
   var $ = cheerio.load(htmlPage), train;
   var trains = _.map($('.tablaTrenes > tbody > tr:not([id])'), function(val) {
     var element = $(val);
@@ -53,15 +69,16 @@ var parseResultsPage = function (htmlPage) {
         arrival:     helper.parseHour(helper.trimSpacesAndNewlines(element.find('th,td').eq(2).text())),
         price:       helper.trimSpacesAndNewlines(element.find('th,td').eq(4).find("img[title*='Mesa']").eq(0).parent().text())
       };
-      train.signature = calculateTrainSignature(train);
+      train.signature = helper.signArguments(train.name, fromId, toId, date, train.departure, train.arrival);
       return train;
     }
   });
   return _.compact(trains);
 };
 
-var calculateTrainSignature = function(train) {
-  return md5(process.env.MD5SECRET + '-' + train.name + '-' + train.departure + '-' + train.arrival + '-' + train.price);
+var isValidTrainSignature = function(name, fromId, toId, date, departure, arrival, signature) {
+  var validSignature = helper.signArguments(name, fromId, toId, date, departure, arrival);
+  return validSignature === signature;
 };
 
 var configureSearch = function (from, to, departure) {
