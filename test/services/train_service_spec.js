@@ -2,54 +2,49 @@ var expect   = require('chai').expect,
     dotenv   = require('dotenv').load(),
     fs       = require('fs'),
     sinon    = require('sinon'),
-    request  = require('request'),
     P        = require('bluebird'),
+    request  = require('../../config/request'),
     actions  = require('../actions'),
     helper   = require('../../core/helper'),
     stations = require('../../core/repositories/station_repository'),
-    trains   = require('../../core/repositories/train_repository');
+    trains   = require('../../core/repositories/train_repository'),
+    service  = require('../../core/services/train_service');
 
 describe('TrainService', function() {
   describe('#searchAtRenfe', function() {
-    var renfeSearchPage, requestAgent, postRenfe,
-        service, from, to, date;
+    var renfeSearchPage, from, to, date;
 
     before(function() {
-      // Stub external requests to Renfe website
       renfeSearchPage = fs.readFileSync(__dirname + "/../fixtures/renfe_search_results.html", 'UTF8');
-      requestAgent = request.defaults({jar: true, headers: { 'User-Agent': 'Chrome/38.0.2125.122' }});
-      sinon.stub(request, 'defaults').returns(requestAgent);
-      sinon.stub(requestAgent, 'get').callsArgWith(1, null, null, "Renfe main page content");
-      postRenfe = sinon.stub(requestAgent, 'post');
-      service = require('../../core/services/train_service');
-
-      // Stub repositories responses for station codes
+      sinon.stub(request, 'get').returns(P.resolve("Renfe main page content"));
       from = actions.newStation({id: 1, code: '1234'});
       to   = actions.newStation({id: 2, code: '5678'});
-      date = '2014-12-18';
       findStation = sinon.stub(stations, 'findOneById');
       findStation.withArgs(from.id).returns(from);
       findStation.withArgs(to.id).returns(to);
+      date = '2014-12-18';
     });
 
     after(function() {
-      request.defaults.restore();
-      requestAgent.get.restore();
-      requestAgent.post.restore();
+      request.get.restore();
       stations.findOneById.restore();
     });
 
+    afterEach(function() {
+      request.post.restore();
+    });
+
     it("sets an array of trains in the callback when Renfe responds", function(done) {
-      postRenfe.callsArgWith(1, null, null, renfeSearchPage);
-      service.searchAtRenfe(from.id, to.id, date, function(trains) {
+      sinon.stub(request, 'post').returns(P.resolve(renfeSearchPage));
+      service.searchAtRenfe(from.id, to.id, date).then(function(trains) {
         expect(trains.length).to.eql(3);
         done();
       });
     });
 
     it("parses the trains from the request properly when Renfe responds", function(done) {
-      postRenfe.callsArgWith(1, null, null, renfeSearchPage);
-      service.searchAtRenfe(from.id, to.id, date, function(trains) {
+      sinon.stub(request, 'post').returns(P.resolve(renfeSearchPage));
+      service.searchAtRenfe(from.id, to.id, date).then(function(trains) {
         expect(trains[0].name).to.eql("AV City 02262");
         expect(trains[0].departure).to.eql("06:20");
         expect(trains[0].arrival).to.eql("08:27");
@@ -60,17 +55,19 @@ describe('TrainService', function() {
     });
 
     it("gives empty array when the stations doesn't exist", function(done) {
-      service.searchAtRenfe(20, 30, date, function(trains) {
+      sinon.stub(request, 'post').returns(P.resolve(renfeSearchPage));
+      service.searchAtRenfe(20, 30, date).then(function(trains) {
         expect(trains.length).to.eql(0);
         done();
       });
     });
 
-    it("throws an error when renfe does not respond", function() {
-      postRenfe.callsArgWith(1, {}, null, null);
-      expect(service.searchAtRenfe.bind(service.searchAtRenfe,
-        from.id, to.id, date, function(trains) {}
-      )).to.throw("Error connecting with Renfe");
+    it("throws an error when renfe does not respond", function(done) {
+      sinon.stub(request, 'post').returns(P.reject("Some error"));
+      service.searchAtRenfe(from.id, to.id, date).catch(function(err) {
+        expect(err).to.eql("Some error");
+        done();
+      });
     });
   });
 

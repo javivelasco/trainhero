@@ -1,9 +1,9 @@
 var _        = require('lodash'),
-    request  = require('request'),
     cheerio  = require('cheerio'),
-    helper   = require('../helper'),
     P        = require('bluebird'),
     md5      = require('blueimp-md5').md5,
+    request  = require('../../config/request'),
+    helper   = require('../helper'),
     Train    = require('../models/train'),
     stations = require('../repositories/station_repository'),
     trains   = require('../repositories/train_repository');
@@ -15,19 +15,19 @@ _.extend(TrainService.prototype, {
     return stations.findAll();
   },
 
-  searchAtRenfe: function (fromId, toId, departureDate, cb) {
-    var from = stations.findOneById(fromId),
-        to   = stations.findOneById(toId);
+  searchAtRenfe: function (fromId, toId, departureDate) {
+    var from   = stations.findOneById(fromId),
+        to     = stations.findOneById(toId);
+        params = null;
 
-    if (!from || !to) return cb([]);
-    var params = configureSearch(from, to, departureDate);
-    performRequest(params, fromId, toId, departureDate, cb);
+    if (!from || !to) return P.resolve([]);
+    params = configureSearch(from, to, departureDate);
+    return performRequest(params, fromId, toId, departureDate);
   },
 
   findOrCreateTrain: function(name, fromId, toId, date, departure, arrival, signature) {
-    if (!isValidTrainSignature(name, fromId, toId, date, departure, arrival, signature)) {
+    if (!isValidTrainSignature(name, fromId, toId, date, departure, arrival, signature))
       return P.reject({signature: "Invalid signature for train data"});
-    }
 
     return trains.findOneByNameAndRoute({name: name, fromId: fromId, toId: toId, date: date}).then(function(result) {
       if (result) return P.resolve(result);
@@ -38,23 +38,14 @@ _.extend(TrainService.prototype, {
   }
 });
 
-request = request.defaults({
-  jar: true,
-  headers: { 'User-Agent': 'Chrome/38.0.2125.122' }
-});
-
 var performRequest = function (params, fromId, toId, date, cb) {
   var init   = "https://venta.renfe.com/vol/index.do";
   var search = "https://venta.renfe.com/vol/buscarTren.do";
 
-  request.get({url: init}, function (error, response, html) {
-    request.post({url: search, form: params}, function (error, response, html) {
-      if (!error) {
-        cb(parseResultsPage(html, fromId, toId, date));
-      } else {
-        throw new Error("Error connecting with Renfe");
-      }
-    });
+  return request.get({url: init}).then(function() {
+    return request.post({url: search, form: params})
+  }).then(function(body) {
+    return P.resolve(parseResultsPage(body, fromId, toId, date));
   });
 };
 
