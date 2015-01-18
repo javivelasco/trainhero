@@ -7,6 +7,7 @@ gulp.task('mocha', function() {
   process.env.NODE_ENV = 'test';
   return gulp.src([
       'test/models/**/*.js',
+      'test/actions/**/*.js',
       'test/repositories/**/*.js',
       'test/services/**/*.js'], { read: false }
     ).pipe(mocha({
@@ -25,6 +26,7 @@ gulp.task('coverage', function (cb) {
     .pipe(istanbul())
     .on('finish', function () {
       gulp.src([
+          'test/actions/**/*.js',
           'test/models/**/*.js',
           'test/repositories/**/*.js',
           'test/services/**/*.js'])
@@ -38,6 +40,7 @@ gulp.task('lint', function() {
   return gulp.src([
     'core/**/*.js',
     'test/models/**/*.js',
+    'test/actions/**/*.js',
     'test/repositories/**/*.js',
     'test/services/**/*.js'])
   .pipe(jshint())
