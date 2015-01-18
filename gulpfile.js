@@ -22,7 +22,7 @@ gulp.task('watch-mocha', function() {
 
 gulp.task('istanbul', function (cb) {
   process.env.NODE_ENV = 'test';
-  gulp.src(['core/**/*.js', 'main.js'])
+  gulp.src(['core/**/*.js'])
     .pipe(istanbul())
     .on('finish', function () {
       return gulp.src([
