@@ -8,6 +8,9 @@ var search = {
 
 		trainService.searchAtRenfe(fromId, toId, departureDate).then(function(trains) {
 			res.render('search/results', { trains: trains });
+		}).catch(function(err) {
+			console.log(err);
+			res.render('search/error', {err: err});
 		});
 	},
 

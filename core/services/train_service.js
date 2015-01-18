@@ -71,8 +71,8 @@ var performRequest = function (params, fromId, toId, date, cb) {
   var init   = "https://venta.renfe.com/vol/index.do";
   var search = "https://venta.renfe.com/vol/buscarTren.do";
 
-  return request.get({uri: init}).then(function(page) {
-    return request.post({uri: search, form: params});
+  return request.get({uri: init, timeout: 20000}).then(function(page) {
+    return request.post({uri: search, form: params, timeout: 20000});
   }).then(function(body) {
     return P.resolve(parseResultsPage(body, fromId, toId, date));
   });
