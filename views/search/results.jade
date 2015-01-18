@@ -1,11 +1,19 @@
 extend ../layout
 block content
-  ul
+  header
+    h2 Available trains from #{from.name} to #{to.name}
+    p  You are logged in as #{user.name}
+  
+  ul(style="list-style: none;")
     each train in trains
-      li
-        ul
-          li Tren #{train.name}
-          li Salida #{train.departure}
-          li Llegada #{train.arrival}
-          li Price #{train.price}
-          li Signature #{train.signature}
+      li      
+        form(action="/bookings", method="POST")
+          input(type="text", name="train[name]",      value="#{train.name}")
+          input(type="text", name="train[fromId]",    value="#{from.id}")
+          input(type="text", name="train[toId]",      value="#{to.id}")
+          input(type="text", name="train[price]",     value="#{train.price}€")
+          input(type="text", name="train[date]",      value="02/02/2015")
+          input(type="text", name="train[departure]", value="#{train.departure}")
+          input(type="text", name="train[arrival]",   value="#{train.arrival}")
+          input(type="text", name="train[signature]", value="#{train.signature}")
+          button(type="submit") Book!

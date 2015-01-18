@@ -1,6 +1,7 @@
 var router         = require('express').Router(),
     authentication = require('./routes/authentication'),
-    search         = require('./routes/search');
+    search         = require('./routes/search'),
+    booking        = require('./routes/booking');
 
 router.get('/signup', authentication.signupPage);
 router.post('/signup', authentication.emailSignup);
@@ -11,6 +12,7 @@ router.get('/auth/facebook/callback', authentication.facebookCallback);
 router.get('/logout', authentication.logout);
 router.get('/search', isLoggedIn, search.searchPage);
 router.post('/search', isLoggedIn, search.search);
+router.post('/bookings', isLoggedIn, booking.create);
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated())
