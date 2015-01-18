@@ -49,6 +49,7 @@ dummies.dummyAuthorization = function() {
 
 dummies.dummyBooking = function() {
   return {
+    id:      1,
     userId:  dummies.dummyUser().id,
     trainId: dummies.dummyTrain().id
   }
