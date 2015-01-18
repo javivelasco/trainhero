@@ -72,7 +72,7 @@ var performRequest = function (params, fromId, toId, date, cb) {
   var search = "https://venta.renfe.com/vol/buscarTren.do";
 
   return request.get({uri: init}).then(function(page) {
-    return request.post({uri: search, form: params})
+    return request.post({uri: search, form: params});
   }).then(function(body) {
     return P.resolve(parseResultsPage(body, fromId, toId, date));
   });

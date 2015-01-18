@@ -3,6 +3,7 @@ var _       = require("lodash"),
     Station = require("../core/models/station"),
     Train   = require("../core/models/train"),
     User    = require("../core/models/user"),
+    Booking = require("../core/models/booking"),
     Authorization = require("../core/models/authorization");
 
 var Actions = function() {};
@@ -22,6 +23,10 @@ _.extend(Actions.prototype, {
 
   newAuthorization: function(args) {
     return new Authorization(_.extend(dummies.dummyAuthorization(), args));
+  },
+
+  newBooking: function(args) {
+    return new Booking(_.extend(dummies.dummyBooking(), args));
   }
 });
 

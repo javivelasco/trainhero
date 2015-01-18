@@ -47,4 +47,11 @@ dummies.dummyAuthorization = function() {
   }
 };
 
+dummies.dummyBooking = function() {
+  return {
+    userId:  dummies.dummyUser().id,
+    trainId: dummies.dummyTrain().id
+  }
+};
+
 module.exports = dummies;
