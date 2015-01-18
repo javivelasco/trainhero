@@ -7,6 +7,7 @@ var dotenv       = require('dotenv').load(),
     morgan       = require('morgan'),
     session      = require('express-session'),
     passport     = require('./config/passport'),
+    redisStore   = require('./config/redis-store'),
     routes       = require('./routes');
 
 var app  = express();
@@ -23,7 +24,7 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true}));
+app.use(session({secret: process.env.SESSION_SECRET, resave: false, store:  redisStore, saveUninitialized: true}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(__dirname + '/public'))
