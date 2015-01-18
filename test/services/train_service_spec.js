@@ -11,7 +11,7 @@ var expect   = require('chai').expect,
     service  = require('../../core/services/train_service');
 
 describe('TrainService', function() {
-  describe('#searchAtRenfe', function() {
+  describe('#search', function() {
     var renfeSearchPage, from, to, date;
 
     before(function() {
@@ -19,15 +19,11 @@ describe('TrainService', function() {
       sinon.stub(request, 'get').returns(P.resolve("Renfe main page content"));
       from = actions.newStation({id: 1, code: '1234'});
       to   = actions.newStation({id: 2, code: '5678'});
-      findStation = sinon.stub(stations, 'findOneById');
-      findStation.withArgs(from.id).returns(from);
-      findStation.withArgs(to.id).returns(to);
       date = '2014-12-18';
     });
 
     after(function() {
       request.get.restore();
-      stations.findOneById.restore();
     });
 
     afterEach(function() {
@@ -36,7 +32,7 @@ describe('TrainService', function() {
 
     it("sets an array of trains in the callback when Renfe responds", function(done) {
       sinon.stub(request, 'post').returns(P.resolve(renfeSearchPage));
-      service.searchAtRenfe(from.id, to.id, date).then(function(trains) {
+      service.search(from, to, date).then(function(trains) {
         expect(trains.length).to.eql(3);
         done();
       });
@@ -44,7 +40,7 @@ describe('TrainService', function() {
 
     it("parses the trains from the request properly when Renfe responds", function(done) {
       sinon.stub(request, 'post').returns(P.resolve(renfeSearchPage));
-      service.searchAtRenfe(from.id, to.id, date).then(function(trains) {
+      service.search(from, to, date).then(function(trains) {
         expect(trains[0].name).to.eql("AV City 02262");
         expect(trains[0].departure).to.eql("06:20");
         expect(trains[0].arrival).to.eql("08:27");
@@ -54,17 +50,9 @@ describe('TrainService', function() {
       });
     });
 
-    it("gives empty array when the stations doesn't exist", function(done) {
-      sinon.stub(request, 'post').returns(P.resolve(renfeSearchPage));
-      service.searchAtRenfe(20, 30, date).then(function(trains) {
-        expect(trains.length).to.eql(0);
-        done();
-      });
-    });
-
     it("throws an error when renfe does not respond", function(done) {
       sinon.stub(request, 'post').returns(P.reject("Some error"));
-      service.searchAtRenfe(from.id, to.id, date).catch(function(err) {
+      service.search(from.id, to.id, date).catch(function(err) {
         expect(err).to.eql("Some error");
         done();
       });

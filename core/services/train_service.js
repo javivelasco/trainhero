@@ -14,11 +14,9 @@ _.extend(TrainService.prototype, {
     return stations.findAll();
   },
 
-  searchAtRenfe: function (fromId, toId, departureDate) {
-    var from   = stations.findOneById(fromId),
-        to     = stations.findOneById(toId);
-    if (!from || !to) return P.resolve([]);
-    return renfeSearch(from, to, departureDate);
+  search: function (from, to, departureDate) {
+    var params = configureSearch(from, to, departureDate);
+    return performRequest(params, from.id, to.id, departureDate);
   },
 
   findOrCreateTrain: function(name, fromId, toId, date, departure, arrival, signature) {
@@ -33,11 +31,6 @@ _.extend(TrainService.prototype, {
     });
   }
 });
-
-var renfeSearch = function(from, to, date) {
-  var params = configureSearch(from, to, date);
-  return performRequest(params, from.id, to.id, date);
-};
 
 var configureSearch = function (from, to, departure) {
   return {
