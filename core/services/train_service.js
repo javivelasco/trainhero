@@ -1,6 +1,7 @@
 var _        = require('lodash'),
     cheerio  = require('cheerio'),
     P        = require('bluebird'),
+    moment   = require('moment'),
     request  = require('../../config/request'),
     helper   = require('../helper'),
     Train    = require('../models/train'),
@@ -19,13 +20,14 @@ _.extend(TrainService.prototype, {
     return performRequest(params, from.id, to.id, departureDate);
   },
 
-  findOrCreateTrain: function(name, fromId, toId, date, departure, arrival, signature) {
-    if (!isValidTrainSignature(name, fromId, toId, date, departure, arrival, signature))
+  findOrCreateTrain: function(name, fromId, toId, dateString, departure, arrival, signature) {
+    if (!isValidTrainSignature(name, fromId, toId, dateString, departure, arrival, signature))
       return P.reject({signature: "Invalid signature for train data"});
 
-    return trains.findOneByNameAndRoute({name: name, fromId: fromId, toId: toId, date: date}).then(function(result) {
+    var trainDate = moment(dateString, "DD/MM/YYYY").toDate();
+    return trains.findOneByNameAndRoute({name: name, fromId: fromId, toId: toId, date: trainDate}).then(function(result) {
       if (result) return P.resolve(result);
-      var train = new Train({name: name, fromId: fromId, toId: toId, date: date, departure: departure, arrival: arrival});
+      var train = new Train({name: name, fromId: fromId, toId: toId, date: trainDate, departure: departure, arrival: arrival});
       if (!train.isValid()) return P.reject(train.errors);
       return trains.put(train);
     });
