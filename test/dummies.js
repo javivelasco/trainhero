@@ -20,7 +20,7 @@ dummies.dummyTrain = function() {
   return {
     id:        1,
     name:      'AVE Hobbiton',
-    date:      '2013-12-20',
+    date:      new Date('2013/12/20'),
     departure: '18:30',
     arrival:   '20:34',
     fromId:    dummies.dummyStation().id,

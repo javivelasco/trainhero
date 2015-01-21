@@ -39,7 +39,7 @@ describe("models/train.js", function() {
     });
 
     it("is not valid with not date object date", function() {
-      var train = actions.newTrain({date: undefined});
+      var train = actions.newTrain({date: "12/02/14"});
       expect(train.isValid()).to.eql(false);
     });
 
