@@ -1,4 +1,5 @@
 var gulp     = require('gulp'),
+    tap      = require('gulp-tap'),
     mocha    = require('gulp-mocha'),
     istanbul = require('gulp-istanbul'),
     jshint   = require('gulp-jshint');
@@ -20,24 +21,29 @@ gulp.task('watch-mocha', function() {
   gulp.watch(['core/**', 'test/**'], ['mocha']);
 });
 
-gulp.task('istanbul', function (cb) {
+gulp.task('cover', function (cb) {
   process.env.NODE_ENV = 'test';
   gulp.src(['core/**/*.js'])
     .pipe(istanbul())
-    .on('finish', function () {
-      return gulp.src([
+    .pipe(tap(function(f) {
+      // wait until it's done
+    }))
+    .on('end', function () {
+      gulp.src([
           'test/models/**/*.js',
           'test/repositories/**/*.js',
           'test/services/**/*.js',
           'test/actions/**/*.js'])
         .pipe(mocha())
-        .pipe(istanbul.writeReports())
+        .pipe(istanbul.writeReports({
+          reporters: [ 'lcov' ],
+        }))
         .on('end', cb);
     });
 });
 
 gulp.task('lint', function() {
-  return gulp.src([
+  gulp.src([
     'core/**/*.js',
     'test/models/**/*.js',
     'test/actions/**/*.js',
