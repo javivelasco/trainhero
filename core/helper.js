@@ -1,5 +1,6 @@
-var _   = require('lodash'),
-    md5 = require("blueimp-md5").md5;
+var _      = require('lodash'),
+    moment = require('moment'),
+    md5    = require("blueimp-md5").md5;
 
 function Helper () {}
 
@@ -20,7 +21,13 @@ _.extend(Helper.prototype, {
 		return md5(_.reduce(arguments, function(result, item) {
 			return result + item;
 		}, process.env.MD5SECRET));
-	}
+	},
+
+  renfeDatetimeToDate: function(date, hour) {
+    var datetime = moment(date + ' ' + hour, "DD/MM/YYYY HH:mm");
+    if (!datetime.isValid()) return false
+    return datetime.toDate()
+  }
 });
 
 module.exports = new Helper();

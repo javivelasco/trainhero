@@ -22,6 +22,7 @@ var search = {
         user:   req.user,
 				from:   results.from,
 				to:     results.to,
+        date:   date,
 				trains: results.trains,
 			});
 		}).catch(function(err) {

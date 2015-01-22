@@ -1,4 +1,5 @@
-var dummies = {}
+var helper  = require('../core/helper'),
+    dummies = {}
 
 dummies.dummyStation = function() {
   return {
@@ -16,13 +17,22 @@ dummies.dummyStation2 = function() {
   };
 };
 
+dummies.dummyTrainTimes = function() {
+  return {
+    departureDateString: '20/12/2013',
+    arrivalDateString:   '20/12/2013',
+    departureHourString: '11:35',
+    arrivalHourString:   '14:22'
+  }
+}
+
 dummies.dummyTrain = function() {
+  var t = dummies.dummyTrainTimes();
   return {
     id:        1,
     name:      'AVE Hobbiton',
-    date:      new Date('2013/12/20'),
-    departure: '18:30',
-    arrival:   '20:34',
+    departure: helper.renfeDatetimeToDate(t.departureDateString, t.departureHourString),
+    arrival:   helper.renfeDatetimeToDate(t.arrivalDateString,   t.arrivalHourString),
     fromId:    dummies.dummyStation().id,
     toId:      dummies.dummyStation2().id
   };

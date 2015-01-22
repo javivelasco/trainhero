@@ -20,14 +20,16 @@ _.extend(TrainService.prototype, {
     return performRequest(params, from.id, to.id, departureDate);
   },
 
-  findOrCreateTrain: function(name, fromId, toId, dateString, departure, arrival, signature) {
-    if (!isValidTrainSignature(name, fromId, toId, dateString, departure, arrival, signature))
+  findOrCreateTrain: function(name, fromId, toId, date, departure, arrival, signature) {
+    if (!isValidTrainSignature(name, fromId, toId, date, departure, arrival, signature))
       return P.reject({signature: "Invalid signature for train data"});
 
-    var trainDate = moment(dateString, "DD/MM/YYYY").toDate();
-    return trains.findOneByNameAndRoute({name: name, fromId: fromId, toId: toId, date: trainDate}).then(function(result) {
+    var departureDatetime = helper.renfeDatetimeToDate(date, departure),
+        arrivalDatetime   = helper.renfeDatetimeToDate(date, arrival);
+
+    return trains.findOneByNameRouteAndDeparture({name: name, fromId: fromId, toId: toId, departure: departureDatetime}).then(function(result) {
       if (result) return P.resolve(result);
-      var train = new Train({name: name, fromId: fromId, toId: toId, date: trainDate, departure: departure, arrival: arrival});
+      var train = new Train({name: name, fromId: fromId, toId: toId, departure: departureDatetime, arrival: arrivalDatetime});
       if (!train.isValid()) return P.reject(train.errors);
       return trains.put(train);
     });

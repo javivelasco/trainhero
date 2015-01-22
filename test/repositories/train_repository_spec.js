@@ -23,15 +23,15 @@ describe("TrainRepository", function() {
     });
   });
 
-  describe("#findOneByNameAndRoute", function() {
+  describe("#findOneByNameRouteAndDeparture", function() {
     var searchParams;
 
     before(function() {
       searchParams = {
-        name:   dummyTrain.name,
-        fromId: dummyTrain.fromId,
-        toId:   dummyTrain.toId,
-        date:   dummyTrain.date
+        name:      dummyTrain.name,
+        fromId:    dummyTrain.fromId,
+        toId:      dummyTrain.toId,
+        departure: dummyTrain.departure
       };
     });
 
@@ -41,7 +41,7 @@ describe("TrainRepository", function() {
 
     it("finds the train if it exists", function(done) {
       sinon.stub(repository, 'findOneBy').withArgs(searchParams).returns(P.resolve(dummyTrain));
-      repository.findOneByNameAndRoute(searchParams).then(function(train) {
+      repository.findOneByNameRouteAndDeparture(searchParams).then(function(train) {
         expect(train.toJSON()).to.eql(dummyTrain.toJSON());
         done();
       }).catch(function(err) {
@@ -51,7 +51,7 @@ describe("TrainRepository", function() {
 
     it("resolves the promise with null if train is not found", function(done) {
       sinon.stub(repository, 'findOneBy').withArgs(searchParams).returns(P.resolve(null));
-      repository.findOneByNameAndRoute(searchParams).then(function(train) {
+      repository.findOneByNameRouteAndDeparture(searchParams).then(function(train) {
         expect(train).to.eql(null);
         done();
       }).catch(function(err) {

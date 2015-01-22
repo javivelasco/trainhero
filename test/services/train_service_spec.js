@@ -6,27 +6,22 @@ var expect   = require('chai').expect,
     moment   = require('moment'),
     request  = require('../../config/request'),
     actions  = require('../actions'),
+    dummies  = require('../dummies'),
     helper   = require('../../core/helper'),
     stations = require('../../core/repositories/station_repository'),
     trains   = require('../../core/repositories/train_repository'),
     service  = require('../../core/services/train_service');
 
 describe('TrainService', function() {
-  var dateString, date;
-
-  before(function() {
-    dateString = '18/12/2015';
-    date = moment(dateString, 'DD/MM/YYYY').toDate();
-  })
-
   describe('#search', function() {
-    var renfeSearchPage, from, to;
+    var renfeSearchPage, from, to, date;
 
     before(function() {
       renfeSearchPage = fs.readFileSync(__dirname + "/../fixtures/renfe_search_results.html", 'UTF8');
       sinon.stub(request, 'get').returns(P.resolve("Renfe main page content"));
       from = actions.newStation({id: 1, code: '1234'});
       to   = actions.newStation({id: 2, code: '5678'});
+      date = '12/03/2015'
     });
 
     after(function() {
@@ -39,7 +34,7 @@ describe('TrainService', function() {
 
     it("sets an array of trains in the callback when Renfe responds", function(done) {
       sinon.stub(request, 'post').returns(P.resolve(renfeSearchPage));
-      service.search(from, to, dateString).then(function(trains) {
+      service.search(from, to, date).then(function(trains) {
         expect(trains.length).to.eql(3);
         done();
       }).catch(function(err) {
@@ -49,19 +44,19 @@ describe('TrainService', function() {
 
     it("parses the trains from the request properly when Renfe responds", function(done) {
       sinon.stub(request, 'post').returns(P.resolve(renfeSearchPage));
-      service.search(from, to, dateString).then(function(trains) {
+      service.search(from, to, date).then(function(trains) {
         expect(trains[0].name).to.eql("AV City 02262");
         expect(trains[0].departure).to.eql("06:20");
         expect(trains[0].arrival).to.eql("08:27");
         expect(trains[0].price).to.eql("18.80");
-        expect(trains[0].signature).to.eql("cd4b2e1dd1f8ef163e81562bae343b27");
+        expect(trains[0].signature).to.eql("a25b5900bb7a466ccd479455ad517b3c");
         done();
       });
     });
 
     it("throws an error when renfe does not respond", function(done) {
       sinon.stub(request, 'post').returns(P.reject("Some error"));
-      service.search(from.id, to.id, dateString).catch(function(err) {
+      service.search(from.id, to.id, date).catch(function(err) {
         expect(err).to.eql("Some error");
         done();
       });
@@ -79,14 +74,14 @@ describe('TrainService', function() {
   });
 
   describe('#findOrCreateTrain', function() {
-    var dummyTrain, wrongTrain, savedTrain, signature;
+    var dummyTrain, dummyTrainTimes, wrongTrain, savedTrain, signature;
 
     before(function() {
-      service    = require('../../core/services/train_service');
-      dummyTrain = actions.newTrain();
-      wrongTrain = actions.newTrain({name: null});
-      savedTrain = actions.newTrain({id: 4321});
-      signature  = helper.signArguments(dummyTrain.name, dummyTrain.fromId, dummyTrain.toId, dateString, dummyTrain.departure, dummyTrain.arrival);
+      service         = require('../../core/services/train_service');
+      dummyTrain      = actions.newTrain();
+      dummyTrainTimes = dummies.dummyTrainTimes();
+      savedTrain      = actions.newTrain({id: 4321});
+      signature       = helper.signArguments(dummyTrain.name, dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString);
     });
 
     beforeEach(function() {
@@ -95,12 +90,12 @@ describe('TrainService', function() {
 
     afterEach(function() {
       trains.put.restore();
-      trains.findOneByNameAndRoute.restore();
+      trains.findOneByNameRouteAndDeparture.restore();
     });
 
     it("creates a train if signature is valid and did not exist", function(done) {
-      sinon.stub(trains, "findOneByNameAndRoute").withArgs().returns(P.resolve(null));
-      service.findOrCreateTrain(dummyTrain.name, dummyTrain.fromId, dummyTrain.toId, dateString, dummyTrain.departure, dummyTrain.arrival, signature).then(function(train) {
+      sinon.stub(trains, "findOneByNameRouteAndDeparture").returns(P.resolve(null));
+      service.findOrCreateTrain(dummyTrain.name, dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, signature).then(function(train) {
         expect(train.toJSON()).to.eql(savedTrain.toJSON());
         done();
       }).catch(function(err) {
@@ -109,10 +104,9 @@ describe('TrainService', function() {
     });
 
     it("does not create a train if signature is not valid", function(done) {
-      sinon.stub(trains, "findOneByNameAndRoute").withArgs().returns(P.resolve(null));
-      service.findOrCreateTrain("Quahog", dummyTrain.fromId, dummyTrain.toId, dateString, dummyTrain.departure, dummyTrain.arrival, signature).catch(function(err) {
+      sinon.stub(trains, "findOneByNameRouteAndDeparture").withArgs().returns(P.resolve(null));
+      service.findOrCreateTrain("Quahog", dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, signature).catch(function(err) {
         expect(err).to.eql({signature: "Invalid signature for train data"});
-        expect(err).not.eql(wrongTrain.errors);
         done();
       });
     });
@@ -120,8 +114,8 @@ describe('TrainService', function() {
     it("does not create a train if data is not valid", function(done) {
       var wrongTrain = actions.newTrain({name: undefined});
       var wrongSignature = helper.signArguments(undefined, dummyTrain.fromId, dummyTrain.toId, dummyTrain.date, dummyTrain.departure, dummyTrain.arrival);
-      sinon.stub(trains, "findOneByNameAndRoute").withArgs().returns(P.resolve(null));
-      service.findOrCreateTrain(undefined, dummyTrain.fromId, dummyTrain.toId, dateString, dummyTrain.departure, dummyTrain.arrival, wrongSignature).then(function(train) {
+      sinon.stub(trains, "findOneByNameRouteAndDeparture").withArgs().returns(P.resolve(null));
+      service.findOrCreateTrain(undefined, dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, wrongSignature).then(function(train) {
         done(train);
       }).catch(function (err) {
         expect(trains.put.called).to.eql(false);
@@ -130,8 +124,8 @@ describe('TrainService', function() {
     });
 
     it("does not create a train if it existed", function(done) {
-      sinon.stub(trains, "findOneByNameAndRoute").withArgs({name: dummyTrain.name, fromId: dummyTrain.fromId, toId: dummyTrain.toId, date: date}).returns(P.resolve(dummyTrain));
-      service.findOrCreateTrain(dummyTrain.name, dummyTrain.fromId, dummyTrain.toId, dateString, dummyTrain.departure, dummyTrain.arrival, signature).then(function(train) {
+      sinon.stub(trains, "findOneByNameRouteAndDeparture").withArgs({name: dummyTrain.name, fromId: dummyTrain.fromId, toId: dummyTrain.toId, departure: dummyTrain.departure}).returns(P.resolve(dummyTrain));
+      service.findOrCreateTrain(dummyTrain.name, dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, signature).then(function(train) {
         expect(trains.put.called).to.eql(false);
         expect(train).to.eql(dummyTrain);
         done();

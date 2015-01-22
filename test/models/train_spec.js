@@ -38,13 +38,13 @@ describe("models/train.js", function() {
       expect(train.isValid()).to.eql(false);
     });
 
-    it("is not valid with not date object date", function() {
-      var train = actions.newTrain({date: "12/02/14"});
+    it("is not valid with invalid arrival hour", function() {
+      var train = actions.newTrain({arrival: '190'});
       expect(train.isValid()).to.eql(false);
     });
 
-    it("is not valid with invalid arrival hour", function() {
-      var train = actions.newTrain({arrival: '190'});
+    it("is not valid with not date arrival hour", function() {
+      var train = actions.newTrain({arrival: '19:30'});
       expect(train.isValid()).to.eql(false);
     });
 
@@ -52,6 +52,11 @@ describe("models/train.js", function() {
       var train = actions.newTrain({departure: '28:30'});
       expect(train.isValid()).to.eql(false);
       train = actions.newTrain({departure: '12:99'});
+      expect(train.isValid()).to.eql(false);
+    });
+
+    it("is not valid with not date departure hour", function() {
+      var train = actions.newTrain({arrival: '19:30'});
       expect(train.isValid()).to.eql(false);
     });
   });

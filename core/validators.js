@@ -21,7 +21,7 @@ validate.validators.hour = function(value, options, key, attributes) {
 	}
 };
 
-validate.validators.date = function(value, options, key, attributes) {
+validate.validators.datetime = function(value, options, key, attributes) {
 	if (!(value instanceof Date)) return "Invalid Date object";
 }
 
