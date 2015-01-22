@@ -34,6 +34,6 @@ describe('models/booking', function() {
       booking = actions.newBooking({id: null});
       expect(booking.id).to.eql(booking.userId + '_' + booking.trainId);
       expect(booking.isValid()).to.eql(true);
-    })
+    });
   });
 });

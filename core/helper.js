@@ -25,8 +25,8 @@ _.extend(Helper.prototype, {
 
   renfeDatetimeToDate: function(date, hour) {
     var datetime = moment(date + ' ' + hour, "DD/MM/YYYY HH:mm");
-    if (!datetime.isValid()) return false
-    return datetime.toDate()
+    if (!datetime.isValid()) return false;
+    return datetime.toDate();
   }
 });
 

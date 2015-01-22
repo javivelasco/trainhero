@@ -21,7 +21,7 @@ describe('TrainService', function() {
       sinon.stub(request, 'get').returns(P.resolve("Renfe main page content"));
       from = actions.newStation({id: 1, code: '1234'});
       to   = actions.newStation({id: 2, code: '5678'});
-      date = '12/03/2015'
+      date = '12/03/2015';
     });
 
     after(function() {

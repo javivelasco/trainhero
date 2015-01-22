@@ -77,7 +77,7 @@ describe("actions/user_actions.js", function() {
     afterEach(function() {
       findStation.restore();
       trainService.search.restore();
-    })
+    });
 
     it("retrieves the stations", function(done) {
       userActions.searchTrains(currentUser.id, fromStation.id, toStation.id, date).then(function(results) {
@@ -107,6 +107,6 @@ describe("actions/user_actions.js", function() {
       }).catch(function(err) {
         done(err);
       });
-    })
-  })
+    });
+  });
 });
