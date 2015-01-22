@@ -29,5 +29,11 @@ describe('models/booking', function() {
       booking = actions.newBooking({trainId: undefined});
       expect(booking.isValid()).to.eql(false);
     });
+
+    it("defaults model id to a composed id", function() {
+      booking = actions.newBooking({id: null});
+      expect(booking.id).to.eql(booking.userId + '_' + booking.trainId);
+      expect(booking.isValid()).to.eql(true);
+    })
   });
 });
