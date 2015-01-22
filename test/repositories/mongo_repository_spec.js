@@ -9,14 +9,13 @@ var expect     = require('chai').expect,
     MongoRepository = require("../../core/repositories/mongo_repository");
 
 describe("Mongo Repository", function() {
-  var repository;
+  var repository, timestampedRepository;
 
   before(function() {
-    var TestRepository = MongoRepository.extend({
-      collection: 'trains',
-      model: Train
-    });
-    repository = new TestRepository();
+    var TestRepository     = MongoRepository.extend({collection: 'trains', model: Train });
+    var TestTimeRepository = MongoRepository.extend({collection: 'trains', model: Train, timestamped: true });
+    repository             = new TestRepository();
+    timestampedRepository  = new TestTimeRepository();
   });
 
   describe("#configure", function() {
@@ -26,6 +25,10 @@ describe("Mongo Repository", function() {
 
     it("sets the proper model name", function() {
       expect(repository._model).to.eql(Train);
+    });
+
+    it("sets the timestamped value", function() {
+      expect(timestampedRepository._timestamped).to.eql(true);
     });
   });
 
@@ -96,13 +99,16 @@ describe("Mongo Repository", function() {
   });
 
   describe("#put", function() {
-    var train;
+    var train, findMongo, tFindMongo, insertMongo, tInsertMongo, updateMongo, tUpdateMongo;
 
     beforeEach(function() {
       train = actions.newTrain();
       findMongo    = sinon.stub(repository._collection, 'findAsync');
       insertMongo  = sinon.stub(repository._collection, 'insertAsync');
       updateMongo  = sinon.stub(repository._collection, 'updateAsync');
+      tFindMongo   = sinon.stub(timestampedRepository._collection, 'findAsync');
+      tInsertMongo = sinon.stub(timestampedRepository._collection, 'insertAsync');
+      tUpdateMongo = sinon.stub(timestampedRepository._collection, 'updateAsync');
       storedRecord = { _id: 1, fromId: train.fromId, toId: train.toId};
     });
 
@@ -110,6 +116,9 @@ describe("Mongo Repository", function() {
       repository._collection.findAsync.restore();
       repository._collection.insertAsync.restore();
       repository._collection.updateAsync.restore();
+      timestampedRepository._collection.findAsync.restore();
+      timestampedRepository._collection.insertAsync.restore();
+      timestampedRepository._collection.updateAsync.restore();
     });
 
     it("stores a new record when there is no id for model", function(done) {
@@ -123,6 +132,39 @@ describe("Mongo Repository", function() {
         expect(result.id).to.exist();
         expect(result._id).to.not.exist();
         expect(result.fromId).to.eql(train.fromId);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it("stores timestamps when it is a timestamped repository", function(done) {
+      cursor = testHelper.generateCursorWithResult(0);
+      train.id = null;
+      tFindMongo.returns(P.resolve(cursor));
+      tInsertMongo.returns(P.resolve([storedRecord]));
+
+      timestampedRepository.put(train).then(function(result) {
+        expect(tInsertMongo.getCall(0).args[0].createdAt).to.exist();
+        expect(tInsertMongo.getCall(0).args[0].createdAt).to.be.an.instanceof(Date);
+        expect(tInsertMongo.getCall(0).args[0].updatedAt).to.exist();
+        expect(tInsertMongo.getCall(0).args[0].updatedAt).to.be.an.instanceof(Date);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it("updates timestamp when it is a timestamped repository", function(done) {
+      cursor = testHelper.generateCursorWithResult(1);
+      tFindMongo.returns(P.resolve(cursor));
+      tUpdateMongo.returns(P.resolve([storedRecord]));
+
+      timestampedRepository.put(train).then(function(result) {
+        expect(tUpdateMongo.getCall(0).args[1].$set.createdAt).to.exist();
+        expect(tUpdateMongo.getCall(0).args[1].$set.createdAt).to.be.an.instanceof(Date);
+        expect(tUpdateMongo.getCall(0).args[1].$set.updatedAt).to.exist();
+        expect(tUpdateMongo.getCall(0).args[1].$set.updatedAt).to.be.an.instanceof(Date);
         done();
       }).catch(function(err) {
         done(err);

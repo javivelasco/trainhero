@@ -1,12 +1,14 @@
 var _         = require('lodash'),
     P         = require("bluebird"),
+    moment    = require("moment"),
     mongoskin = require('mongoskin'),
     db        = require('../../config/mongo').db;
 
 function MongoRepository() {
   var self = this;
-  self._collection = db.collection(self.collection);
-  self._model      = self.model;
+  self._collection  = db.collection(self.collection);
+  self._model       = self.model;
+  self._timestamped = self.timestamped;
 }
 
 _.extend(MongoRepository.prototype, {
@@ -23,8 +25,7 @@ _.extend(MongoRepository.prototype, {
 
   put: function(item) {
     var instance   = this,
-        attributes = item.toJSON();
-    delete attributes.id;
+        attributes = prepareAttributes(item, instance);
 
     return instance._collection.findAsync({_id: item.id}).then(function(result) {
       P.promisifyAll(result);
@@ -44,7 +45,7 @@ _.extend(MongoRepository.prototype, {
 });
 
 var createRecord = function(id, attributes, instance) {
-  if (id)  attributes._id = id;
+  if (id) attributes._id = id;
   return instance._collection.insertAsync(attributes).then(function(result) {
     return P.resolve(build(result[0], instance));
   });
@@ -55,6 +56,18 @@ var updateRecord = function(id, attributes, instance) {
     attributes._id = id;
     return P.resolve(build(attributes, instance));
   });
+};
+
+var prepareAttributes = function(item, instance) {
+  var attributes = item.toJSON();
+  delete attributes.id;
+  if (instance._timestamped) addTimestamps(attributes);
+  return attributes;
+};
+
+var addTimestamps = function(attributes) {
+  attributes.createdAt = attributes.createdAt || moment().toDate();
+  attributes.updatedAt = moment().toDate();
 };
 
 var build = function(record, instance) {
