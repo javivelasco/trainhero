@@ -7,6 +7,7 @@ var gulp     = require('gulp'),
 gulp.task('mocha', function() {
   process.env.NODE_ENV = 'test';
   return gulp.src([
+      'test/*.js',
       'test/models/**/*.js',
       'test/actions/**/*.js',
       'test/repositories/**/*.js',
@@ -30,6 +31,7 @@ gulp.task('cover', function (cb) {
     }))
     .on('end', function () {
       gulp.src([
+          'test/*.js',
           'test/models/**/*.js',
           'test/repositories/**/*.js',
           'test/services/**/*.js',

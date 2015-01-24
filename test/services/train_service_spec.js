@@ -133,5 +133,17 @@ describe('TrainService', function() {
         done(err);
       });
     });
+
+    it("does not create a train if data is invalid", function(done) {
+      sinon.stub(trains, "findOneByNameRouteAndDeparture").returns(P.resolve(null));
+      signature = helper.signArguments('', dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString);
+      service.findOrCreateTrain('', dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, signature).then(function(train) {
+        done(train);
+      }).catch(function(err) {
+        expect(trains.put.called).to.eql(false);
+        expect(err.name).to.exist();
+        done();
+      });
+    });
   });
 });
