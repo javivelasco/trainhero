@@ -20,7 +20,7 @@ _.extend(UserActions.prototype, {
     var fromStation = stations.findOneById(fromId),
         toStation   = stations.findOneById(toId);
 
-    return trainService.search(fromStation, toStation, departureDate).then(function(trains) {
+    return trainService.searchAtRenfe(fromStation, toStation, departureDate).then(function(trains) {
       return P.resolve({
         trains: trains,
         from: fromStation.toJSON(),

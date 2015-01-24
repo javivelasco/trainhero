@@ -70,13 +70,13 @@ describe("actions/user_actions.js", function() {
       findStation = sinon.stub(stations, 'findOneById');
       findStation.withArgs(fromStation.id).returns(fromStation);
       findStation.withArgs(toStation.id).returns(toStation);
-      sinon.stub(trainService, 'search').returns(P.resolve(renfeTrains));
+      sinon.stub(trainService, 'searchAtRenfe').returns(P.resolve(renfeTrains));
       date = '2014-12-18';
     });
 
     afterEach(function() {
       findStation.restore();
-      trainService.search.restore();
+      trainService.searchAtRenfe.restore();
     });
 
     it("retrieves the stations", function(done) {
@@ -91,7 +91,7 @@ describe("actions/user_actions.js", function() {
 
     it("makes the search in train service", function(done) {
       userActions.searchTrains(currentUser.id, fromStation.id, toStation.id, date).then(function(results) {
-        expect(trainService.search.calledWith(fromStation, toStation, date)).to.eql(true);
+        expect(trainService.searchAtRenfe.calledWith(fromStation, toStation, date)).to.eql(true);
         done();
       }).catch(function(err) {
         done(err);

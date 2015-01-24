@@ -15,7 +15,7 @@ _.extend(TrainService.prototype, {
     return stations.findAll();
   },
 
-  search: function (from, to, departureDate) {
+  searchAtRenfe: function (from, to, departureDate) {
     var params = configureSearch(from, to, departureDate);
     return performRequest(params, from.id, to.id, departureDate);
   },

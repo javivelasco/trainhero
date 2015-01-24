@@ -13,7 +13,7 @@ var expect   = require('chai').expect,
     service  = require('../../core/services/train_service');
 
 describe('TrainService', function() {
-  describe('#search', function() {
+  describe('#searchAtRenfe', function() {
     var renfeSearchPage, from, to, date;
 
     before(function() {
@@ -34,7 +34,7 @@ describe('TrainService', function() {
 
     it("sets an array of trains in the callback when Renfe responds", function(done) {
       sinon.stub(request, 'post').returns(P.resolve(renfeSearchPage));
-      service.search(from, to, date).then(function(trains) {
+      service.searchAtRenfe(from, to, date).then(function(trains) {
         expect(trains.length).to.eql(3);
         done();
       }).catch(function(err) {
@@ -44,7 +44,7 @@ describe('TrainService', function() {
 
     it("parses the trains from the request properly when Renfe responds", function(done) {
       sinon.stub(request, 'post').returns(P.resolve(renfeSearchPage));
-      service.search(from, to, date).then(function(trains) {
+      service.searchAtRenfe(from, to, date).then(function(trains) {
         expect(trains[0].name).to.eql("AV City 02262");
         expect(trains[0].departure).to.eql("06:20");
         expect(trains[0].arrival).to.eql("08:27");
@@ -56,7 +56,7 @@ describe('TrainService', function() {
 
     it("throws an error when renfe does not respond", function(done) {
       sinon.stub(request, 'post').returns(P.reject("Some error"));
-      service.search(from.id, to.id, date).catch(function(err) {
+      service.searchAtRenfe(from.id, to.id, date).catch(function(err) {
         expect(err).to.eql("Some error");
         done();
       });
