@@ -17,6 +17,10 @@ _.extend(Actions.prototype, {
     return new Train(_.extend(dummies.dummyTrain(), args));
   },
 
+  newRenfeTrain: function(args) {
+    return _.extend(dummies.dummyTrain(), args);
+  },
+
   newUser: function(args) {
     return new User(_.extend(dummies.dummyUser(), args));
   },

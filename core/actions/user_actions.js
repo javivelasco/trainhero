@@ -17,17 +17,51 @@ _.extend(UserActions.prototype, {
   },
 
   searchTrains: function(currentUserId, fromId, toId, departureDate) {
-    var fromStation = stations.findOneById(fromId),
-        toStation   = stations.findOneById(toId);
+    var fromStation  = stations.findOneById(fromId),
+        toStation    = stations.findOneById(toId),
+        localTrainsP = trainService.searchAtLocal(fromStation, toStation, departureDate),
+        renfeTrainsP = trainService.searchAtRenfe(fromStation, toStation, departureDate);
 
-    return trainService.searchAtRenfe(fromStation, toStation, departureDate).then(function(trains) {
-      return P.resolve({
-        trains: trains,
-        from: fromStation.toJSON(),
-        to: toStation.toJSON()
+    return P.join(localTrainsP, renfeTrainsP, function(localTrains, renfeTrains) {
+      return bookingService.getBookingsForTrains(localTrains).then(function(bookings) {
+        return P.resolve({
+          trains: buildTrainsResponse(localTrains, renfeTrains, bookings, currentUserId),
+          from: fromStation.toJSON(),
+          to: toStation.toJSON()
+        });
       });
     });
   }
 });
+
+function buildTrainsResponse(localTrains, renfeTrains, bookings, currentUserId) {
+  var trainBookings;
+  return _.map(renfeTrains, function(item) {
+    trainBookings  = filterBookingsForTrain(item, localTrains, bookings);
+    item.bookings  = trainBookings.length;
+    item.booked    = anyBookingByUser(trainBookings, currentUserId);
+    return item;
+  });
+}
+
+function filterBookingsForTrain(renfeTrain, localTrains, bookings) {
+  var savedTrain = findSavedTrain(renfeTrain, localTrains);
+  if (!savedTrain) return [];
+  return _.filter(bookings, function(booking) {
+    return booking.trainId === savedTrain.id;
+  });
+}
+
+function findSavedTrain(renfeTrain, localTrains) {
+  return _.find(localTrains, function(train) {
+    return train.name === renfeTrain.name;
+  });
+}
+
+function anyBookingByUser(bookings, userId) {
+  return !!_.find(bookings, function(booking) {
+    return booking.userId === userId;
+  });
+}
 
 module.exports = new UserActions();

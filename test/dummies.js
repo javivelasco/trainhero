@@ -65,4 +65,14 @@ dummies.dummyBooking = function() {
   }
 };
 
+dummies.dummyRenfeTrain = function() {
+  return {
+    name:      dummies.dummyTrain().name,
+    departure: '18:30',
+    arrival:   '20:23',
+    price:     '19.2',
+    signature: 'testsignaturethatdoesntwork'
+  }
+};
+
 module.exports = dummies;
