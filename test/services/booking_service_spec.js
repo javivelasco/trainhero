@@ -34,4 +34,39 @@ describe('BookingService', function() {
       });
     });
   });
+
+  describe('#getBookingsForTrains', function() {
+    var booking, train1, train2, trains;
+
+    beforeEach(function() {
+      train1  = actions.newTrain({id: 1});
+      train2  = actions.newTrain({id: 2});
+      trains  = [train1, train2];
+      booking = actions.newBooking({trainId: train1.id});
+      sinon.stub(bookings, "findAllByTrainId").returns(P.resolve([booking]));
+    });
+
+    afterEach(function() {
+      bookings.findAllByTrainId.restore();
+    });
+
+    it("resolves with the results", function(done) {
+      service.getBookingsForTrains(trains).then(function(results) {
+        expect(results).to.eql([booking]);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it("searchs in the repository with proper parameters", function(done) {
+      service.getBookingsForTrains(trains).then(function(results) {
+        expect(bookings.findAllByTrainId.called).to.eql(true);
+        expect(bookings.findAllByTrainId.getCall(0).args[0]).to.eql([train1.id, train2.id]);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+  });
 });

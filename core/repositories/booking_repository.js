@@ -6,7 +6,7 @@ var BookingRepository = MongoRepository.extend({
   model: Booking,
 
   findAllByTrainId: function(trainIds) {
-    return this.find({trainId: {$in: trainIds}})
+    return this.find({trainId: {$in: trainIds}});
   }
 });
 

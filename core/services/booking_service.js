@@ -10,6 +10,11 @@ _.extend(BookingService.prototype, {
     var booking = new Booking({userId: user.id, trainId: train.id});
     if (!booking.isValid()) return P.reject(booking.errors);
     return bookings.put(booking);
+  },
+
+  getBookingsForTrains: function(trains) {
+    var trainIds = _.map(trains, function(item) { return item.id; });
+    return bookings.findAllByTrainId(trainIds);
   }
 });
 
