@@ -3,7 +3,11 @@ var MongoRepository = require('./mongo_repository'),
 
 var BookingRepository = MongoRepository.extend({
   collection: 'bookings',
-  model: Booking
+  model: Booking,
+
+  findAllByTrainId: function(trainIds) {
+    return this.find({trainId: {$in: trainIds}})
+  }
 });
 
 module.exports = new BookingRepository();
