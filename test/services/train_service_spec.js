@@ -146,4 +146,38 @@ describe('TrainService', function() {
       });
     });
   });
+
+  describe('#searchAtLocal', function() {
+    var from, to, date, dummyTrain;
+
+    beforeEach(function() {
+      from       = actions.newStation({id: 1, code: '1234'});
+      to         = actions.newStation({id: 2, code: '5678'});
+      dummyTrain = actions.newTrain({fromId: from.id, toId: to.id});
+      dateString = '12/03/2015';
+      date       = helper.renfeDatetimeToDate(dateString);
+    });
+
+    afterEach(function() {
+      trains.findByRouteAndDeparture.restore();
+    });
+
+    it("resolves with empty array if there are no trains", function(done) {
+      sinon.stub(trains, "findByRouteAndDeparture").withArgs(from.id, to.id, date).returns(P.resolve([]));
+      service.searchAtLocal(from, to, dateString).then(function(result) {
+        expect(result).to.eql([]);
+        expect(trains.findByRouteAndDeparture.called).to.eql(true);
+        done();
+      });
+    });
+
+    it("resolves with array of trains if there are trains", function(done) {
+      sinon.stub(trains, "findByRouteAndDeparture").withArgs(from.id, to.id, date).returns(P.resolve([dummyTrain]));
+      service.searchAtLocal(from, to, dateString).then(function(result) {
+        expect(result).to.eql([dummyTrain]);
+        expect(trains.findByRouteAndDeparture.called).to.eql(true);
+        done();
+      });
+    });
+  });
 });

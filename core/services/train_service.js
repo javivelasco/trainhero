@@ -15,9 +15,14 @@ _.extend(TrainService.prototype, {
     return stations.findAll();
   },
 
-  searchAtRenfe: function (from, to, departureDate) {
+  searchAtRenfe: function(from, to, departureDate) {
     var params = configureSearch(from, to, departureDate);
     return performRequest(params, from.id, to.id, departureDate);
+  },
+
+  searchAtLocal: function(from, to, departureDate) {
+    var date = helper.renfeDatetimeToDate(departureDate);
+    return trains.findByRouteAndDeparture(from.id, to.id, date);
   },
 
   findOrCreateTrain: function(name, fromId, toId, date, departure, arrival, signature) {
