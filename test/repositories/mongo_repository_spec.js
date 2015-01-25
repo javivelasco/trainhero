@@ -98,6 +98,55 @@ describe("Mongo Repository", function() {
     });
   });
 
+  describe("#find", function() {
+    var findMongo, train;
+
+    beforeEach(function() {
+      train = actions.newTrain();
+      findMongo    = sinon.stub(repository._collection, 'findAsync');
+      storedRecord = { _id: 1, fromId: train.fromId, toId: train.toId, departure: train.departure, arrival: train.arrival};
+    });
+
+    afterEach(function() {
+      repository._collection.findAsync.restore();
+    });
+
+    it("returns an empty array when there are no results", function(done) {
+      cursor = testHelper.generateCursorWithResult(0, []);
+      findMongo.returns(P.resolve(cursor));
+      repository.find({}).then(function(result) {
+        expect(result).to.eql([]);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it("returns a list of instances of the model", function(done) {
+      cursor = testHelper.generateCursorWithResult(1, [storedRecord]);
+      findMongo.returns(P.resolve(cursor));
+      repository.find({}).then(function(result) {
+        expect(result.length).to.eql(1);
+        expect(result[0]).to.be.an.instanceof(Train);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it("gives the proper parameters to the driver", function(done) {
+      cursor = testHelper.generateCursorWithResult(0, []);
+      findMongo.returns(P.resolve(cursor));
+      repository.find({name: 'AVE 127'}).then(function(result) {
+        expect(findMongo.called).to.exist();
+        expect(findMongo.getCall(0).args[0]).to.eql({name: 'AVE 127'});
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+  });
+
   describe("#put", function() {
     var train, findMongo, tFindMongo, insertMongo, tInsertMongo, updateMongo, tUpdateMongo;
 

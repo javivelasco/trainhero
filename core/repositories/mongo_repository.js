@@ -12,6 +12,18 @@ function MongoRepository() {
 }
 
 _.extend(MongoRepository.prototype, {
+  find: function(args) {
+    var instance = this;
+    return this._collection.findAsync(args).then(function(cursor) {
+      P.promisifyAll(cursor);
+      return cursor.toArrayAsync().then(function(result) {
+        return P.resolve(_.map(result, function(item) {
+          return build(item, instance);
+        }));
+      });
+    });
+  },
+
   findOneBy: function(args) {
     var instance = this;
     return this._collection.findOneAsync(args).then(function(result) {
