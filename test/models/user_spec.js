@@ -38,6 +38,12 @@ describe("models/user.js", function() {
 			user = actions.newUser({name: null});
 			expect(user.isValid()).to.eql(false);
 		});
+
+		it("has a generated id by default", function() {
+			user = actions.newUser({id: null});
+			expect(user.isValid()).to.eql(true);
+			expect(user.id).to.exist();
+		})
 	});
 
 	describe("#generateHash", function() {

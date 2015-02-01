@@ -9,6 +9,7 @@ var User = Model.extend({
 
 	constructor: function() {
 		Model.prototype.constructor.call(this, arguments[0]);
+    defaults(this);
 	},
 
 	constraints: {
@@ -33,5 +34,9 @@ var User = Model.extend({
     }
   }
 });
+
+var defaults = function(self) {
+  if (!self.id) self.id = self.generateId();
+};
 
 module.exports = User;
