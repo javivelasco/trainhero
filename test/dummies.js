@@ -1,4 +1,5 @@
 var helper  = require('../core/helper'),
+    moment  = require('moment'),
     dummies = {}
 
 dummies.dummyStation = function() {
@@ -24,18 +25,6 @@ dummies.dummyTrainTimes = function() {
     departureHourString: '11:35',
     arrivalHourString:   '14:22'
   }
-}
-
-dummies.dummyTrain = function() {
-  var t = dummies.dummyTrainTimes();
-  return {
-    id:        '1',
-    name:      'AVE Hobbiton',
-    departure: helper.renfeDatetimeToDate(t.departureDateString, t.departureHourString),
-    arrival:   helper.renfeDatetimeToDate(t.arrivalDateString,   t.arrivalHourString),
-    fromId:    dummies.dummyStation().id,
-    toId:      dummies.dummyStation2().id
-  };
 };
 
 dummies.dummyUser = function() {
@@ -57,14 +46,6 @@ dummies.dummyAuthorization = function() {
   }
 };
 
-dummies.dummyBooking = function() {
-  return {
-    id:      '1',
-    userId:  dummies.dummyUser().id,
-    trainId: dummies.dummyTrain().id
-  }
-};
-
 dummies.dummyRenfeTrain = function() {
   return {
     name:      dummies.dummyTrain().name,
@@ -74,5 +55,25 @@ dummies.dummyRenfeTrain = function() {
     signature: 'testsignaturethatdoesntwork'
   }
 };
+
+dummies.dummyTrain = function() {
+  var t = dummies.dummyTrainTimes();
+  return {
+    id:        '1',
+    name:      'AVE Hobbiton',
+    departure: helper.renfeDatetimeToDate(t.departureDateString, t.departureHourString),
+    arrival:   helper.renfeDatetimeToDate(t.arrivalDateString,   t.arrivalHourString),
+    fromId:    dummies.dummyStation().id,
+    toId:      dummies.dummyStation2().id
+  };
+};
+
+dummies.dummyBooking = function() {
+  return {
+    userId:    dummies.dummyUser().id,
+    createdAt: moment('01/02/2015 12:34', "DD/MM/YYYY HH:mm").toDate()
+  }
+};
+
 
 module.exports = dummies;

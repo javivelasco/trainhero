@@ -1,7 +1,8 @@
-var Model  = require("./model");
+var Model  = require("./model"),
+    moment = require("moment");
 
 var Booking = Model.extend({
-  attributes: ['id', 'trainId', 'userId'],
+  attributes: ['userId', 'createdAt'],
 
   constructor: function() {
     Model.prototype.constructor.call(this, arguments[0]);
@@ -9,13 +10,12 @@ var Booking = Model.extend({
   },
 
   constraints: {
-    userId:  { presence: true },
-    trainId: { presence: true }
+    userId:  { presence: true }
   }
 });
 
-var defaults = function(self) {
-  if (!self.id) self.id = self.userId + '_' + self.trainId;
+function defaults(self) {
+  if (!self.createdAt) self.createdAt = moment().toDate();
 };
 
 module.exports = Booking;

@@ -25,15 +25,10 @@ describe('models/booking', function() {
       expect(booking.isValid()).to.eql(false);
     });
 
-    it("is not valid with no trainId", function() {
-      booking = actions.newBooking({trainId: undefined});
-      expect(booking.isValid()).to.eql(false);
-    });
-
-    it("defaults model id to a composed id", function() {
-      booking = actions.newBooking({id: null});
-      expect(booking.id).to.eql(booking.userId + '_' + booking.trainId);
+    it("has a createdAt field by default", function() {
+      booking = actions.newBooking({createdAt: null});
       expect(booking.isValid()).to.eql(true);
+      expect(booking.createdAt).to.be.an.instanceof(Date);
     });
   });
 });
