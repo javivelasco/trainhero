@@ -2,6 +2,7 @@ var expect  = require('chai').expect,
     actions = require('../actions'),
     dummies = require('../dummies'),
     Train   = require("../../core/models/train"),
+    Booking = require("../../core/models/booking"),
     Model   = require("../../core/models/model");
 
 describe("models/train.js", function() {
@@ -10,6 +11,7 @@ describe("models/train.js", function() {
       var train = actions.newTrain();
       expect(train).to.be.an.instanceof(Model);
       expect(train).to.be.an.instanceof(Train);
+      expect(train.bookings[0]).to.be.an.instanceof(Booking);
       expect(train.isValid()).to.be.eql(true);
     });
 

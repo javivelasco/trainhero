@@ -64,7 +64,8 @@ dummies.dummyTrain = function() {
     departure: helper.renfeDatetimeToDate(t.departureDateString, t.departureHourString),
     arrival:   helper.renfeDatetimeToDate(t.arrivalDateString,   t.arrivalHourString),
     fromId:    dummies.dummyStation().id,
-    toId:      dummies.dummyStation2().id
+    toId:      dummies.dummyStation2().id,
+    bookings:  [ dummies.dummyBooking() ]
   };
 };
 

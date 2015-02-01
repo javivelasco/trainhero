@@ -1,7 +1,9 @@
-var Model  = require("./model");
+var Model   = require("./model"),
+    Booking = require("./booking");
 
 var Train = Model.extend({
-  attributes: ['id', 'name', 'fromId', 'toId', 'departure', 'arrival'],
+  attributes: ['id', 'name', 'fromId', 'toId', 'departure', 'arrival', 'bookings'],
+  embebbed:   { bookings: [Booking] },
 
   constructor: function() {
     Model.prototype.constructor.call(this, arguments[0]);
