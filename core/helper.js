@@ -27,6 +27,10 @@ _.extend(Helper.prototype, {
     var datetime = moment(date + ' ' + hour, "DD/MM/YYYY HH:mm");
     if (!datetime.isValid()) return false;
     return datetime.toDate();
+  },
+
+  isArray: function(value) {
+    return {}.toString.call(value) === '[object Array]';
   }
 });
 

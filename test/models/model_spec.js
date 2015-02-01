@@ -43,6 +43,16 @@ describe("models/model.js", function() {
       expect(model.isValid()).to.eql(true);
     });
 
+    it("has an array of embbebed model if specified", function() {
+      var EmbebbedModel = Model.extend({attributes: ['baz']});
+      var TestModel = Model.extend({attributes: ['foo'], embebbed: {bars: [EmbebbedModel]}});
+      var model = new TestModel({foo: 1, bars: [{baz: 3}, {baz: 4}]});
+      expect(model.bars.length).to.eql(2);
+      expect(model.bars[0]).to.be.an.instanceof(EmbebbedModel);
+      expect(model.bars[0]).to.be.an.instanceof(Model);
+      expect(model.isValid()).to.eql(true);
+    });
+
     it("validates embebbed model", function() {
       var EmbebbedModel = Model.extend({attributes: ['baz'], constraints: { baz: { presence: true }}});
       var TestModel = Model.extend({attributes: ['foo'], embebbed: {bar: EmbebbedModel}});
@@ -113,6 +123,23 @@ describe("models/model.js", function() {
       var EmbebbedModel = Model.extend({attributes: ['baz']});
       var TestModel = Model.extend({attributes: ['foo'], embebbed: {bar: EmbebbedModel}});
       var model = new TestModel(hash);
+      expect(model.toJSON()).to.eql(hash);
+    });
+
+    it("includes the embebbed models when they are arrays", function() {
+      var hash = { foo: 1, bar: [{baz: 2}, {baz: 3}]};
+      var EmbebbedModel = Model.extend({attributes: ['baz']});
+      var TestModel = Model.extend({attributes: ['foo'], embebbed: {bar: [EmbebbedModel]}});
+      var model = new TestModel(hash);
+      expect(model.toJSON()).to.eql(hash);
+    });
+
+    it("include the embebbed models empty array when they are arrays and dont have data", function(){
+      var hash = { foo: 1 };
+      var EmbebbedModel = Model.extend({attributes: ['baz']});
+      var TestModel = Model.extend({attributes: ['foo'], embebbed: {bar: [EmbebbedModel]}});
+      var model = new TestModel(hash);
+      hash.bar = [];
       expect(model.toJSON()).to.eql(hash);
     });
   });
