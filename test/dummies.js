@@ -3,7 +3,7 @@ var helper  = require('../core/helper'),
 
 dummies.dummyStation = function() {
   return {
-    id:   1,
+    id:   '1',
     name: 'Mordor',
     code: '123456'
   };
@@ -11,7 +11,7 @@ dummies.dummyStation = function() {
 
 dummies.dummyStation2 = function() {
   return {
-    id:   2,
+    id:   '2',
     name: 'Gondor',
     code: '789123'
   };
@@ -29,7 +29,7 @@ dummies.dummyTrainTimes = function() {
 dummies.dummyTrain = function() {
   var t = dummies.dummyTrainTimes();
   return {
-    id:        1,
+    id:        '1',
     name:      'AVE Hobbiton',
     departure: helper.renfeDatetimeToDate(t.departureDateString, t.departureHourString),
     arrival:   helper.renfeDatetimeToDate(t.arrivalDateString,   t.arrivalHourString),
@@ -40,7 +40,7 @@ dummies.dummyTrain = function() {
 
 dummies.dummyUser = function() {
   return {
-    id:       1,
+    id:       '1',
     name:     'Omar',
     lastname: 'Little',
     email:    'omarlittle@thewire.com',
@@ -59,7 +59,7 @@ dummies.dummyAuthorization = function() {
 
 dummies.dummyBooking = function() {
   return {
-    id:      1,
+    id:      '1',
     userId:  dummies.dummyUser().id,
     trainId: dummies.dummyTrain().id
   }

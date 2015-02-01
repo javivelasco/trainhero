@@ -5,18 +5,18 @@ var expect     = require('chai').expect,
 describe("Station Repository", function() {
   describe('#findOneById', function() {
     it('returns a station model', function(){
-      expect(repository.findOneById(0)).to.be.an.instanceof(Station);
+      expect(repository.findOneById('0')).to.be.an.instanceof(Station);
     });
 
     it('has the right attributes', function() {
-      expect(repository.findOneById(0).toJSON()).to.eql(stations[0]);
+      expect(repository.findOneById('0').toJSON()).to.eql(stations[0]);
     });
   });
 
   describe('#findAll', function() {
     it('returns an array of stations', function() {
       expect(repository.findAll()).to.be.an.instanceof(Array);
-      expect(repository.findAll()[0]).to.be.an.instanceof(Station);
+      expect(repository.findAll()['0']).to.be.an.instanceof(Station);
     });
 
     it('returns all elements', function() {
@@ -26,6 +26,6 @@ describe("Station Repository", function() {
 });
 
 var stations = [
-  {id: 0, name: "A Albergueria-Prado", code: "0071,31209,31209"},
-  {id: 1, name: "A Bandeira", code: "0071,31311,31311"}
+  {id: '0', name: "A Albergueria-Prado", code: "0071,31209,31209"},
+  {id: '1', name: "A Bandeira", code: "0071,31311,31311"}
 ];

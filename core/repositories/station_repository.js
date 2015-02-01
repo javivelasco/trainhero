@@ -22,7 +22,7 @@ var loadStations = function () {
   var items   = {};
   var fixture = JSON.parse(fs.readFileSync(__dirname + "/../fixtures/stations.json", 'UTF8'));
   fixture.forEach(function(element, index, array) {
-    id = Object.keys(items).length;
+    id = Object.keys(items).length + '';
     items[id] = build(id, element);
   });
   return items;
