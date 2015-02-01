@@ -1,5 +1,6 @@
 var _        = require('lodash'),
     moment   = require('moment'),
+    shortId  = require('shortid'),
     validate = require("../validators");
 
 function Model() {
@@ -20,6 +21,10 @@ _.extend(Model.prototype, {
 
   isValid: function() {
     return (this.errors === undefined);
+  },
+
+  generateId: function() {
+    return shortId.generate();
   },
 
   toJSON: function() {

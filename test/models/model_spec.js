@@ -76,6 +76,16 @@ describe("models/model.js", function() {
     });
   });
 
+  describe('#generateId', function() {
+    it("generates a different it each time", function() {
+      var TestModel = Model.extend();
+      var model     = new TestModel();
+      var firstId   = model.generateId();
+      expect(firstId).to.exist();
+      expect(firstId).to.not.eql(model.generateId());
+    });
+  });
+
   describe("#toJSON", function() {
     it("returns empty object if model has no attributes", function() {
       var TestModel = Model.extend();
