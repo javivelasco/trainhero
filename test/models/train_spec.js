@@ -59,5 +59,11 @@ describe("models/train.js", function() {
       var train = actions.newTrain({arrival: '19:30'});
       expect(train.isValid()).to.eql(false);
     });
+
+    it("has a generated id by default", function() {
+      var train = actions.newTrain({id: null});
+      expect(train.isValid()).to.eql(true);
+      expect(train.id).to.exist();
+    })
   });
 });

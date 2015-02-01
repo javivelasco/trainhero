@@ -5,6 +5,7 @@ var Train = Model.extend({
 
   constructor: function() {
     Model.prototype.constructor.call(this, arguments[0]);
+    defaults(this);
   },
 
   constraints: {
@@ -15,5 +16,9 @@ var Train = Model.extend({
     departure: { presence: true, datetime: true }
   }
 });
+
+var defaults = function(self) {
+  if (!self.id) self.id = self.generateId();
+};
 
 module.exports = Train;
