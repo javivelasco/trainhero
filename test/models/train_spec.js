@@ -68,4 +68,26 @@ describe("models/train.js", function() {
       expect(train.id).to.exist();
     })
   });
+
+  describe("#createBookingFor", function() {
+    var train, user;
+
+    beforeEach(function() {
+      user  = actions.newUser();
+      train = actions.newTrain({bookings: null});
+    });
+
+    it("creates a booking in the train for a given user", function() {
+      train.createBookingFor(user.id);
+      expect(train.bookings.length).to.eql(1);
+      expect(train.bookings[0].userId).to.eql(user.id);
+      expect(train.bookings[0].createdAt).to.exist();
+    });
+
+    it("does not create a booking for a user twice", function() {
+      train.createBookingFor(user.id);
+      train.createBookingFor(user.id);
+      expect(train.bookings.length).to.eql(1);
+    });
+  });
 });

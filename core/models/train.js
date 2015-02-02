@@ -1,4 +1,5 @@
-var Model   = require("./model"),
+var _       = require("lodash"),
+    Model   = require("./model"),
     Booking = require("./booking");
 
 var Train = Model.extend({
@@ -16,6 +17,18 @@ var Train = Model.extend({
     toId:      { presence: true },
     arrival:   { presence: true, datetime: true },
     departure: { presence: true, datetime: true }
+  },
+
+  createBookingFor: function(userId) {
+    var index = _.findIndex(this.bookings, function(booking) {
+      return booking.userId === userId;
+    });
+
+    if (index === -1) {
+      booking = new Booking({userId: userId});
+      this.bookings.push(booking);
+      return booking;
+    };
   }
 });
 
