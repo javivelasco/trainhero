@@ -25,6 +25,12 @@ _.extend(TrainService.prototype, {
     return trains.findByRouteAndDeparture(from.id, to.id, date);
   },
 
+  bookTrain: function(user, train) {
+    train.createBookingFor(user.id);
+    if (!train.isValid()) return P.reject(train.errors);
+    return trains.put(train);
+  },
+
   findOrCreateTrain: function(name, fromId, toId, date, departure, arrival, signature) {
     if (!isValidTrainSignature(name, fromId, toId, date, departure, arrival, signature))
       return P.reject({signature: "Invalid signature for train data"});

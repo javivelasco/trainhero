@@ -180,4 +180,28 @@ describe('TrainService', function() {
       });
     });
   });
+
+  describe('#bookTrain', function() {
+    var dummyUser, dummyTrain, dummyBooking, invalidBooking;
+
+    before(function() {
+      dummyUser      = actions.newUser();
+      dummyTrain     = actions.newTrain({bookings: null});
+      dummyBooking   = actions.newBooking();
+      invalidBooking = actions.newBooking({trainId: undefined});
+    });
+
+    it("creates a booking", function(done) {
+      sinon.stub(trains, "put").returns(P.resolve(dummyBooking));
+      service.bookTrain(dummyUser, dummyTrain).then(function(booking) {
+        var trainCalled = trains.put.getCall(0).args[0];
+        expect(trains.put.called).to.eql(true);
+        expect(trainCalled.bookings.length).to.eql(1);
+        expect(trainCalled.bookings[0].userId).to.eql(dummyUser.id);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+  });
 });
