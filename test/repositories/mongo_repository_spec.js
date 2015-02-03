@@ -77,10 +77,7 @@ describe("Mongo Repository", function() {
 
   describe("#findOneById", function() {
     before(function() {
-      sinon.stub(mongoskin, "ObjectID").returns("object_id");
-      sinon.stub(repository, "findOneBy")
-           .withArgs({_id: "object_id"})
-           .returns(P.resolve('example'));
+      sinon.stub(repository, "findOneBy").withArgs({_id: "1"}).returns(P.resolve('example'));
     });
 
     after(function() {
@@ -88,7 +85,7 @@ describe("Mongo Repository", function() {
     });
 
     it("calls properly the find function", function(done) {
-      repository.findOneById(1).then(function(result) {
+      repository.findOneById("1").then(function(result) {
         expect(repository.findOneBy.called).to.eql(true);
         expect(result).to.eql('example');
         done();

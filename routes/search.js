@@ -18,7 +18,6 @@ var search = {
 		    date   = req.body.departureDate;
 
 		userActions.searchTrains(req.user.id, fromId, toId, date).then(function(results) {
-      saveResultsToStub(results);
 			res.render('search/results', {
         user:   req.user,
 				from:   results.from,
@@ -33,11 +32,3 @@ var search = {
 };
 
 module.exports = search;
-
-// Date should be changed to 19/02/2015 to make saving work in stub
-var stubSearch = function() {
-	var results = JSON.parse(fs.readFileSync(__dirname + "/../trains_search.json", 'UTF8'));
-	sinon.stub(userActions, 'searchTrains').returns(P.resolve(results));
-};
-
-// stubSearch();

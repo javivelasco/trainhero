@@ -16,4 +16,6 @@ block content
           input(type="text", name="train[departure]", value="#{train.departure}")
           input(type="text", name="train[arrival]",   value="#{train.arrival}")
           input(type="text", name="train[signature]", value="#{train.signature}")
+          span #{train.bookings}
+          span #{train.booked}
           button(type="submit") Book!

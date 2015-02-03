@@ -32,7 +32,7 @@ _.extend(MongoRepository.prototype, {
   },
 
   findOneById: function(id) {
-    return this.findOneBy({_id: mongoskin.ObjectID(id)});
+    return this.findOneBy({_id: id});
   },
 
   put: function(item) {
