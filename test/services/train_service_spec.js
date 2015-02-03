@@ -203,5 +203,15 @@ describe('TrainService', function() {
         done(err);
       });
     });
+
+    it("does not create a train if booking user id is invalid", function(done) {
+      dummyUser.id = null;
+      service.bookTrain(dummyUser, dummyTrain).then(function(booking) {
+        done(booking);
+      }).catch(function(err) {
+        expect(err).to.exist();
+        done();
+      });
+    });
   });
 });

@@ -25,6 +25,7 @@ _.extend(Model.prototype, {
   },
 
   isValid: function() {
+    this.validate();
     return (this.errors === undefined);
   },
 

@@ -79,9 +79,8 @@ describe("models/model.js", function() {
     });
 
     it("returns false if there are errors", function() {
-      var TestModel = Model.extend();
+      var TestModel = Model.extend({attributes: ['foo'], constraints: {foo: {presence: true}}});
       var model = new TestModel();
-      model.errors = {attr: ["Error"]};
       expect(model.isValid()).to.eql(false);
     });
   });
