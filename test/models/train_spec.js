@@ -66,7 +66,7 @@ describe("models/train.js", function() {
       var train = actions.newTrain({id: null});
       expect(train.isValid()).to.eql(true);
       expect(train.id).to.exist();
-    })
+    });
   });
 
   describe("#createBookingFor", function() {

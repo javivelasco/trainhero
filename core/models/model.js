@@ -53,7 +53,7 @@ function addArrayOfEmbebbedModelsJSON(self, json, attribute) {
   json[attribute] = [];
   _.forEach(self[attribute], function(embebbedInstance) {
     json[attribute].push(embebbedInstance.toJSON());
-  })
+  });
 }
 
 function setAttributes(self, values) {
@@ -69,7 +69,7 @@ function setEmbebbedModels(self, values) {
   _.forIn(self.embebbed, function(embebbedValue, attribute) {
     instanceValue = values[attribute];
     if (helper.isArray(embebbedValue)) {
-      setArrayOfEmbebbedModels(self, attribute, embebbedValue, instanceValue)
+      setArrayOfEmbebbedModels(self, attribute, embebbedValue, instanceValue);
     } else {
       self[attribute] = instanceValue ? new embebbedValue(instanceValue) : null;
     }

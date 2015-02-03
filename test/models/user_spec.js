@@ -43,7 +43,7 @@ describe("models/user.js", function() {
 			user = actions.newUser({id: null});
 			expect(user.isValid()).to.eql(true);
 			expect(user.id).to.exist();
-		})
+		});
 	});
 
 	describe("#generateHash", function() {

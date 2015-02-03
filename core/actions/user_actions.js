@@ -36,7 +36,7 @@ function buildTrainsResponse(localTrains, renfeTrains, currentUserId) {
   var trainBookings, savedTrain;
   return _.map(renfeTrains, function(item) {
     savedTrain    = findSavedTrain(item, localTrains);
-    item.bookings = savedTrain ? savedTrain.bookings : 0;
+    item.bookings = savedTrain ? savedTrain.bookings.length : 0;
     item.booked   = anyBookingByUser(savedTrain, currentUserId);
     return item;
   });

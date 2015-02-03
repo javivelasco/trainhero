@@ -16,6 +16,6 @@ var Booking = Model.extend({
 
 function defaults(self) {
   if (!self.createdAt) self.createdAt = moment().toDate();
-};
+}
 
 module.exports = Booking;

@@ -28,7 +28,7 @@ var Train = Model.extend({
       booking = new Booking({userId: userId});
       this.bookings.push(booking);
       return booking;
-    };
+    }
   }
 });
 

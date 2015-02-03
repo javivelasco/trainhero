@@ -16,7 +16,7 @@ describe("actions/user_actions.js", function() {
     currentUser = actions.newUser();
     booking     = actions.newBooking();
     train       = actions.newTrain({bookings: null});
-    bookedTrain = actions.newTrain({bookings: [booking]})
+    bookedTrain = actions.newTrain({bookings: [booking]});
     fromStation = actions.newStation({id: 1, code: '1234'});
     toStation   = actions.newStation({id: 2, code: '5678'});
     signature   = helper.signArguments(train.name, train.fromId, train.toId, train.date, train.departure, train.arrival);
@@ -116,12 +116,12 @@ describe("actions/user_actions.js", function() {
       userActions.searchTrains(currentUser.id, fromStation.id, toStation.id, date).then(function(results) {
         expect(results.from).to.eql(fromStation.toJSON());
         expect(results.to).to.eql(toStation.toJSON());
-        // expect(results.trains[0].name).to.eql(renfeTrains[0].name);
-        // expect(results.trains[0].booked).to.eql(true);
-        // expect(results.trains[0].bookings).to.eql(1);
-        // expect(results.trains[1].name).to.eql(renfeTrains[1].name);
-        // expect(results.trains[1].booked).to.eql(false);
-        // expect(results.trains[1].bookings).to.eql(0);
+        expect(results.trains[0].name).to.eql(renfeTrains[0].name);
+        expect(results.trains[0].booked).to.eql(true);
+        expect(results.trains[0].bookings).to.eql(1);
+        expect(results.trains[1].name).to.eql(renfeTrains[1].name);
+        expect(results.trains[1].booked).to.eql(false);
+        expect(results.trains[1].bookings).to.eql(0);
         done();
       }).catch(function(err) {
         done(err);
