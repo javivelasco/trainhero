@@ -44,6 +44,10 @@ _.extend(TrainService.prototype, {
       if (!train.isValid()) return P.reject(train.errors);
       return trains.put(train);
     });
+  },
+
+  getBookedByUser: function(user) {
+    return trains.findByBookingUserId(user.id);
   }
 });
 
