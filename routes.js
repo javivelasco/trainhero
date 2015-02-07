@@ -13,6 +13,7 @@ router.get('/logout', authentication.logout);
 router.get('/search', isLoggedIn, search.searchPage);
 router.post('/search', isLoggedIn, search.search);
 router.post('/bookings', isLoggedIn, booking.create);
+router.get('/bookings', isLoggedIn, booking.getAll);
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated())

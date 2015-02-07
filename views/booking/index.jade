@@ -1,4 +1,12 @@
 extend ../layout
 block content
-	h1 Booking saved
-	p  Pending list all bookings for user
+	table
+		tr
+			th Train Name
+			th Departure 
+			th Arrival
+		each train in trains
+			tr
+				td #{train.name}
+				td #{train.departure}
+				td #{train.arrival}

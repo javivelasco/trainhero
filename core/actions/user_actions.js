@@ -33,7 +33,9 @@ _.extend(UserActions.prototype, {
 
   getBookedByUser: function(currentUserId) {
     return users.findOneById(currentUserId).then(function(user) {
-      return trainService.getBookedByUser(user.id);
+      return trainService.getBookedByUser(user)
+    }).then(function(trains) {
+      return P.resolve({trains: trains});
     });
   }
 });

@@ -103,7 +103,7 @@ describe("TrainRepository", function() {
     it("performs the proper query", function(done) {
       repository.findByBookingUserId(user.id).then(function(results) {
         expect(repository.find.called).to.eql(true);
-        expect(repository.find.getCall(0).args[0]).to.eql({bookings: {'$elemMatch': {userId: user.id}}});
+        expect(repository.find.getCall(0).args[0]).to.eql({$query: {bookings: {$elemMatch: {userId: user.id}}}, $orderby: {'bookings.createdAt': -1}});
         expect(results).to.eql('train results');
         done();
       }).catch(function(err) {

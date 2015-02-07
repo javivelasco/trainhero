@@ -16,7 +16,7 @@ var search = {
 		var fromId = req.body.fromId,
 		    toId   = req.body.toId,
 		    date   = req.body.departureDate;
-
+        
 		userActions.searchTrains(req.user.id, fromId, toId, date).then(function(results) {
 			res.render('search/results', {
         user:   req.user,

@@ -16,7 +16,7 @@ var TrainRepository = MongoRepository.extend({
   },
 
   findByBookingUserId: function(userId) {
-    return this.find({bookings: {'$elemMatch': {userId: userId}}});
+    return this.find({$query: {bookings: {$elemMatch: {userId: userId}}}, $orderby: {'bookings.createdAt': -1}});
   }
 });
 

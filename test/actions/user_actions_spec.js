@@ -136,7 +136,7 @@ describe("actions/user_actions.js", function() {
       user = actions.newUser();
       train = actions.newTrain();
       sinon.stub(users, 'findOneById').withArgs(user.id).returns(P.resolve(user));
-      sinon.stub(trainService, 'getBookedByUser').withArgs(user.id).returns(P.resolve([train]))
+      sinon.stub(trainService, 'getBookedByUser').withArgs(user).returns(P.resolve([train]))
     });
 
     after(function() {
@@ -146,7 +146,7 @@ describe("actions/user_actions.js", function() {
 
     it("retrieves the trains booked by the user", function(done) {
       userActions.getBookedByUser(user.id).then(function(result) {
-        expect(result).to.eql([train]);
+        expect(result.trains).to.eql([train]);
         done();
       }).catch(function(err) {
         done(err);
