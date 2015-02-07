@@ -69,10 +69,14 @@ describe("TrainRepository", function() {
       dayAfter   = moment(searchDate.toDate()).add(1, 'days');
       fromId     = '1';
       toId       = '2';
+      sinon.stub(repository, 'find').returns(P.resolve([]));
+    });
+
+    after(function() {
+      repository.find.restore();
     });
 
     it("performs the proper query", function(done) {
-      sinon.stub(repository, 'find').returns(P.resolve([]));
       repository.findByRouteAndDeparture(fromId, toId, searchDate.toDate()).then(function(results) {
         expect(repository.find.called).to.eql(true);
         expect(repository.find.getCall(0).args[0]).to.eql({fromId: fromId, toId: toId, departure: { $gte: searchDate.toDate(), $lt: dayAfter.toDate() }});
@@ -89,10 +93,14 @@ describe("TrainRepository", function() {
 
     before(function() {
       user = actions.newUser();
+      sinon.stub(repository, 'find').returns(P.resolve('train results'));
+    });
+
+    after(function() {
+      repository.find.restore();
     });
 
     it("performs the proper query", function(done) {
-      sinon.stub(repository, 'find').returns(P.resolve('train results'));
       repository.findByBookingUserId(user.id).then(function(results) {
         expect(repository.find.called).to.eql(true);
         expect(repository.find.getCall(0).args[0]).to.eql({bookings: {'$elemMatch': {userId: user.id}}});

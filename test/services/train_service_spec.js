@@ -224,6 +224,10 @@ describe('TrainService', function() {
       sinon.stub(trains, 'findByBookingUserId').withArgs(dummyUser.id).returns(P.resolve([dummyTrain]));
     });
 
+    after(function() {
+      trains.findByBookingUserId.restore();
+    });
+
     it("returns trains booked by user", function(done) {
       service.getBookedByUser(dummyUser).then(function(result) {
         expect(result).to.eql([dummyTrain]);

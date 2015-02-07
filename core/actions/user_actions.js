@@ -29,6 +29,12 @@ _.extend(UserActions.prototype, {
         to: toStation.toJSON()
       });
     });
+  },
+
+  getBookedByUser: function(currentUserId) {
+    return users.findOneById(currentUserId).then(function(user) {
+      return trainService.getBookedByUser(user.id);
+    });
   }
 });
 
