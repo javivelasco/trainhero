@@ -145,8 +145,10 @@ describe("actions/user_actions.js", function() {
     });
 
     it("retrieves the trains booked by the user", function(done) {
-      userActions.getBookedByUser(user.id).then(function(result) {
-        expect(result.trains).to.eql([train]);
+      userActions.getBookedByUser(user.id).then(function(results) {
+        expect(results.trains[0].id).to.eql(train.id);
+        expect(results.trains[0].name).to.eql(train.name);
+        expect(results.trains[0].bookings).to.eql(1);
         done();
       }).catch(function(err) {
         done(err);

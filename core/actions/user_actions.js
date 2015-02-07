@@ -24,7 +24,7 @@ _.extend(UserActions.prototype, {
 
     return P.join(localTrainsP, renfeTrainsP, function(localTrains, renfeTrains) {
       return P.resolve({
-        trains: buildTrainsResponse(localTrains, renfeTrains, currentUserId),
+        trains: buildTrainsForSearch(localTrains, renfeTrains, currentUserId),
         from: fromStation.toJSON(),
         to: toStation.toJSON()
       });
@@ -35,12 +35,14 @@ _.extend(UserActions.prototype, {
     return users.findOneById(currentUserId).then(function(user) {
       return trainService.getBookedByUser(user)
     }).then(function(trains) {
-      return P.resolve({trains: trains});
+      return P.resolve({
+        trains: buildTrainsForBookingList(trains)
+      });
     });
   }
 });
 
-function buildTrainsResponse(localTrains, renfeTrains, currentUserId) {
+function buildTrainsForSearch(localTrains, renfeTrains, currentUserId) {
   var trainBookings, savedTrain;
   return _.map(renfeTrains, function(item) {
     savedTrain    = findSavedTrain(item, localTrains);
@@ -60,6 +62,14 @@ function anyBookingByUser(savedTrain, userId) {
   if (!savedTrain) return false;
   return !!_.find(savedTrain.bookings, function(booking) {
     return booking.userId === userId;
+  });
+}
+
+function buildTrainsForBookingList(trains) {
+  return _.map(trains, function(item) {
+    item = item.toJSON();
+    item.bookings = item.bookings.length;
+    return item;
   });
 }
 
