@@ -13,6 +13,10 @@ var TrainRepository = MongoRepository.extend({
   findByRouteAndDeparture: function(fromId, toId, departure) {
     var dayAfterDeparture = moment(departure).add(1, 'days').toDate();
     return this.find({fromId: fromId, toId: toId, departure: { $gte: departure, $lt: dayAfterDeparture}});
+  },
+
+  findByBookingUserId: function(userId) {
+    return this.find({bookings: {'$elemMatch': {userId: userId}}});
   }
 });
 

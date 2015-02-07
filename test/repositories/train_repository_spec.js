@@ -67,8 +67,8 @@ describe("TrainRepository", function() {
     before(function() {
       searchDate = moment("12/03/2015", "DD/MM/YYYY");
       dayAfter   = moment(searchDate.toDate()).add(1, 'days');
-      fromId     = 1;
-      toId       = 2;
+      fromId     = '1';
+      toId       = '2';
     });
 
     it("performs the proper query", function(done) {
@@ -82,5 +82,25 @@ describe("TrainRepository", function() {
         done(err);
       });
     });
+  });
+
+  describe("#findByBookingUserId", function(done) {
+    var user;
+
+    before(function() {
+      user = actions.newUser();
+    });
+
+    it("performs the proper query", function(done) {
+      sinon.stub(repository, 'find').returns(P.resolve('train results'));
+      repository.findByBookingUserId(user.id).then(function(results) {
+        expect(repository.find.called).to.eql(true);
+        expect(repository.find.getCall(0).args[0]).to.eql({bookings: {'$elemMatch': {userId: user.id}}});
+        expect(results).to.eql('train results');
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    })
   });
 });
