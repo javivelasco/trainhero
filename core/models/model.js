@@ -81,7 +81,7 @@ function setArrayOfEmbebbedModels(self, attribute, embebbedValue, instanceValues
   var embebbedModel = embebbedValue[0];
   self[attribute] = [];
   _.forEach(instanceValues, function(instanceValue) {
-    self[attribute].push(instanceValue ? new embebbedModel(instanceValue) : null);
+    self[attribute].push(new embebbedModel(instanceValue));
   });
 }
 

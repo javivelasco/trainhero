@@ -136,7 +136,7 @@ describe("actions/user_actions.js", function() {
       user = actions.newUser();
       train = actions.newTrain();
       sinon.stub(users, 'findOneById').withArgs(user.id).returns(P.resolve(user));
-      sinon.stub(trainService, 'getBookedByUser').withArgs(user).returns(P.resolve([train]))
+      sinon.stub(trainService, 'getBookedByUser').withArgs(user).returns(P.resolve([train]));
     });
 
     after(function() {

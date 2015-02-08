@@ -236,6 +236,6 @@ describe('TrainService', function() {
       }).catch(function(err) {
         done(err);
       });
-    })
+    });
   });
 });

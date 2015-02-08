@@ -109,6 +109,6 @@ describe("TrainRepository", function() {
       }).catch(function(err) {
         done(err);
       });
-    })
+    });
   });
 });
