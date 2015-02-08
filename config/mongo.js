@@ -4,4 +4,4 @@ var mongoskin = require('mongoskin'),
     db        = null;
 
 Promise.promisifyAll(mongoskin);
-module.exports.db = mongoskin.db(config.mongo_url);
+module.exports.db = mongoskin.db(config.mongoUrl);

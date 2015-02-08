@@ -9,7 +9,6 @@ log
 tmp/**
 .loadpath
 .project
-spike*.rb
 public/**
 node_modules/**
 coverage/**
