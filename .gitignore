@@ -13,3 +13,4 @@ spike*.rb
 public/**
 node_modules/**
 coverage/**
+spike*.js
