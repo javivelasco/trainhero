@@ -2,6 +2,7 @@ var router         = require('express').Router(),
     authentication = require('./routes/authentication'),
     search         = require('./routes/search'),
     booking        = require('./routes/booking');
+    email          = require('./routes/email');
 
 router.get('/signup', authentication.signupPage);
 router.post('/signup', authentication.emailSignup);
@@ -14,6 +15,11 @@ router.get('/search', isLoggedIn, search.searchPage);
 router.post('/search', isLoggedIn, search.search);
 router.post('/bookings', isLoggedIn, booking.create);
 router.get('/bookings', isLoggedIn, booking.getAll);
+
+// Routes for development
+if (process.env.NODE_ENV != 'development') {
+  router.get('/emails/welcome', email.welcomePreview);
+}
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated())
