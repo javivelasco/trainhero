@@ -19,12 +19,16 @@ var Train = Model.extend({
     departure: { presence: true, datetime: true }
   },
 
-  createBookingFor: function(userId) {
+  getBookingFor: function(userId) {
     var index = _.findIndex(this.bookings, function(booking) {
       return booking.userId === userId;
     });
+    return index === -1 ? null : this.bookings[index]
+  },
 
-    if (index === -1) {
+  createBookingFor: function(userId) {
+    var booking = this.getBookingFor(userId);
+    if (booking === null) {
       booking = new Booking({userId: userId});
       this.bookings.push(booking);
       return booking;

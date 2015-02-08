@@ -90,4 +90,23 @@ describe("models/train.js", function() {
       expect(train.bookings.length).to.eql(1);
     });
   });
+
+  describe("#getBookingFor", function() {
+    var train, user;
+
+    beforeEach(function() {
+      user  = actions.newUser();
+      train = actions.newTrain({bookings: null});
+    });
+
+    it("returns null when the booking does not exists", function() {
+      expect(train.getBookingFor(user.id)).to.eql(null);
+    });
+
+    it("returns the booking when exists", function() {
+      train.createBookingFor(user.id);
+      expect(train.getBookingFor(user.id)).to.be.an.instanceof(Booking);
+      expect(train.getBookingFor(user.id).userId).to.eql(user.id);
+    });
+  });
 });
