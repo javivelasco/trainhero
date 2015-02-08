@@ -1,7 +1,7 @@
 var validate = require('validate.js');
 
 validate.validators.datetime = function(value, options, key, attributes) {
-	if (!(value instanceof Date)) return "Invalid Date object";
+	if (!(value instanceof Date) && value !== null) return "Invalid Date object";
 };
 
 

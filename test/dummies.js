@@ -71,10 +71,11 @@ dummies.dummyTrain = function() {
 
 dummies.dummyBooking = function() {
   return {
-    userId:    dummies.dummyUser().id,
-    createdAt: moment('01/02/2015 12:34', "DD/MM/YYYY HH:mm").toDate()
+    userId:       dummies.dummyUser().id,
+    createdAt:    moment('01/02/2015 12:34', "DD/MM/YYYY HH:mm").toDate(),
+    paidAt:       moment('20/02/2015 12:34', "DD/MM/YYYY HH:mm").toDate(),
+    paymentToken: 'tokencreatedbystring',
   }
 };
-
 
 module.exports = dummies;
