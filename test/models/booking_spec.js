@@ -60,7 +60,7 @@ describe('models/booking', function() {
     });
 
     it("sets the payment id", function() {
-      var clock = sinon.useFakeTimers()
+      var clock = sinon.useFakeTimers();
       booking.setPayment(paymentId);
       expect(booking.paymentId).to.eql(paymentId);
       expect(booking.isValid()).to.eql(true);

@@ -2,7 +2,7 @@ var config = require('./config'),
     _      = require('lodash'),
     stripe = require('stripe')(config.stripeSecretKey);
 
-function PaymentService() {};
+function PaymentService() {}
 
 _.extend(PaymentService, {
   createStripeCharge: function(amount, stripeToken, description, metadata) {

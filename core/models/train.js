@@ -23,7 +23,7 @@ var Train = Model.extend({
     var index = _.findIndex(this.bookings, function(booking) {
       return booking.userId === userId;
     });
-    return index === -1 ? null : this.bookings[index]
+    return index === -1 ? null : this.bookings[index];
   },
 
   createBookingFor: function(userId) {
