@@ -26,7 +26,7 @@ var Booking = Model.extend({
 
 function defaults(self) {
   if (self.paidAt === undefined) self.paidAt = null;
-  if (self.paymentToken === undefined) self.paymentToken = null;
+  if (self.paymentId === undefined) self.paymentId = null;
   if (!self.createdAt) self.createdAt = moment().toDate();
 }
 

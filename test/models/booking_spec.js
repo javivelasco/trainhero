@@ -39,9 +39,9 @@ describe('models/booking', function() {
       expect(booking.isValid()).to.eql(true);
     });
 
-    it("has null paymentToken by default", function() {
-      booking = actions.newBooking({paymentToken: undefined});
-      expect(booking.paymentToken).to.eql(null);
+    it("has null paymentId by default", function() {
+      booking = actions.newBooking({paymentId: undefined});
+      expect(booking.paymentId).to.eql(null);
       expect(booking.isValid()).to.eql(true);
     });
 
