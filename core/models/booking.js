@@ -2,7 +2,7 @@ var Model  = require("./model"),
     moment = require("moment");
 
 var Booking = Model.extend({
-  attributes: ['userId', 'createdAt', 'paymentToken', 'paidAt'],
+  attributes: ['userId', 'createdAt', 'paymentId', 'paidAt'],
 
   constructor: function() {
     Model.prototype.constructor.call(this, arguments[0]);
@@ -14,12 +14,13 @@ var Booking = Model.extend({
     paidAt:  { datetime: true }
   },
 
-  paidNow: function() {
+  setPayment: function(paymentId) {
+    this.paymentId = paymentId;
     this.paidAt = moment().toDate();
   },
 
   isPaid: function() {
-    return !!this.paidAt;
+    return !!this.paymentId;
   }
 });
 

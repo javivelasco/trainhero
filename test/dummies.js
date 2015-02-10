@@ -74,7 +74,7 @@ dummies.dummyBooking = function() {
     userId:       dummies.dummyUser().id,
     createdAt:    moment('01/02/2015 12:34', "DD/MM/YYYY HH:mm").toDate(),
     paidAt:       moment('20/02/2015 12:34', "DD/MM/YYYY HH:mm").toDate(),
-    paymentToken: 'tokencreatedbystring',
+    paymentId:    'external_payment_id'
   }
 };
 

@@ -51,26 +51,37 @@ describe('models/booking', function() {
     });
   });
 
-  describe("#paidNow", function() {
-    it("sets paidAt as the current time", function() {
+  describe("#setPayment", function() {
+    var paymentId;
+
+    before(function() {
+      booking = actions.newBooking({paymentId: null, paidAt: null});
+      paymentId = "external_payment_id";
+    });
+
+    it("sets the payment id", function() {
       var clock = sinon.useFakeTimers()
-      booking.paidNow();
-      expect(booking.paidAt).to.eql(moment().toDate());
+      booking.setPayment(paymentId);
+      expect(booking.paymentId).to.eql(paymentId);
       expect(booking.isValid()).to.eql(true);
       clock.restore();
+    });
+
+    it("sets paidAt as the current time", function() {
+      booking.setPayment(paymentId);
+      expect(booking.paidAt).to.eql(moment().toDate());
+      expect(booking.isValid()).to.eql(true);
     });
   });
 
   describe("#isPaid", function() {
-    var booking;
-
-    it("returns true if it is paid", function() {
+    it("returns true if it has paymentId", function() {
       booking = actions.newBooking();
       expect(booking.isPaid()).to.eql(true);
     });
 
-    it("returns false if it is not paid", function() {
-      booking = actions.newBooking({paidAt: null});
+    it("returns false if it has no paymentId", function() {
+      booking = actions.newBooking({paymentId: null});
       expect(booking.isPaid()).to.eql(false);
     });
   });
