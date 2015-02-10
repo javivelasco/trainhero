@@ -199,6 +199,7 @@ describe('TrainService', function() {
         expect(trainCalled.bookings.length).to.eql(1);
         expect(trainCalled.bookings[0].userId).to.eql(dummyUser.id);
         done();
+        trains.put.restore();
       }).catch(function(err) {
         done(err);
       });
@@ -235,6 +236,42 @@ describe('TrainService', function() {
         done();
       }).catch(function(err) {
         done(err);
+      });
+    });
+  });
+
+  describe('#setBookingPaid', function() {
+    var dummyTrain, dummyUser, paymentId;
+
+    beforeEach(function() {
+      dummyTrain = actions.newTrain({bookings: []});
+      dummyUser  = actions.newUser();
+      paymentId  = "paymentidtreturnedbystripe";
+      dummyTrain.createBookingFor(dummyUser.id);
+      sinon.stub(trains, 'put').returns(P.resolve('train saved'));
+    });
+
+    afterEach(function() {
+      trains.put.restore();
+    });
+
+    it("set the booking as paid in the repository", function(done) {
+      service.setBookingPaid(dummyTrain, dummyUser, paymentId).then(function() {
+        expect(trains.put.called).to.eql(true);
+        expect(trains.put.getCall(0).args[0].getBookingFor(dummyUser.id).paymentId).to.eql(paymentId);
+        expect(trains.put.getCall(0).args[0].getBookingFor(dummyUser.id).isPaid()).to.eql(true);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it("rejects the promise if payment data is invalid", function(done) {
+      service.setBookingPaid(dummyTrain, dummyUser, null).then(function(result) {
+        done(result);
+      }).catch(function(err) {
+        expect(trains.put.called).to.eql(false);
+        done();
       });
     });
   });

@@ -48,6 +48,12 @@ _.extend(TrainService.prototype, {
 
   getBookedByUser: function(user) {
     return trains.findByBookingUserId(user.id);
+  },
+
+  setBookingPaid: function(train, user, paymentId) {
+    var booking = train.getBookingFor(user.id);
+    booking.setPayment(paymentId);
+    return booking.isPaid() ? trains.put(train) : P.reject("Invalid payment data");
   }
 });
 
