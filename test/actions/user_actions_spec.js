@@ -7,6 +7,7 @@ var expect         = require('chai').expect,
     users          = require('../../core/repositories/user_repository'),
     stations       = require('../../core/repositories/station_repository'),
     trainService   = require('../../core/services/train_service'),
+    bookingService = require('../../core/services/booking_service'),
     userActions    = require('../../core/actions/user_actions');
 
 describe("actions/user_actions.js", function() {
@@ -25,13 +26,13 @@ describe("actions/user_actions.js", function() {
   describe("#bookTrain", function() {
     beforeEach(function() {
       sinon.stub(trainService, 'findOrCreateTrain').returns(P.resolve(train));
-      sinon.stub(trainService, 'bookTrain').withArgs(currentUser, train).returns(P.resolve(bookedTrain));
+      sinon.stub(bookingService, 'bookTrain').withArgs(currentUser, train).returns(P.resolve(bookedTrain));
       sinon.stub(users, 'findOneById').withArgs(currentUser.id).returns(P.resolve(currentUser));
     });
 
     afterEach(function() {
       trainService.findOrCreateTrain.restore();
-      trainService.bookTrain.restore();
+      bookingService.bookTrain.restore();
       users.findOneById.restore();
     });
 
@@ -55,7 +56,7 @@ describe("actions/user_actions.js", function() {
 
     it("creates the booking", function(done) {
       userActions.bookTrain(currentUser.id, train.name, train.fromId, train.toId, train.date, train.departure, train.arrival, signature).then(function(booking) {
-         expect(trainService.bookTrain.calledWith(currentUser, train)).to.eql(true);
+         expect(bookingService.bookTrain.calledWith(currentUser, train)).to.eql(true);
          done();
       }).catch(function(err) {
         done(err);
@@ -129,23 +130,23 @@ describe("actions/user_actions.js", function() {
     });
   });
 
-  describe("#getBookedByUser", function() {
+  describe("#getTrainsBookedByUser", function() {
     var user, train;
 
     before(function() {
       user = actions.newUser();
       train = actions.newTrain();
       sinon.stub(users, 'findOneById').withArgs(user.id).returns(P.resolve(user));
-      sinon.stub(trainService, 'getBookedByUser').withArgs(user).returns(P.resolve([train]));
+      sinon.stub(bookingService, 'getTrainsBookedByUser').withArgs(user).returns(P.resolve([train]));
     });
 
     after(function() {
       users.findOneById.restore();
-      trainService.getBookedByUser.restore();
+      bookingService.getTrainsBookedByUser.restore();
     });
 
     it("retrieves the trains booked by the user", function(done) {
-      userActions.getBookedByUser(user.id).then(function(results) {
+      userActions.getTrainsBookedByUser(user.id).then(function(results) {
         expect(results.trains[0].id).to.eql(train.id);
         expect(results.trains[0].name).to.eql(train.name);
         expect(results.trains[0].bookings).to.eql(1);

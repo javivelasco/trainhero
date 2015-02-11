@@ -1,0 +1,110 @@
+var expect   = require('chai').expect,
+		dotenv   = require('dotenv').load(),
+		fs       = require('fs'),
+		sinon    = require('sinon'),
+		P        = require('bluebird'),
+		moment   = require('moment'),
+		request  = require('../../config/request'),
+		actions  = require('../actions'),
+		dummies  = require('../dummies'),
+		helper   = require('../../core/helper'),
+		stations = require('../../core/repositories/station_repository'),
+		trains   = require('../../core/repositories/train_repository'),
+		service  = require('../../core/services/booking_service');
+
+describe('BookingService', function() {
+	describe('#bookTrain', function() {
+		var dummyUser, dummyTrain, dummyBooking, invalidBooking;
+
+		before(function() {
+			dummyUser      = actions.newUser();
+			dummyTrain     = actions.newTrain({bookings: null});
+			dummyBooking   = actions.newBooking();
+			invalidBooking = actions.newBooking({trainId: undefined});
+		});
+
+		it("creates a booking", function(done) {
+			sinon.stub(trains, "put").returns(P.resolve(dummyBooking));
+			service.bookTrain(dummyUser, dummyTrain).then(function(booking) {
+				var trainCalled = trains.put.getCall(0).args[0];
+				expect(trains.put.called).to.eql(true);
+				expect(trainCalled.bookings.length).to.eql(1);
+				expect(trainCalled.bookings[0].userId).to.eql(dummyUser.id);
+				done();
+				trains.put.restore();
+			}).catch(function(err) {
+				done(err);
+			});
+		});
+
+		it("does not create a train if booking user id is invalid", function(done) {
+			dummyUser.id = null;
+			service.bookTrain(dummyUser, dummyTrain).then(function(booking) {
+				done(booking);
+			}).catch(function(err) {
+				expect(err).to.exist();
+				done();
+			});
+		});
+	});
+
+	describe('#getTrainsBookedByUser', function() {
+		var dummyUser, dummyTrain;
+
+		before(function() {
+			dummyUser  = actions.newUser();
+			dummyTrain = actions.newTrain();
+			sinon.stub(trains, 'findByBookingUserId').withArgs(dummyUser.id).returns(P.resolve([dummyTrain]));
+		});
+
+		after(function() {
+			trains.findByBookingUserId.restore();
+		});
+
+		it("returns trains booked by user", function(done) {
+			service.getTrainsBookedByUser(dummyUser).then(function(result) {
+				expect(result).to.eql([dummyTrain]);
+				expect(trains.findByBookingUserId.called).to.eql(true);
+				done();
+			}).catch(function(err) {
+				done(err);
+			});
+		});
+	});
+
+	describe('#setBookingPaid', function() {
+		var dummyTrain, dummyUser, paymentId;
+
+		beforeEach(function() {
+			dummyTrain = actions.newTrain({bookings: []});
+			dummyUser  = actions.newUser();
+			paymentId  = "paymentidtreturnedbystripe";
+			dummyTrain.createBookingFor(dummyUser.id);
+			sinon.stub(trains, 'put').returns(P.resolve('train saved'));
+		});
+
+		afterEach(function() {
+			trains.put.restore();
+		});
+
+		it("set the booking as paid in the repository", function(done) {
+			service.setBookingPaid(dummyTrain, dummyUser, paymentId).then(function() {
+				expect(trains.put.called).to.eql(true);
+				expect(trains.put.getCall(0).args[0].getBookingFor(dummyUser.id).paymentId).to.eql(paymentId);
+				expect(trains.put.getCall(0).args[0].getBookingFor(dummyUser.id).isPaid()).to.eql(true);
+				done();
+			}).catch(function(err) {
+				done(err);
+			});
+		});
+
+		it("rejects the promise if payment data is invalid", function(done) {
+			service.setBookingPaid(dummyTrain, dummyUser, null).then(function(result) {
+				done(result);
+			}).catch(function(err) {
+				expect(trains.put.called).to.eql(false);
+				done();
+			});
+		});
+	});
+});

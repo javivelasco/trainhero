@@ -2,7 +2,8 @@ var _              = require('lodash'),
     P              = require('bluebird'),
     users          = require('../repositories/user_repository'),
     stations       = require('../repositories/station_repository'),
-    trainService   = require('../services/train_service');
+    trainService   = require('../services/train_service'),
+    bookingService = require('../services/booking_service');
 
 function UserActions () {}
 
@@ -12,7 +13,7 @@ _.extend(UserActions.prototype, {
         userP  = users.findOneById(currentUserId);
 
     return P.join(trainP, userP, function(train, user) {
-      return trainService.bookTrain(user, train);
+      return bookingService.bookTrain(user, train);
     });
   },
 
@@ -31,9 +32,9 @@ _.extend(UserActions.prototype, {
     });
   },
 
-  getBookedByUser: function(currentUserId) {
+  getTrainsBookedByUser: function(currentUserId) {
     return users.findOneById(currentUserId).then(function(user) {
-      return trainService.getBookedByUser(user);
+      return bookingService.getTrainsBookedByUser(user);
     }).then(function(trains) {
       return P.resolve({
         trains: buildTrainsForBookingList(trains)
