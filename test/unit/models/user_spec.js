@@ -1,11 +1,11 @@
 var expect  = require('chai').expect,
 		bcrypt  = require('bcrypt-nodejs'),
 		sinon   = require('sinon'),
-		actions = require('../actions'),
-		dummies = require('../dummies'),
-		User    = require("../../core/models/user"),
-		Model   = require("../../core/models/model"),
-		Authorization = require("../../core/models/authorization");
+		actions = require('../../actions'),
+		dummies = require('../../dummies'),
+		User    = require('../../../core/models/user'),
+		Model   = require('../../../core/models/model'),
+		Authorization = require('../../../core/models/authorization');
 
 describe("models/user.js", function() {
 	var user;

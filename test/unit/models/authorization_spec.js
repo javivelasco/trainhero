@@ -1,8 +1,8 @@
 var expect  = require('chai').expect,
-    actions = require('../actions'),
-    dummies = require('../dummies'),
-		Model   = require("../../core/models/model"),
-    Authorization = require("../../core/models/authorization");
+    actions = require('../../actions'),
+    dummies = require('../../dummies'),
+		Model   = require('../../../core/models/model'),
+    Authorization = require('../../../core/models/authorization');
 
 describe("models/authorization.js", function() {
 	describe("#constructor", function() {

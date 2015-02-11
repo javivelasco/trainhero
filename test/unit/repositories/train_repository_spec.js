@@ -2,10 +2,10 @@ var expect          = require('chai').expect,
     sinon           = require('sinon'),
     P               = require('bluebird'),
     moment          = require('moment'),
-    actions         = require('../actions'),
-    Train           = require('../../core/models/train'),
-    MongoRepository = require('../../core/repositories/mongo_repository'),
-    repository      = require('../../core/repositories/train_repository');
+    actions         = require('../../actions'),
+    Train           = require('../../../core/models/train'),
+    MongoRepository = require('../../../core/repositories/mongo_repository'),
+    repository      = require('../../../core/repositories/train_repository');
 
 describe("TrainRepository", function() {
   var dummyTrain = actions.newTrain();

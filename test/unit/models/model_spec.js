@@ -1,6 +1,6 @@
 var expect   = require('chai').expect,
     assert   = require('chai').assert,
-    Model    = require("../../core/models/model");
+    Model    = require("../../../core/models/model");
 
 describe("models/model.js", function() {
   describe("#constructor", function() {

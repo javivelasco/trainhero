@@ -1,9 +1,9 @@
 var expect  = require('chai').expect,
-    actions = require('../actions'),
-    dummies = require('../dummies'),
-    Train   = require("../../core/models/train"),
-    Booking = require("../../core/models/booking"),
-    Model   = require("../../core/models/model");
+    actions = require('../../actions'),
+    dummies = require('../../dummies'),
+    Train   = require('../../../core/models/train'),
+    Booking = require('../../../core/models/booking'),
+    Model   = require('../../../core/models/model');
 
 describe("models/train.js", function() {
   describe("#constructor", function() {

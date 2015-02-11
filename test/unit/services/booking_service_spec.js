@@ -4,13 +4,13 @@ var expect   = require('chai').expect,
 		sinon    = require('sinon'),
 		P        = require('bluebird'),
 		moment   = require('moment'),
-		request  = require('../../config/request'),
-		actions  = require('../actions'),
-		dummies  = require('../dummies'),
-		helper   = require('../../core/helper'),
-		stations = require('../../core/repositories/station_repository'),
-		trains   = require('../../core/repositories/train_repository'),
-		service  = require('../../core/services/booking_service');
+		request  = require('../../../config/request'),
+		actions  = require('../../actions'),
+		dummies  = require('../../dummies'),
+		helper   = require('../../../core/helper'),
+		stations = require('../../../core/repositories/station_repository'),
+		trains   = require('../../../core/repositories/train_repository'),
+		service  = require('../../../core/services/booking_service');
 
 describe('BookingService', function() {
 	describe('#bookTrain', function() {

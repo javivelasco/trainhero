@@ -7,11 +7,11 @@ var gulp     = require('gulp'),
 gulp.task('mocha', function() {
   process.env.NODE_ENV = 'test';
   return gulp.src([
-      'test/*.js',
-      'test/models/**/*.js',
-      'test/actions/**/*.js',
-      'test/repositories/**/*.js',
-      'test/services/**/*.js'], { read: false }
+      'test/unit/*.js',
+      'test/unit/models/**/*.js',
+      'test/unit/actions/**/*.js',
+      'test/unit/repositories/**/*.js',
+      'test/unit/services/**/*.js'], { read: false }
     ).pipe(mocha({
       reporter: 'nyan'
     }));

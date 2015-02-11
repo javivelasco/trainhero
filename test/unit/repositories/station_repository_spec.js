@@ -1,6 +1,6 @@
 var expect     = require('chai').expect,
-    Station    = require('../../core/models/station'),
-    repository = require('../../core/repositories/station_repository');
+    Station    = require('../../../core/models/station'),
+    repository = require('../../../core/repositories/station_repository');
 
 describe("Station Repository", function() {
   describe('#findOneById', function() {

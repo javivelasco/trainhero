@@ -1,11 +1,11 @@
 var expect  = require('chai').expect,
     sinon   = require('sinon'),
     P       = require('bluebird'),
-    dummies = require('../dummies'),
-    actions = require('../actions'),
-    service = require('../../core/services/user_service'),
-    User    = require('../../core/models/user'),
-    users   = require('../../core/repositories/user_repository');
+    dummies = require('../../dummies'),
+    actions = require('../../actions'),
+    service = require('../../../core/services/user_service'),
+    User    = require('../../../core/models/user'),
+    users   = require('../../../core/repositories/user_repository');
 
 describe('UserService', function() {
   var dummyUser = actions.newUser();

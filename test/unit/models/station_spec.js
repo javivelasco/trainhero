@@ -1,8 +1,8 @@
 var expect  = require('chai').expect,
-    actions = require('../actions'),
-    dummies = require('../dummies'),
-    Station = require("../../core/models/station"),
-    Model   = require("../../core/models/model");
+    actions = require('../../actions'),
+    dummies = require('../../dummies'),
+    Station = require('../../../core/models/station'),
+    Model   = require('../../../core/models/model');
 
 describe("models/station.js", function() {
   describe("#constructor", function() {

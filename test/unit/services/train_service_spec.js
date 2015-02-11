@@ -4,20 +4,20 @@ var expect   = require('chai').expect,
     sinon    = require('sinon'),
     P        = require('bluebird'),
     moment   = require('moment'),
-    request  = require('../../config/request'),
-    actions  = require('../actions'),
-    dummies  = require('../dummies'),
-    helper   = require('../../core/helper'),
-    stations = require('../../core/repositories/station_repository'),
-    trains   = require('../../core/repositories/train_repository'),
-    service  = require('../../core/services/train_service');
+    actions  = require('../../actions'),
+    dummies  = require('../../dummies'),
+    helper   = require('../../../core/helper'),
+    request  = require('../../../config/request'),
+    stations = require('../../../core/repositories/station_repository'),
+    trains   = require('../../../core/repositories/train_repository'),
+    service  = require('../../../core/services/train_service');
 
 describe('TrainService', function() {
   describe('#searchAtRenfe', function() {
     var renfeSearchPage, from, to, date;
 
     before(function() {
-      renfeSearchPage = fs.readFileSync(__dirname + "/../fixtures/renfe_search_results.html", 'UTF8');
+      renfeSearchPage = fs.readFileSync(__dirname + "/../../fixtures/renfe_search_results.html", 'UTF8');
       sinon.stub(request, 'get').returns(P.resolve("Renfe main page content"));
       from = actions.newStation({id: 1, code: '1234'});
       to   = actions.newStation({id: 2, code: '5678'});
@@ -65,7 +65,7 @@ describe('TrainService', function() {
 
   describe('#allStations', function() {
     it("search for all stations in the repository", function() {
-      var service = require('../../core/services/train_service'),
+      var service = require('../../../core/services/train_service'),
           findAllStations = sinon.spy(stations, 'findAll');
       service.allStations();
       expect(findAllStations.called).to.eql(true);
@@ -77,7 +77,7 @@ describe('TrainService', function() {
     var dummyTrain, dummyTrainTimes, wrongTrain, savedTrain, signature;
 
     before(function() {
-      service         = require('../../core/services/train_service');
+      service         = require('../../../core/services/train_service');
       dummyTrain      = actions.newTrain();
       dummyTrainTimes = dummies.dummyTrainTimes();
       savedTrain      = actions.newTrain({id: 4321});

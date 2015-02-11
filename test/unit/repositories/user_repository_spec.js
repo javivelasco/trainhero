@@ -1,10 +1,10 @@
 var expect          = require('chai').expect,
     sinon           = require('sinon'),
     P               = require('bluebird'),
-    actions         = require('../actions'),
-    User            = require('../../core/models/user'),
-    MongoRepository = require('../../core/repositories/mongo_repository'),
-    repository      = require('../../core/repositories/user_repository');
+    actions         = require('../../actions'),
+    User            = require('../../../core/models/user'),
+    MongoRepository = require('../../../core/repositories/mongo_repository'),
+    repository      = require('../../../core/repositories/user_repository');
 
 describe("UserRepository", function() {
   var dummyUser = actions.newUser();

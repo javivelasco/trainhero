@@ -1,14 +1,14 @@
 var expect         = require('chai').expect,
     sinon          = require('sinon'),
     P              = require('bluebird'),
-    actions        = require('../actions'),
-    dummies        = require('../dummies'),
-    helper         = require('../../core/helper'),
-    users          = require('../../core/repositories/user_repository'),
-    stations       = require('../../core/repositories/station_repository'),
-    trainService   = require('../../core/services/train_service'),
-    bookingService = require('../../core/services/booking_service'),
-    userActions    = require('../../core/actions/user_actions');
+    actions        = require('../../actions'),
+    dummies        = require('../../dummies'),
+    helper         = require('../../../core/helper'),
+    users          = require('../../../core/repositories/user_repository'),
+    stations       = require('../../../core/repositories/station_repository'),
+    trainService   = require('../../../core/services/train_service'),
+    bookingService = require('../../../core/services/booking_service'),
+    userActions    = require('../../../core/actions/user_actions');
 
 describe("actions/user_actions.js", function() {
   var currentUser, fromStation, toStation, booking, train, signature;

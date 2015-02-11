@@ -2,11 +2,11 @@ var expect     = require('chai').expect,
     sinon      = require('sinon'),
     mongoskin  = require('mongoskin'),
     P          = require('bluebird'),
-    db         = require('../../config/mongo').db,
-    actions    = require('../actions'),
-    testHelper = require('../helper'),
-    Train      = require('../../core/models/train'),
-    MongoRepository = require("../../core/repositories/mongo_repository");
+    db         = require('../../../config/mongo').db,
+    actions    = require('../../actions'),
+    testHelper = require('../../helper'),
+    Train      = require('../../../core/models/train'),
+    MongoRepository = require('../../../core/repositories/mongo_repository');
 
 describe("Mongo Repository", function() {
   var repository, timestampedRepository;

@@ -1,10 +1,10 @@
 var expect   = require('chai').expect,
     sinon    = require('sinon'),
     moment   = require('moment'),
-    actions  = require('../actions'),
-    dummies  = require('../dummies'),
-    Booking  = require("../../core/models/booking"),
-    Model    = require("../../core/models/model");
+    actions  = require('../../actions'),
+    dummies  = require('../../dummies'),
+    Booking  = require('../../../core/models/booking'),
+    Model    = require('../../../core/models/model');
 
 describe('models/booking', function() {
   var booking;
