@@ -72,7 +72,7 @@ describe('BookingService', function() {
 		});
 	});
 
-	describe('#setBookingPaid', function() {
+	describe('#setBookingPayment', function() {
 		var dummyTrain, dummyUser, paymentId;
 
 		beforeEach(function() {
@@ -88,7 +88,7 @@ describe('BookingService', function() {
 		});
 
 		it("set the booking as paid in the repository", function(done) {
-			service.setBookingPaid(dummyTrain, dummyUser, paymentId).then(function() {
+			service.setBookingPayment(dummyTrain, dummyUser, paymentId).then(function() {
 				expect(trains.put.called).to.eql(true);
 				expect(trains.put.getCall(0).args[0].getBookingFor(dummyUser.id).paymentId).to.eql(paymentId);
 				expect(trains.put.getCall(0).args[0].getBookingFor(dummyUser.id).isPaid()).to.eql(true);
@@ -99,7 +99,7 @@ describe('BookingService', function() {
 		});
 
 		it("rejects the promise if payment data is invalid", function(done) {
-			service.setBookingPaid(dummyTrain, dummyUser, null).then(function(result) {
+			service.setBookingPayment(dummyTrain, dummyUser, null).then(function(result) {
 				done(result);
 			}).catch(function(err) {
 				expect(trains.put.called).to.eql(false);
