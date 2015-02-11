@@ -15,7 +15,7 @@ var booking = {
 	getAll: function(req, res) {
 		var user = req.user;
 
-		userActions.getBookedByUser(user.id).then(function(result) {
+		userActions.getTrainsBookedByUser(user.id).then(function(result) {
 			res.render('booking/index', {
 				user: req.user,
 				trains: result.trains
