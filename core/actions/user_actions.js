@@ -8,7 +8,7 @@ var _              = require('lodash'),
     paymentService = require('../infrastructure/payment_service'),
     bookingService = require('../services/booking_service');
 
-var Actions = {
+var userActions = {
   signupWithEmail: function(name, email, password, passwordRepeat) {
     return userService.emailSignup(name, email, password, passwordRepeat);
   },
@@ -100,4 +100,4 @@ function bookingIsCharged(train, userId) {
   return !!train.getBookingFor(userId).chargeId;
 }
 
-module.exports = Actions;
+module.exports = userActions;

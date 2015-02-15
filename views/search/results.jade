@@ -3,15 +3,15 @@ block content
   header
     h2 Available trains from #{from.name} to #{to.name}
     p  You are logged in as #{user.name}
-  
+
   ul(style="list-style: none;")
     each train in trains
-      li      
+      li
         form(action="/bookings", method="POST")
           input(type="text", name="train[name]",      value="#{train.name}")
           input(type="text", name="train[fromId]",    value="#{from.id}")
           input(type="text", name="train[toId]",      value="#{to.id}")
-          input(type="text", name="train[price]",     value="#{train.price}€")
+          input(type="text", name="train[price]",     value="#{train.price}")
           input(type="text", name="train[date]",      value="#{date}")
           input(type="text", name="train[departure]", value="#{train.departure}")
           input(type="text", name="train[arrival]",   value="#{train.arrival}")
