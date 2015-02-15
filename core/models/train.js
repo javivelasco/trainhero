@@ -3,7 +3,7 @@ var _       = require("lodash"),
     Booking = require("./booking");
 
 var Train = Model.extend({
-  attributes: ['id', 'name', 'fromId', 'toId', 'departure', 'arrival', 'bookings'],
+  attributes: ['id', 'name', 'fromId', 'toId', 'departure', 'arrival', 'bookings', 'price'],
   embebbed:   { bookings: [Booking] },
 
   constructor: function() {
@@ -17,6 +17,7 @@ var Train = Model.extend({
     toId:      { presence: true },
     arrival:   { presence: true, datetime: true },
     departure: { presence: true, datetime: true }
+    price:     { presence: true, numericality: { greaterThan: 0 }},
   },
 
   getBookingFor: function(userId) {

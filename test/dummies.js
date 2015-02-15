@@ -61,6 +61,7 @@ dummies.dummyTrain = function() {
   return {
     id:        '1',
     name:      'AVE Hobbiton',
+    price:     19.2,
     departure: helper.renfeDatetimeToDate(t.departureDateString, t.departureHourString),
     arrival:   helper.renfeDatetimeToDate(t.arrivalDateString,   t.arrivalHourString),
     fromId:    dummies.dummyStation().id,

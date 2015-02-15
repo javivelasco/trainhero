@@ -25,6 +25,11 @@ describe("models/train.js", function() {
       expect(train.isValid()).to.eql(false);
     });
 
+    it("is not valid with no price", function() {
+      var train = actions.newTrain({price: undefined});
+      expect(train.isValid()).to.eql(false);
+    })
+
     it("is not valid with no toId", function() {
       var train = actions.newTrain({toId: undefined});
       expect(train.isValid()).to.eql(false);
@@ -59,6 +64,16 @@ describe("models/train.js", function() {
 
     it("is not valid with not date departure hour", function() {
       var train = actions.newTrain({arrival: '19:30'});
+      expect(train.isValid()).to.eql(false);
+    });
+
+    it("is not valid with no numeric price", function() {
+      var train = actions.newTrain({price: 'nonumber'});
+      expect(train.isValid()).to.eql(false);
+    });
+
+    it("is not valid with price under 0", function() {
+      var train = actions.newTrain({price: -20.3});
       expect(train.isValid()).to.eql(false);
     });
 
