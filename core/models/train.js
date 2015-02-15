@@ -16,8 +16,8 @@ var Train = Model.extend({
     fromId:    { presence: true },
     toId:      { presence: true },
     arrival:   { presence: true, datetime: true },
-    departure: { presence: true, datetime: true }
-    price:     { presence: true, numericality: { greaterThan: 0 }},
+    departure: { presence: true, datetime: true },
+    price:     { presence: true, numericality: { greaterThan: 0 }}
   },
 
   getBookingFor: function(userId) {

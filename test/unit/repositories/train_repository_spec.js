@@ -111,4 +111,28 @@ describe("TrainRepository", function() {
       });
     });
   });
+
+  describe("findOneByIdAndUserBooking", function(done) {
+    var user, train;
+
+    before(function() {
+      user  = actions.newUser();
+      train = actions.newTrain();
+      sinon.stub(repository, 'findOneBy').returns(P.resolve('train'));
+    });
+
+    after(function() {
+      repository.findOneBy.restore();
+    });
+
+    it("performs the proper query", function(done) {
+      repository.findOneByIdAndUserBooking(train.id, user.id).then(function(results) {
+        expect(repository.findOneBy.called).to.eql(true);
+        expect(repository.findOneBy.getCall(0).args[0]).to.eql({id: train.id, bookings: {$elemMatch: {userId: user.id}}})
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    })
+  });
 });
