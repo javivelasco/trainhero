@@ -25,16 +25,16 @@ _.extend(TrainService.prototype, {
     return trains.findByRouteAndDeparture(from.id, to.id, date);
   },
 
-  findOrCreateTrain: function(name, fromId, toId, date, departure, arrival, signature) {
-    if (!isValidTrainSignature(name, fromId, toId, date, departure, arrival, signature))
+  findOrCreateTrain: function(name, fromId, toId, date, departure, arrival, price, signature) {
+    if (!isValidTrainSignature(name, fromId, toId, date, departure, arrival, price, signature))
       return P.reject({signature: "Invalid signature for train data"});
 
     var departureDatetime = helper.renfeDatetimeToDate(date, departure),
         arrivalDatetime   = helper.renfeDatetimeToDate(date, arrival);
 
     return trains.findOneByNameRouteAndDeparture({name: name, fromId: fromId, toId: toId, departure: departureDatetime}).then(function(result) {
-      if (result) return P.resolve(result);
-      var train = new Train({name: name, fromId: fromId, toId: toId, departure: departureDatetime, arrival: arrivalDatetime});
+      if (result) return P.resolve(updateTrainPrice(result, price));
+      var train = new Train({name: name, fromId: fromId, toId: toId, departure: departureDatetime, arrival: arrivalDatetime, price: price});
       if (!train.isValid()) return P.reject(train.errors);
       return trains.put(train);
     });
@@ -91,16 +91,24 @@ var parseResultsPage = function (htmlPage, fromId, toId, date) {
         arrival:     helper.parseHour(helper.trimSpacesAndNewlines(element.find('th,td').eq(2).text())),
         price:       helper.trimSpacesAndNewlines(element.find('th,td').eq(4).find("img[title*='Mesa']").eq(0).parent().text())
       };
-      train.signature = helper.signArguments(train.name, fromId, toId, date, train.departure, train.arrival);
+      train.signature = helper.signArguments(train.name, fromId, toId, date, train.departure, train.arrival, train.price);
       return train;
     }
   });
   return _.compact(trains);
 };
 
-var isValidTrainSignature = function(name, fromId, toId, date, departure, arrival, signature) {
-  var validSignature = helper.signArguments(name, fromId, toId, date, departure, arrival);
+var isValidTrainSignature = function(name, fromId, toId, date, departure, arrival, price, signature) {
+  var validSignature = helper.signArguments(name, fromId, toId, date, departure, arrival, price);
   return validSignature === signature;
+};
+
+var updateTrainPrice = function(train, price) {
+  if (train.price !== price) {
+    train.price = price;
+    trains.put(train);
+  }
+  return train;
 };
 
 // Export module

@@ -49,7 +49,7 @@ describe('TrainService', function() {
         expect(trains[0].departure).to.eql("06:20");
         expect(trains[0].arrival).to.eql("08:27");
         expect(trains[0].price).to.eql("18.80");
-        expect(trains[0].signature).to.eql("a25b5900bb7a466ccd479455ad517b3c");
+        expect(trains[0].signature).to.eql("fd026cc93b08ffcecc5e3debe5d96e4b");
         done();
       });
     });
@@ -79,9 +79,10 @@ describe('TrainService', function() {
     before(function() {
       service         = require('../../../core/services/train_service');
       dummyTrain      = actions.newTrain();
+      dummyTrainPrice = actions.newTrain({price: 32.30});
       dummyTrainTimes = dummies.dummyTrainTimes();
       savedTrain      = actions.newTrain({id: 4321});
-      signature       = helper.signArguments(dummyTrain.name, dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString);
+      signature       = helper.signArguments(dummyTrain.name, dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, dummyTrain.price);
     });
 
     beforeEach(function() {
@@ -95,7 +96,7 @@ describe('TrainService', function() {
 
     it("creates a train if signature is valid and did not exist", function(done) {
       sinon.stub(trains, "findOneByNameRouteAndDeparture").returns(P.resolve(null));
-      service.findOrCreateTrain(dummyTrain.name, dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, signature).then(function(train) {
+      service.findOrCreateTrain(dummyTrain.name, dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, dummyTrain.price, signature).then(function(train) {
         expect(train.toJSON()).to.eql(savedTrain.toJSON());
         done();
       }).catch(function(err) {
@@ -105,7 +106,7 @@ describe('TrainService', function() {
 
     it("does not create a train if signature is not valid", function(done) {
       sinon.stub(trains, "findOneByNameRouteAndDeparture").withArgs().returns(P.resolve(null));
-      service.findOrCreateTrain("Quahog", dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, signature).catch(function(err) {
+      service.findOrCreateTrain("Quahog", dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, dummyTrain.price, signature).catch(function(err) {
         expect(err).to.eql({signature: "Invalid signature for train data"});
         done();
       });
@@ -115,7 +116,7 @@ describe('TrainService', function() {
       var wrongTrain = actions.newTrain({name: undefined});
       var wrongSignature = helper.signArguments(undefined, dummyTrain.fromId, dummyTrain.toId, dummyTrain.date, dummyTrain.departure, dummyTrain.arrival);
       sinon.stub(trains, "findOneByNameRouteAndDeparture").withArgs().returns(P.resolve(null));
-      service.findOrCreateTrain(undefined, dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, wrongSignature).then(function(train) {
+      service.findOrCreateTrain(undefined, dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, dummyTrain.price, wrongSignature).then(function(train) {
         done(train);
       }).catch(function (err) {
         expect(trains.put.called).to.eql(false);
@@ -125,7 +126,7 @@ describe('TrainService', function() {
 
     it("does not create a train if it existed", function(done) {
       sinon.stub(trains, "findOneByNameRouteAndDeparture").withArgs({name: dummyTrain.name, fromId: dummyTrain.fromId, toId: dummyTrain.toId, departure: dummyTrain.departure}).returns(P.resolve(dummyTrain));
-      service.findOrCreateTrain(dummyTrain.name, dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, signature).then(function(train) {
+      service.findOrCreateTrain(dummyTrain.name, dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, dummyTrain.price, signature).then(function(train) {
         expect(trains.put.called).to.eql(false);
         expect(train).to.eql(dummyTrain);
         done();
@@ -134,10 +135,23 @@ describe('TrainService', function() {
       });
     });
 
+    it("updates price of a train if it's now different", function(done) {
+      sinon.stub(trains, "findOneByNameRouteAndDeparture").withArgs({name: dummyTrain.name, fromId: dummyTrain.fromId, toId: dummyTrain.toId, departure: dummyTrain.departure}).returns(P.resolve(dummyTrainPrice));
+      service.findOrCreateTrain(dummyTrain.name, dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, dummyTrain.price, signature).then(function(train) {
+        expect(train.price).to.eql(dummyTrain.price);
+        expect(trains.put.called).to.eql(true);
+        dummyTrainPrice.price = dummyTrain.price;
+        expect(trains.put.getCall(0).args[0]).to.eql(dummyTrainPrice);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
     it("does not create a train if data is invalid", function(done) {
       sinon.stub(trains, "findOneByNameRouteAndDeparture").returns(P.resolve(null));
-      signature = helper.signArguments('', dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString);
-      service.findOrCreateTrain('', dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, signature).then(function(train) {
+      signature = helper.signArguments('', dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, dummyTrain.price);
+      service.findOrCreateTrain('', dummyTrain.fromId, dummyTrain.toId, dummyTrainTimes.departureDateString, dummyTrainTimes.departureHourString, dummyTrainTimes.arrivalHourString, dummyTrain.price, signature).then(function(train) {
         done(train);
       }).catch(function(err) {
         expect(trains.put.called).to.eql(false);

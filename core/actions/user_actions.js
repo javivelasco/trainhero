@@ -1,6 +1,7 @@
 var _              = require('lodash'),
     P              = require('bluebird'),
     users          = require('../repositories/user_repository'),
+    trains         = require('../repositories/train_repository'),
     stations       = require('../repositories/station_repository'),
     trainService   = require('../services/train_service'),
     bookingService = require('../services/booking_service');
@@ -8,8 +9,8 @@ var _              = require('lodash'),
 function UserActions () {}
 
 _.extend(UserActions.prototype, {
-  bookTrain: function(currentUserId, trainName, fromId, toId, date, departure, arrival, signature) {
-    var trainP = trainService.findOrCreateTrain(trainName, fromId, toId, date, departure, arrival, signature),
+  bookTrain: function(currentUserId, trainName, fromId, toId, date, departure, arrival, price, signature) {
+    var trainP = trainService.findOrCreateTrain(trainName, fromId, toId, date, departure, arrival, price, signature),
         userP  = users.findOneById(currentUserId);
 
     return P.join(trainP, userP, function(train, user) {
@@ -39,6 +40,16 @@ _.extend(UserActions.prototype, {
       return P.resolve({
         trains: buildTrainsForBookingList(trains)
       });
+    });
+  },
+
+  authorizeBookingPayment: function(currentUserId, trainId) {
+    var currentUserP = users.findOneById(currentUserId),
+        trainP       = trains.findOneByIdAndUserBooking(trainId, currentUserId);
+
+    return P.join(currentUserP, trainP, function(user, train) {
+      if (!train) return P.reject("Booking not found for user");
+      return P.resolve(null);
     });
   }
 });

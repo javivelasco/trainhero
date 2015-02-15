@@ -5,6 +5,7 @@ var expect         = require('chai').expect,
     dummies        = require('../../dummies'),
     helper         = require('../../../core/helper'),
     users          = require('../../../core/repositories/user_repository'),
+    trains         = require('../../../core/repositories/train_repository'),
     stations       = require('../../../core/repositories/station_repository'),
     trainService   = require('../../../core/services/train_service'),
     bookingService = require('../../../core/services/booking_service'),
@@ -20,7 +21,7 @@ describe("actions/user_actions.js", function() {
     bookedTrain = actions.newTrain({bookings: [booking]});
     fromStation = actions.newStation({id: 1, code: '1234'});
     toStation   = actions.newStation({id: 2, code: '5678'});
-    signature   = helper.signArguments(train.name, train.fromId, train.toId, train.date, train.departure, train.arrival);
+    signature   = helper.signArguments(train.name, train.fromId, train.toId, train.date, train.departure, train.arrival, train.price);
   });
 
   describe("#bookTrain", function() {
@@ -37,8 +38,8 @@ describe("actions/user_actions.js", function() {
     });
 
     it("creates the train if it doesn't exists", function(done) {
-      userActions.bookTrain(currentUser.id, train.name, train.fromId, train.toId, train.date, train.departure, train.arrival, signature).then(function(result) {
-        expect(trainService.findOrCreateTrain.calledWith(train.name, train.fromId, train.toId, train.date, train.departure, train.arrival, signature)).to.eql(true);
+      userActions.bookTrain(currentUser.id, train.name, train.fromId, train.toId, train.date, train.departure, train.arrival, train.price, signature).then(function(result) {
+        expect(trainService.findOrCreateTrain.calledWith(train.name, train.fromId, train.toId, train.date, train.departure, train.arrival, train.price, signature)).to.eql(true);
         done();
       }).catch(function(err) {
         done(err);
@@ -46,7 +47,7 @@ describe("actions/user_actions.js", function() {
     });
 
     it("searchs for the user", function(done) {
-      userActions.bookTrain(currentUser.id, train.name, train.fromId, train.toId, train.date, train.departure, train.arrival, signature).then(function(booking) {
+      userActions.bookTrain(currentUser.id, train.name, train.fromId, train.toId, train.date, train.departure, train.arrival, train.price, signature).then(function(booking) {
         expect(users.findOneById.calledWith(currentUser.id)).to.eql(true);
         done();
       }).catch(function(err) {
@@ -55,7 +56,7 @@ describe("actions/user_actions.js", function() {
     });
 
     it("creates the booking", function(done) {
-      userActions.bookTrain(currentUser.id, train.name, train.fromId, train.toId, train.date, train.departure, train.arrival, signature).then(function(booking) {
+      userActions.bookTrain(currentUser.id, train.name, train.fromId, train.toId, train.date, train.departure, train.arrival, train.price, signature).then(function(booking) {
          expect(bookingService.bookTrain.calledWith(currentUser, train)).to.eql(true);
          done();
       }).catch(function(err) {
@@ -153,6 +154,45 @@ describe("actions/user_actions.js", function() {
         done();
       }).catch(function(err) {
         done(err);
+      });
+    });
+  });
+
+  describe("#authorizeBookingPayment", function() {
+    var user  = actions.newUser(),
+        train = actions.newTrain();
+
+    beforeEach(function() {
+      sinon.stub(trains, 'findOneByIdAndUserBooking').withArgs(train.id, user.id).returns(P.resolve(train));
+      sinon.stub(users,  'findOneById').withArgs(user.id).returns(P.resolve(user));
+    });
+
+    afterEach(function() {
+      trains.findOneByIdAndUserBooking.restore();
+      users.findOneById.restore();
+    });
+
+    it("finds the train and the user", function(done) {
+      userActions.authorizeBookingPayment(user.id, train.id).then(function(result) {
+        expect(users.findOneById.called).to.eql(true);
+        expect(trains.findOneByIdAndUserBooking.called).to.eql(true);
+        expect(users.findOneById.getCall(0).args[0]).to.eql(user.id);
+        expect(trains.findOneByIdAndUserBooking.getCall(0).args[0]).to.eql(train.id);
+        expect(trains.findOneByIdAndUserBooking.getCall(0).args[1]).to.eql(user.id);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it("rejects the promise if the train is not booked by the user", function(done) {
+      trains.findOneByIdAndUserBooking.restore();
+      sinon.stub(trains, 'findOneByIdAndUserBooking').withArgs(train.id, user.id).returns(P.resolve(null));
+      userActions.authorizeBookingPayment(user.id, train.id).then(function(result) {
+        done("Promise not rejected");
+      }).catch(function(err) {
+        expect(err).to.eql("Booking not found for user");
+        done();
       });
     });
   });
