@@ -4,6 +4,7 @@ var _              = require('lodash'),
     trains         = require('../repositories/train_repository'),
     stations       = require('../repositories/station_repository'),
     trainService   = require('../services/train_service'),
+    paymentService = require('../infrastructure/payment_service'),
     bookingService = require('../services/booking_service');
 
 function UserActions () {}
@@ -43,13 +44,16 @@ _.extend(UserActions.prototype, {
     });
   },
 
-  authorizeBookingPayment: function(currentUserId, trainId) {
+  createChargeForBooking: function(currentUserId, trainId, token) {
     var currentUserP = users.findOneById(currentUserId),
         trainP       = trains.findOneByIdAndUserBooking(trainId, currentUserId);
 
     return P.join(currentUserP, trainP, function(user, train) {
-      if (!train) return P.reject("Booking not found for user");
-      return P.resolve(null);
+      if (!train)                           return P.reject("Booking not found for user");
+      if (bookingIsCharged(train, user.id)) return P.reject("Booking is already charged");
+      return paymentService.createBlockedCharge(token, train.price).then(function(chargeId) {
+        return bookingService.setBookingCharge(train, user, chargeId);
+      });
     });
   }
 });
@@ -83,6 +87,10 @@ function buildTrainsForBookingList(trains) {
     item.bookings = item.bookings.length;
     return item;
   });
+}
+
+function bookingIsCharged(train, userId) {
+  return !!train.getBookingFor(userId).chargeId;
 }
 
 module.exports = new UserActions();

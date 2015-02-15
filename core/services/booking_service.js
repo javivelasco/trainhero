@@ -21,10 +21,10 @@ _.extend(BookingService.prototype, {
 			return trains.findByBookingUserId(user.id);
 		},
 
-		setBookingPayment: function(train, user, paymentId) {
+		setBookingCharge: function(train, user, chargeId) {
 			var booking = train.getBookingFor(user.id);
-			booking.setPayment(paymentId);
-			return booking.isPaid() ? trains.put(train) : P.reject("Invalid payment data");
+			booking.setCharge(chargeId);
+			return chargeId ? trains.put(train) : P.reject("Invalid payment data");
 		}
 });
 

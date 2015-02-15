@@ -8,6 +8,7 @@ var expect         = require('chai').expect,
     trains         = require('../../../core/repositories/train_repository'),
     stations       = require('../../../core/repositories/station_repository'),
     trainService   = require('../../../core/services/train_service'),
+    paymentService = require('../../../core/infrastructure/payment_service'),
     bookingService = require('../../../core/services/booking_service'),
     userActions    = require('../../../core/actions/user_actions');
 
@@ -158,22 +159,29 @@ describe("actions/user_actions.js", function() {
     });
   });
 
-  describe("#authorizeBookingPayment", function() {
-    var user  = actions.newUser(),
-        train = actions.newTrain();
+  describe("#createChargeForBooking", function() {
+    var user     = actions.newUser(),
+        token    = 'testtoken',
+        chargeId = 'ch_15WVEk2eZvKYlo2CWVCmsrm3',
+        chargedBookingTrain = actions.newTrain({bookings: [actions.newBooking().toJSON()]}),
+        train = actions.newTrain({bookings: [actions.newBooking({chargeId: null, paidAt: null}).toJSON()]});
 
     beforeEach(function() {
       sinon.stub(trains, 'findOneByIdAndUserBooking').withArgs(train.id, user.id).returns(P.resolve(train));
       sinon.stub(users,  'findOneById').withArgs(user.id).returns(P.resolve(user));
+      sinon.stub(paymentService, 'createBlockedCharge').returns(P.resolve(chargeId));
+      sinon.stub(bookingService, 'setBookingCharge').returns(P.resolve(train));
     });
 
     afterEach(function() {
       trains.findOneByIdAndUserBooking.restore();
       users.findOneById.restore();
+      paymentService.createBlockedCharge.restore();
+      bookingService.setBookingCharge.restore();
     });
 
     it("finds the train and the user", function(done) {
-      userActions.authorizeBookingPayment(user.id, train.id).then(function(result) {
+      userActions.createChargeForBooking(user.id, train.id, token).then(function(result) {
         expect(users.findOneById.called).to.eql(true);
         expect(trains.findOneByIdAndUserBooking.called).to.eql(true);
         expect(users.findOneById.getCall(0).args[0]).to.eql(user.id);
@@ -188,11 +196,53 @@ describe("actions/user_actions.js", function() {
     it("rejects the promise if the train is not booked by the user", function(done) {
       trains.findOneByIdAndUserBooking.restore();
       sinon.stub(trains, 'findOneByIdAndUserBooking').withArgs(train.id, user.id).returns(P.resolve(null));
-      userActions.authorizeBookingPayment(user.id, train.id).then(function(result) {
+      userActions.createChargeForBooking(user.id, train.id, token).then(function(result) {
         done("Promise not rejected");
       }).catch(function(err) {
         expect(err).to.eql("Booking not found for user");
         done();
+      });
+    });
+
+    it("rejects the promise if the booking is already charged", function(done) {
+      trains.findOneByIdAndUserBooking.restore()
+      sinon.stub(trains, 'findOneByIdAndUserBooking').withArgs(train.id, user.id).returns(P.resolve(chargedBookingTrain));
+      userActions.createChargeForBooking(user.id, train.id, token).then(function(result) {
+        done("Promise not rejected");
+      }).catch(function(err) {
+        expect(err).to.eql("Booking is already charged");
+        done();
+      });
+    });
+
+    it("creates the non-captured charge using the token", function(done) {
+      userActions.createChargeForBooking(user.id, train.id, token).then(function(result) {
+        expect(paymentService.createBlockedCharge.called).to.eql(true);
+        expect(paymentService.createBlockedCharge.getCall(0).args[0]).to.eql(token);
+        expect(paymentService.createBlockedCharge.getCall(0).args[1]).to.eql(train.price);
+        done();
+      }).catch(function(err) {
+        done(err);
+      });
+    });
+
+    it("rejects the promise with stripe error if charge cannot be created", function(done) {
+      paymentService.createBlockedCharge.restore();
+      sinon.stub(paymentService, 'createBlockedCharge').returns(P.reject('Stripe error'));
+      userActions.createChargeForBooking(user.id, train.id, token).then(function(result) {
+        done('Promise should be rejected');
+      }).catch(function(err) {
+        expect(err).to.eql('Stripe error')
+        done();
+      });
+    });
+
+    it("stores the created chargeId in the booking if it was not charged before", function(done) {
+      userActions.createChargeForBooking(user.id, train.id, token).then(function(result) {
+        expect(bookingService.setBookingCharge.called).to.eql(true);
+        done();
+      }).catch(function(err) {
+        done(err);
       });
     });
   });

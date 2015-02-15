@@ -39,9 +39,9 @@ describe('models/booking', function() {
       expect(booking.isValid()).to.eql(true);
     });
 
-    it("has null paymentId by default", function() {
-      booking = actions.newBooking({paymentId: undefined});
-      expect(booking.paymentId).to.eql(null);
+    it("has null chargeId by default", function() {
+      booking = actions.newBooking({chargeId: undefined});
+      expect(booking.chargeId).to.eql(null);
       expect(booking.isValid()).to.eql(true);
     });
 
@@ -51,38 +51,43 @@ describe('models/booking', function() {
     });
   });
 
-  describe("#setPayment", function() {
-    var paymentId;
+  describe("#setCharge", function() {
+    var chargeId = "external_payment_id",
+        booking   = actions.newBooking({chargeId: null, paidAt: moment().toDate()});
 
-    before(function() {
-      booking = actions.newBooking({paymentId: null, paidAt: null});
-      paymentId = "external_payment_id";
-    });
-
-    it("sets the payment id", function() {
+    it("sets the charge id", function() {
       var clock = sinon.useFakeTimers();
-      booking.setPayment(paymentId);
-      expect(booking.paymentId).to.eql(paymentId);
+      booking.setCharge(chargeId);
+      expect(booking.chargeId).to.eql(chargeId);
       expect(booking.isValid()).to.eql(true);
       clock.restore();
     });
 
-    it("sets paidAt as the current time", function() {
-      booking.setPayment(paymentId);
+    it("sets paidAt as the given value if exists", function() {
+      var clock = sinon.useFakeTimers();
+      booking.setCharge(chargeId, moment().toDate());
+      expect(booking.chargeId).to.eql(chargeId);
       expect(booking.paidAt).to.eql(moment().toDate());
+      expect(booking.isValid()).to.eql(true);
+      clock.restore();
+    });
+
+    it("sets paidAt as null if no value given", function() {
+      booking.setCharge(chargeId);
+      expect(booking.paidAt).to.eql(null);
       expect(booking.isValid()).to.eql(true);
     });
   });
 
-  describe("#isPaid", function() {
-    it("returns true if it has paymentId", function() {
+  describe("#isCaptured", function() {
+    it("returns true if it has paidAt", function() {
       booking = actions.newBooking();
-      expect(booking.isPaid()).to.eql(true);
+      expect(booking.isCaptured()).to.eql(true);
     });
 
-    it("returns false if it has no paymentId", function() {
-      booking = actions.newBooking({paymentId: null});
-      expect(booking.isPaid()).to.eql(false);
+    it("returns false if it has no paidAt", function() {
+      booking = actions.newBooking({paidAt: null});
+      expect(booking.isCaptured()).to.eql(false);
     });
   });
 });

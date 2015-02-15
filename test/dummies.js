@@ -72,10 +72,10 @@ dummies.dummyTrain = function() {
 
 dummies.dummyBooking = function() {
   return {
-    userId:       dummies.dummyUser().id,
-    createdAt:    moment('01/02/2015 12:34', "DD/MM/YYYY HH:mm").toDate(),
-    paidAt:       moment('20/02/2015 12:34', "DD/MM/YYYY HH:mm").toDate(),
-    paymentId:    'external_payment_id'
+    userId:    dummies.dummyUser().id,
+    createdAt: moment('01/02/2015 12:34', "DD/MM/YYYY HH:mm").toDate(),
+    chargeId:  'external_charge_id',
+    paidAt:    moment('20/02/2015 12:34', "DD/MM/YYYY HH:mm").toDate()
   }
 };
 

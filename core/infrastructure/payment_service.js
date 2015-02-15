@@ -1,11 +1,11 @@
-var config = require('./config'),
+var config = require('../../config/config'),
     _      = require('lodash'),
     stripe = require('stripe')(config.stripeSecretKey);
 
 function PaymentService() {}
 
-_.extend(PaymentService, {
-  createStripeCharge: function(amount, stripeToken, description, metadata) {
+_.extend(PaymentService.prototype, {
+  createBlockedCharge: function(stripeToken, amount, description, metadata) {
     var charge = {
       amount:      amount*100,
       card:        stripeToken,

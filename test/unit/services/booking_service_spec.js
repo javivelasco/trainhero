@@ -72,13 +72,13 @@ describe('BookingService', function() {
 		});
 	});
 
-	describe('#setBookingPayment', function() {
-		var dummyTrain, dummyUser, paymentId;
+	describe('#setBookingCharge', function() {
+		var dummyTrain, dummyUser, chargeId;
 
 		beforeEach(function() {
 			dummyTrain = actions.newTrain({bookings: []});
 			dummyUser  = actions.newUser();
-			paymentId  = "paymentidtreturnedbystripe";
+			chargeId  = "chargeIdtreturnedbystripe";
 			dummyTrain.createBookingFor(dummyUser.id);
 			sinon.stub(trains, 'put').returns(P.resolve('train saved'));
 		});
@@ -88,10 +88,10 @@ describe('BookingService', function() {
 		});
 
 		it("set the booking as paid in the repository", function(done) {
-			service.setBookingPayment(dummyTrain, dummyUser, paymentId).then(function() {
+			service.setBookingCharge(dummyTrain, dummyUser, chargeId).then(function() {
 				expect(trains.put.called).to.eql(true);
-				expect(trains.put.getCall(0).args[0].getBookingFor(dummyUser.id).paymentId).to.eql(paymentId);
-				expect(trains.put.getCall(0).args[0].getBookingFor(dummyUser.id).isPaid()).to.eql(true);
+				expect(trains.put.getCall(0).args[0].getBookingFor(dummyUser.id).chargeId).to.eql(chargeId);
+				expect(trains.put.getCall(0).args[0].getBookingFor(dummyUser.id).paidAt).to.eql(null);
 				done();
 			}).catch(function(err) {
 				done(err);
@@ -99,7 +99,7 @@ describe('BookingService', function() {
 		});
 
 		it("rejects the promise if payment data is invalid", function(done) {
-			service.setBookingPayment(dummyTrain, dummyUser, null).then(function(result) {
+			service.setBookingCharge(dummyTrain, dummyUser, null).then(function(result) {
 				done(result);
 			}).catch(function(err) {
 				expect(trains.put.called).to.eql(false);
