@@ -4,12 +4,19 @@ var _              = require('lodash'),
     trains         = require('../repositories/train_repository'),
     stations       = require('../repositories/station_repository'),
     trainService   = require('../services/train_service'),
+    userService    = require('../services/user_service'),
     paymentService = require('../infrastructure/payment_service'),
     bookingService = require('../services/booking_service');
 
-function UserActions () {}
+var Actions = {
+  signupWithEmail: function(name, email, password, passwordRepeat) {
+    return userService.emailSignup(name, email, password, passwordRepeat);
+  },
 
-_.extend(UserActions.prototype, {
+  connectFacebook: function(name, email, uid, token) {
+    return userService.facebookConnect(name, email, uid, token);
+  },
+
   bookTrain: function(currentUserId, trainName, fromId, toId, date, departure, arrival, price, signature) {
     var trainP = trainService.findOrCreateTrain(trainName, fromId, toId, date, departure, arrival, price, signature),
         userP  = users.findOneById(currentUserId);
@@ -56,7 +63,7 @@ _.extend(UserActions.prototype, {
       });
     });
   }
-});
+};
 
 function buildTrainsForSearch(localTrains, renfeTrains, currentUserId) {
   var trainBookings, savedTrain;
@@ -93,4 +100,4 @@ function bookingIsCharged(train, userId) {
   return !!train.getBookingFor(userId).chargeId;
 }
 
-module.exports = new UserActions();
+module.exports = Actions;
