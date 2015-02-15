@@ -31,11 +31,11 @@ gulp.task('cover', function (cb) {
     }))
     .on('end', function () {
       gulp.src([
-          'test/*.js',
-          'test/models/**/*.js',
-          'test/repositories/**/*.js',
-          'test/services/**/*.js',
-          'test/actions/**/*.js'])
+          'test/unit/*.js',
+          'test/unit/models/**/*.js',
+          'test/unit/actions/**/*.js',
+          'test/unit/repositories/**/*.js',
+          'test/unit/services/**/*.js'])
         .pipe(mocha())
         .pipe(istanbul.writeReports({
           reporters: [ 'lcov' ],
