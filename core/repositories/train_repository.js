@@ -20,7 +20,7 @@ var TrainRepository = MongoRepository.extend({
   },
 
   findOneByIdAndUserBooking: function(trainId, userId) {
-    return this.findOneBy({id: trainId, bookings: {$elemMatch: {userId: userId}}});
+    return this.findOneBy({_id: trainId, bookings: {$elemMatch: {userId: userId}}});
   }
 });
 

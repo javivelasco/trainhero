@@ -4,7 +4,21 @@ var gulp     = require('gulp'),
     istanbul = require('gulp-istanbul'),
     jshint   = require('gulp-jshint');
 
-gulp.task('mocha', function() {
+gulp.task('tests', function() {
+  process.env.NODE_ENV = 'test';
+  return gulp.src([
+      'test/integration/*.js',
+      'test/unit/*.js',
+      'test/unit/models/**/*.js',
+      'test/unit/actions/**/*.js',
+      'test/unit/repositories/**/*.js',
+      'test/unit/services/**/*.js'], { read: false }
+    ).pipe(mocha({
+      reporter: 'nyan'
+    }));
+});
+
+gulp.task('unit-tests', function() {
   process.env.NODE_ENV = 'test';
   return gulp.src([
       'test/unit/*.js',
@@ -17,12 +31,21 @@ gulp.task('mocha', function() {
     }));
 });
 
+gulp.task('integration-tests', function() {
+  process.env.NODE_ENV = 'test';
+  return gulp.src([
+      'test/integration/**/*.js'], { read: false }
+    ).pipe(mocha({
+      reporter: 'nyan'
+    }));
+});
+
 gulp.task('watch-mocha', function() {
   process.env.NODE_ENV = 'test';
   gulp.watch(['core/**', 'test/**'], ['mocha']);
 });
 
-gulp.task('cover', function (cb) {
+gulp.task('coverage', function (cb) {
   process.env.NODE_ENV = 'test';
   gulp.src(['core/**/*.js'])
     .pipe(istanbul())
@@ -31,6 +54,7 @@ gulp.task('cover', function (cb) {
     }))
     .on('end', function () {
       gulp.src([
+          'test/integration/*.js',
           'test/unit/*.js',
           'test/unit/models/**/*.js',
           'test/unit/actions/**/*.js',
@@ -47,10 +71,11 @@ gulp.task('cover', function (cb) {
 gulp.task('lint', function() {
   gulp.src([
     'core/**/*.js',
-    'test/models/**/*.js',
-    'test/actions/**/*.js',
-    'test/repositories/**/*.js',
-    'test/services/**/*.js'])
+    'test/integration/*.js',
+    'test/unit/models/**/*.js',
+    'test/unit/actions/**/*.js',
+    'test/unit/repositories/**/*.js',
+    'test/unit/services/**/*.js'])
   .pipe(jshint())
   .pipe(jshint.reporter('jshint-stylish'));
 });

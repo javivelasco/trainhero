@@ -28,7 +28,7 @@ describe("models/train.js", function() {
     it("is not valid with no price", function() {
       var train = actions.newTrain({price: undefined});
       expect(train.isValid()).to.eql(false);
-    })
+    });
 
     it("is not valid with no toId", function() {
       var train = actions.newTrain({toId: undefined});

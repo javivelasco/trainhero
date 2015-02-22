@@ -20,10 +20,10 @@ dummies.dummyStation2 = function() {
 
 dummies.dummyTrainTimes = function() {
   return {
-    departureDateString: '20/12/2013',
-    arrivalDateString:   '20/12/2013',
-    departureHourString: '11:35',
-    arrivalHourString:   '14:22'
+    departureDateString: '19/12/2014',
+    arrivalDateString:   '19/12/2014',
+    departureHourString: '07:00',
+    arrivalHourString:   '08:42'
   }
 };
 

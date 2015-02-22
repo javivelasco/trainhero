@@ -1,4 +1,4 @@
-var Model  = require("./model");
+var Model = require("./model");
 
 var Authorization = Model.extend({
 	attributes: ['uid', 'token', 'provider'],

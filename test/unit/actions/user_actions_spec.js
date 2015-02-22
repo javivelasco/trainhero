@@ -30,7 +30,7 @@ describe("actions/user_actions.js", function() {
     var user = actions.newUser();
 
     before(function() { sinon.stub(userService, 'emailSignup').returns(P.resolve(user)); });
-    after(function()  { userService.emailSignup.restore(); })
+    after(function()  { userService.emailSignup.restore(); });
 
     it("calls user service with the proper arguments", function(done) {
       userActions.signupWithEmail(user.name, user.email, user.password, user.password).then(function(result) {
@@ -50,15 +50,14 @@ describe("actions/user_actions.js", function() {
   describe("#connectFacebook", function() {
     var user  = actions.newUser(),
         token = 'facebookTokenConnect',
-        uid   = 'testUID'
+        uid   = 'testUID';
 
     before(function() { sinon.stub(userService, 'facebookConnect').returns(P.resolve(user)); });
-    after(function()  { userService.facebookConnect.restore(); })
+    after(function()  { userService.facebookConnect.restore(); });
 
     it("calls user service with the proper arguments", function(done) {
       userActions.connectFacebook(user.name, user.email, uid, token).then(function(result) {
         expect(result).to.eql(user);
-        console.log()
         expect(userService.facebookConnect.called).to.eql(true);
         expect(userService.facebookConnect.getCall(0).args[0]).to.eql(user.name);
         expect(userService.facebookConnect.getCall(0).args[1]).to.eql(user.email);
@@ -251,7 +250,7 @@ describe("actions/user_actions.js", function() {
     });
 
     it("rejects the promise if the booking is already charged", function(done) {
-      trains.findOneByIdAndUserBooking.restore()
+      trains.findOneByIdAndUserBooking.restore();
       sinon.stub(trains, 'findOneByIdAndUserBooking').withArgs(train.id, user.id).returns(P.resolve(chargedBookingTrain));
       userActions.createChargeForBooking(user.id, train.id, token).then(function(result) {
         done("Promise not rejected");
@@ -278,7 +277,7 @@ describe("actions/user_actions.js", function() {
       userActions.createChargeForBooking(user.id, train.id, token).then(function(result) {
         done('Promise should be rejected');
       }).catch(function(err) {
-        expect(err).to.eql('Stripe error')
+        expect(err).to.eql('Stripe error');
         done();
       });
     });
