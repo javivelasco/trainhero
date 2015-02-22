@@ -1,6 +1,6 @@
-var config = require('../../config/config'),
-    _      = require('lodash'),
-    stripe = require('stripe')(config.stripeSecretKey);
+var _      = require('lodash'),
+    P      = require('bluebird'),
+    stripe = require('../../config/stripe');
 
 function PaymentService() {}
 

@@ -15,20 +15,9 @@ gulp.task('tests', function() {
       'test/unit/services/**/*.js'], { read: false }
     ).pipe(mocha({
       reporter: 'nyan'
-    }));
-});
-
-gulp.task('unit-tests', function() {
-  process.env.NODE_ENV = 'test';
-  return gulp.src([
-      'test/unit/*.js',
-      'test/unit/models/**/*.js',
-      'test/unit/actions/**/*.js',
-      'test/unit/repositories/**/*.js',
-      'test/unit/services/**/*.js'], { read: false }
-    ).pipe(mocha({
-      reporter: 'nyan'
-    }));
+    })).once('end', function () {
+      process.exit();
+    });
 });
 
 gulp.task('integration-tests', function() {
@@ -37,7 +26,25 @@ gulp.task('integration-tests', function() {
       'test/integration/**/*.js'], { read: false }
     ).pipe(mocha({
       reporter: 'nyan'
-    }));
+    })).once('end', function () {
+      process.exit();
+    });
+});
+
+gulp.task('unit-tests', function() {
+  process.env.NODE_ENV = 'test';
+  return gulp.src([
+      'test/unit/*.js',
+      'test/unit/models/**/*.js',
+      'test/unit/actions/**/*.js',
+      'test/unit/infrastructure/**/*.js',
+      'test/unit/repositories/**/*.js',
+      'test/unit/services/**/*.js'], { read: false }
+    ).pipe(mocha({
+      reporter: 'nyan'
+    })).once('end', function () {
+      process.exit();
+    });
 });
 
 gulp.task('watch-mocha', function() {
@@ -58,6 +65,7 @@ gulp.task('coverage', function (cb) {
           'test/unit/*.js',
           'test/unit/models/**/*.js',
           'test/unit/actions/**/*.js',
+          'test/unit/infrastructure/**/*.js',
           'test/unit/repositories/**/*.js',
           'test/unit/services/**/*.js'])
         .pipe(mocha())
