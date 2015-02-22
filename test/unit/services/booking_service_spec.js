@@ -48,30 +48,6 @@ describe('BookingService', function() {
 		});
 	});
 
-	describe('#getTrainsBookedByUser', function() {
-		var dummyUser, dummyTrain;
-
-		before(function() {
-			dummyUser  = actions.newUser();
-			dummyTrain = actions.newTrain();
-			sinon.stub(trains, 'findByBookingUserId').withArgs(dummyUser.id).returns(P.resolve([dummyTrain]));
-		});
-
-		after(function() {
-			trains.findByBookingUserId.restore();
-		});
-
-		it("returns trains booked by user", function(done) {
-			service.getTrainsBookedByUser(dummyUser).then(function(result) {
-				expect(result).to.eql([dummyTrain]);
-				expect(trains.findByBookingUserId.called).to.eql(true);
-				done();
-			}).catch(function(err) {
-				done(err);
-			});
-		});
-	});
-
 	describe('#setBookingCharge', function() {
 		var dummyTrain, dummyUser, chargeId;
 

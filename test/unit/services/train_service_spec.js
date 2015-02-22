@@ -3,12 +3,10 @@ var expect   = require('chai').expect,
     fs       = require('fs'),
     sinon    = require('sinon'),
     P        = require('bluebird'),
-    moment   = require('moment'),
     actions  = require('../../actions'),
     dummies  = require('../../dummies'),
     helper   = require('../../../core/helper'),
     request  = require('../../../config/request'),
-    stations = require('../../../core/repositories/station_repository'),
     trains   = require('../../../core/repositories/train_repository'),
     service  = require('../../../core/services/train_service');
 
@@ -60,16 +58,6 @@ describe('TrainService', function() {
         expect(err).to.eql("Some error");
         done();
       });
-    });
-  });
-
-  describe('#allStations', function() {
-    it("search for all stations in the repository", function() {
-      var service = require('../../../core/services/train_service'),
-          findAllStations = sinon.spy(stations, 'findAll');
-      service.allStations();
-      expect(findAllStations.called).to.eql(true);
-      stations.findAll.restore();
     });
   });
 

@@ -26,6 +26,15 @@ describe("actions/user_actions.js", function() {
     signature   = helper.signArguments(train.name, train.fromId, train.toId, train.date, train.departure, train.arrival, train.price);
   });
 
+  describe("#getAllStations", function() {
+    it("search for all stations in the repository", function() {
+      var findAllStations = sinon.spy(stations, 'findAll');
+      userActions.getAllStations();
+      expect(findAllStations.called).to.eql(true);
+      stations.findAll.restore();
+    });
+  });
+
   describe("#emailSignupUser", function() {
     var user = actions.newUser();
 
@@ -184,12 +193,12 @@ describe("actions/user_actions.js", function() {
       user = actions.newUser();
       train = actions.newTrain();
       sinon.stub(users, 'findOneById').withArgs(user.id).returns(P.resolve(user));
-      sinon.stub(bookingService, 'getTrainsBookedByUser').withArgs(user).returns(P.resolve([train]));
+      sinon.stub(trains, 'findByBookingUserId').withArgs(user.id).returns(P.resolve([train]));
     });
 
     after(function() {
       users.findOneById.restore();
-      bookingService.getTrainsBookedByUser.restore();
+      trains.findByBookingUserId.restore();
     });
 
     it("retrieves the trains booked by the user", function(done) {

@@ -17,10 +17,6 @@ _.extend(BookingService.prototype, {
 			return trains.put(train);
 		},
 
-		getTrainsBookedByUser: function(user) {
-			return trains.findByBookingUserId(user.id);
-		},
-
 		setBookingCharge: function(train, user, chargeId) {
 			var booking = train.getBookingFor(user.id);
 			booking.setCharge(chargeId);

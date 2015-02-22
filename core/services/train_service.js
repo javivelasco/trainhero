@@ -1,20 +1,14 @@
 var _        = require('lodash'),
     cheerio  = require('cheerio'),
     P        = require('bluebird'),
-    moment   = require('moment'),
     request  = require('../../config/request'),
     helper   = require('../helper'),
     Train    = require('../models/train'),
-    stations = require('../repositories/station_repository'),
     trains   = require('../repositories/train_repository');
 
 function TrainService () {}
 
 _.extend(TrainService.prototype, {
-  allStations: function() {
-    return stations.findAll();
-  },
-
   searchAtRenfe: function(from, to, departureDate) {
     var params = configureSearch(from, to, departureDate);
     return performRequest(params, from.id, to.id, departureDate);

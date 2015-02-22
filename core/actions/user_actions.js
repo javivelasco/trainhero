@@ -17,6 +17,10 @@ var userActions = {
     return userService.facebookConnect(name, email, uid, token);
   },
 
+  getAllStations: function() {
+    return stations.findAll();
+  },
+
   bookTrain: function(currentUserId, trainName, fromId, toId, date, departure, arrival, price, signature) {
     var trainP = trainService.findOrCreateTrain(trainName, fromId, toId, date, departure, arrival, price, signature),
         userP  = users.findOneById(currentUserId);
@@ -43,7 +47,7 @@ var userActions = {
 
   getTrainsBookedByUser: function(currentUserId) {
     return users.findOneById(currentUserId).then(function(user) {
-      return bookingService.getTrainsBookedByUser(user);
+      return trains.findByBookingUserId(user.id);
     }).then(function(trains) {
       return P.resolve({
         trains: buildTrainsForBookingList(trains)

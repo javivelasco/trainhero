@@ -1,14 +1,13 @@
 var fs           = require('fs'),
     P            = require('bluebird'),
     sinon        = require('sinon'),
-    trainService = require('../core/services/train_service'),
     userActions  = require('../core/actions/user_actions');
 
 var search = {
 	searchPage: function (req, res) {
 		res.render('search/search', {
 			user: req.user,
-			stations: trainService.allStations()
+			stations: userActions.getAllStations()
 		});
 	},
 
@@ -16,7 +15,7 @@ var search = {
 		var fromId = req.body.fromId,
 		    toId   = req.body.toId,
 		    date   = req.body.departureDate;
-        
+
 		userActions.searchTrains(req.user.id, fromId, toId, date).then(function(results) {
 			res.render('search/results', {
         user:   req.user,
