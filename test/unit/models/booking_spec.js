@@ -53,41 +53,54 @@ describe('models/booking', function() {
 
   describe("#setCharge", function() {
     var chargeId = "external_payment_id",
-        booking   = actions.newBooking({chargeId: null, paidAt: moment().toDate()});
+        booking  = actions.newBooking({chargeId: null, paidAt: moment().toDate()});
 
-    it("sets the charge id", function() {
-      var clock = sinon.useFakeTimers();
+    it("sets the charge id and paidAt", function() {
       booking.setCharge(chargeId);
       expect(booking.chargeId).to.eql(chargeId);
-      expect(booking.isValid()).to.eql(true);
-      clock.restore();
-    });
-
-    it("sets paidAt as the given value if exists", function() {
-      var clock = sinon.useFakeTimers();
-      booking.setCharge(chargeId, moment().toDate());
-      expect(booking.chargeId).to.eql(chargeId);
-      expect(booking.paidAt).to.eql(moment().toDate());
-      expect(booking.isValid()).to.eql(true);
-      clock.restore();
-    });
-
-    it("sets paidAt as null if no value given", function() {
-      booking.setCharge(chargeId);
       expect(booking.paidAt).to.eql(null);
       expect(booking.isValid()).to.eql(true);
     });
   });
 
-  describe("#isCaptured", function() {
-    it("returns true if it has paidAt", function() {
-      booking = actions.newBooking();
-      expect(booking.isCaptured()).to.eql(true);
+  describe("#setChargeCaptured", function() {
+    var booking = actions.newBooking({chargeId: 'external_payment_id', paidAt: null});
+
+    it("sets paidAt to the current value", function() {
+      var clock = sinon.useFakeTimers();
+      booking.setChargeCaptured();
+      expect(booking.paidAt).to.eql(moment().toDate());
+      expect(booking.isValid()).to.eql(true);
+      clock.restore();
+    });
+  });
+
+  describe("#isCharged", function() {
+    it("returns true if the chargeId is set", function() {
+      booking = actions.newBooking({chargeId: 'external_payment_id'});
+      expect(booking.isCharged()).to.eql(true);
     });
 
-    it("returns false if it has no paidAt", function() {
-      booking = actions.newBooking({paidAt: null});
-      expect(booking.isCaptured()).to.eql(false);
+    it("returns false if the chargeId is not set", function() {
+      booking = actions.newBooking({chargeId: null});
+      expect(booking.isCharged()).to.eql(false);
+    });
+  });
+
+  describe("#isChargeCaptured", function() {
+    it("returns true if the charge is captured", function() {
+      booking = actions.newBooking({chargeId: 'external_payment_id', paidAt: moment().toDate()});
+      expect(booking.isChargeCaptured()).to.eql(true);
+    });
+
+    it("returns false if the charge is unexistent", function() {
+      booking = actions.newBooking({chargeId: null, paidAt: null});
+      expect(booking.isChargeCaptured()).to.eql(false);
+    });
+
+    it("returns false if the charge is not captured", function() {
+      booking = actions.newBooking({chargeId: 'external_payment_id', paidAt: null});
+      expect(booking.isChargeCaptured()).to.eql(false);
     });
   });
 });

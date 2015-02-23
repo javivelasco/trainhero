@@ -89,7 +89,7 @@ describe("Booking trains", function() {
     trains.put(train).then(function(savedTrain) {
       trainActions.chargeBooking(currentUser.id, train.id, stripeToken).then(function(result) {
         expect(result.getBookingFor(currentUser.id).chargeId).to.eql('abcde');
-        expect(result.getBookingFor(currentUser.id).isCaptured()).to.eql(false);
+        expect(result.getBookingFor(currentUser.id).paidAt).to.eql(null);
         done();
       }).catch(function(err) {
         done(err);

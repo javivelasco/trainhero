@@ -14,12 +14,20 @@ var Booking = Model.extend({
     paidAt:  { datetime: true }
   },
 
-  setCharge: function(chargeId, paidAt) {
+  setCharge: function(chargeId) {
     this.chargeId = chargeId;
-    this.paidAt   = paidAt ? moment().toDate() : null;
+    this.paidAt   = null;
   },
 
-  isCaptured: function() {
+  setChargeCaptured: function() {
+    this.paidAt = moment().toDate();
+  },
+
+  isCharged: function() {
+    return !!this.chargeId;
+  },
+
+  isChargeCaptured: function() {
     return !!this.paidAt;
   }
 });
