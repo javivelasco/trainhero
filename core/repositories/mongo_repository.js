@@ -1,7 +1,6 @@
 var _         = require('lodash'),
     P         = require("bluebird"),
     moment    = require("moment"),
-    mongoskin = require('mongoskin'),
     db        = require('../../config/mongo').db;
 
 function MongoRepository() {

@@ -3,13 +3,12 @@ var expect         = require('chai').expect,
     fs             = require('fs'),
     P              = require('bluebird'),
     actions        = require('../actions'),
-    dummies        = require('../dummies'),
-    userActions    = require('../../core/actions/user_actions'),
+    request        = require('../../config/request'),
     users          = require('../../core/repositories/user_repository'),
     trains         = require('../../core/repositories/train_repository'),
     stations       = require('../../core/repositories/station_repository'),
-    request        = require('../../config/request'),
     paymentService = require('../../core/infrastructure/payment_service'),
+    trainActions   = require('../../core/actions/train_actions'),
     sandbox        = sinon.sandbox.create();
 
 describe("Booking trains", function() {
@@ -40,9 +39,9 @@ describe("Booking trains", function() {
   });
 
   it("creates a booking when there are no other bookings", function(done) {
-    userActions.searchTrains(currentUser.id, madridStation.id, cordobaStation.id, date).then(function(results) {
+    trainActions.searchTrains(currentUser.id, madridStation.id, cordobaStation.id, date).then(function(results) {
       searchedTrain = results.trains[0];
-      userActions.bookTrain(currentUser.id, searchedTrain.name, madridStation.id, cordobaStation.id, date, searchedTrain.departure, searchedTrain.arrival, searchedTrain.price, searchedTrain.signature).then(function(result) {
+      trainActions.bookTrain(currentUser.id, searchedTrain.name, madridStation.id, cordobaStation.id, date, searchedTrain.departure, searchedTrain.arrival, searchedTrain.price, searchedTrain.signature).then(function(result) {
         expect(result.id).to.exist();
         expect(result.name).to.eql(searchedTrain.name);
         expect(result.fromId).to.eql(madridStation.id);
@@ -60,7 +59,7 @@ describe("Booking trains", function() {
     train.createBookingFor(currentUser.id);
     train.createBookingFor(otherUser.id);
     trains.put(train).then(function() {
-      userActions.searchTrains(currentUser.id, madridStation.id, cordobaStation.id, date).then(function(results) {
+      trainActions.searchTrains(currentUser.id, madridStation.id, cordobaStation.id, date).then(function(results) {
         searchedTrain = results.trains[0];
         expect(searchedTrain.bookings).to.eql(2);
         expect(searchedTrain.booked).to.eql(true);
@@ -74,7 +73,7 @@ describe("Booking trains", function() {
     train.createBookingFor(currentUser.id);
     train.createBookingFor(otherUser.id);
     trains.put(train).then(function() {
-      userActions.getTrainsBookedByUser(currentUser.id).then(function(results) {
+      trainActions.trainsBookedByUser(currentUser.id).then(function(results) {
         expect(results.trains.length).to.eql(1);
         expect(results.trains[0].bookings).to.eql(2);
         done();
@@ -88,7 +87,7 @@ describe("Booking trains", function() {
     train.createBookingFor(currentUser.id);
     train.createBookingFor(otherUser.id);
     trains.put(train).then(function(savedTrain) {
-      userActions.createChargeForBooking(currentUser.id, train.id, stripeToken).then(function(result) {
+      trainActions.chargeBooking(currentUser.id, train.id, stripeToken).then(function(result) {
         expect(result.getBookingFor(currentUser.id).chargeId).to.eql('abcde');
         expect(result.getBookingFor(currentUser.id).isCaptured()).to.eql(false);
         done();

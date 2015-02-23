@@ -3,12 +3,8 @@ var expect   = require('chai').expect,
 		fs       = require('fs'),
 		sinon    = require('sinon'),
 		P        = require('bluebird'),
-		moment   = require('moment'),
-		request  = require('../../../config/request'),
 		actions  = require('../../actions'),
-		dummies  = require('../../dummies'),
-		helper   = require('../../../core/helper'),
-		stations = require('../../../core/repositories/station_repository'),
+		request  = require('../../../config/request'),
 		trains   = require('../../../core/repositories/train_repository'),
 		service  = require('../../../core/services/booking_service');
 
@@ -48,7 +44,7 @@ describe('BookingService', function() {
 		});
 	});
 
-	describe('#setBookingCharge', function() {
+	describe('#chargeBooking', function() {
 		var dummyTrain, dummyUser, chargeId;
 
 		beforeEach(function() {
@@ -64,7 +60,7 @@ describe('BookingService', function() {
 		});
 
 		it("set the booking as paid in the repository", function(done) {
-			service.setBookingCharge(dummyTrain, dummyUser, chargeId).then(function() {
+			service.chargeBooking(dummyTrain, dummyUser, chargeId).then(function() {
 				expect(trains.put.called).to.eql(true);
 				expect(trains.put.getCall(0).args[0].getBookingFor(dummyUser.id).chargeId).to.eql(chargeId);
 				expect(trains.put.getCall(0).args[0].getBookingFor(dummyUser.id).paidAt).to.eql(null);
@@ -75,7 +71,7 @@ describe('BookingService', function() {
 		});
 
 		it("rejects the promise if payment data is invalid", function(done) {
-			service.setBookingCharge(dummyTrain, dummyUser, null).then(function(result) {
+			service.chargeBooking(dummyTrain, dummyUser, null).then(function(result) {
 				done(result);
 			}).catch(function(err) {
 				expect(trains.put.called).to.eql(false);

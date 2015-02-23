@@ -1,6 +1,4 @@
 var expect = require('chai').expect,
-    sinon  = require('sinon'),
-    moment = require('moment'),
     helper = require('../../core/helper');
 
 describe('Helper', function() {

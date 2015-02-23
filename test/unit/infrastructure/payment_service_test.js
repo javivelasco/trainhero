@@ -1,7 +1,6 @@
 var expect  = require('chai').expect,
     P       = require('bluebird'),
     sinon   = require('sinon'),
-    dummies = require('../../dummies'),
     actions = require('../../actions'),
     stripe  = require('../../../config/stripe'),
     service = require("../../../core/infrastructure/payment_service"),

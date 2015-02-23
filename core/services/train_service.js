@@ -105,5 +105,4 @@ var updateTrainPrice = function(train, price) {
   return train;
 };
 
-// Export module
 module.exports = new TrainService();

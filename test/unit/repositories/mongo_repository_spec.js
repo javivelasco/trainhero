@@ -1,10 +1,9 @@
 var expect     = require('chai').expect,
     sinon      = require('sinon'),
-    mongoskin  = require('mongoskin'),
     P          = require('bluebird'),
-    db         = require('../../../config/mongo').db,
     actions    = require('../../actions'),
-    testHelper = require('../../helper'),
+    testHelper = require('../../test_helper'),
+    db         = require('../../../config/mongo').db,
     Train      = require('../../../core/models/train'),
     MongoRepository = require('../../../core/repositories/mongo_repository');
 
