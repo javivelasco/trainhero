@@ -41,7 +41,7 @@ var trainActions = {
       return trains.findByBookingUserId(user.id);
     }).then(function(trains) {
       return P.resolve({
-        trains: buildTrainsForBookingList(trains)
+        trains: buildTrainsForBookingList(trains, currentUserId)
       });
     });
   },
@@ -83,16 +83,23 @@ function anyBookingByUser(savedTrain, userId) {
   });
 }
 
-function buildTrainsForBookingList(trains) {
-  return _.map(trains, function(item) {
-    item = item.toJSON();
+function buildTrainsForBookingList(trains, userId) {
+  return _.map(trains, function(train) {
+    var item      = train.toJSON();
     item.bookings = item.bookings.length;
+    item.status   = getBookingStatus(train.getBookingFor(userId));
     return item;
   });
 }
 
 function bookingIsCharged(train, userId) {
-  return !!train.getBookingFor(userId).chargeId;
+  return !!train.getBookingFor(userId).isCharged();
+}
+
+function getBookingStatus(booking) {
+  if (!booking.isCharged())        return 'UNCONFIRMED';
+  if (!booking.isChargeCaptured()) return 'BLOCKED';
+  else                             return 'PAID';
 }
 
 module.exports = trainActions;
