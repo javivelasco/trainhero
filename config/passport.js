@@ -1,8 +1,8 @@
-var passport         = require('passport');
-var LocalStrategy    = require('passport-local').Strategy;
-var FacebookStrategy = require('passport-facebook').Strategy;
-var userService      = require('../core/services/user_service');
-var users            = require('../core/repositories/user_repository');
+var passport         = require('passport'),
+    LocalStrategy    = require('passport-local').Strategy,
+    FacebookStrategy = require('passport-facebook').Strategy,
+    userActions      = require('../core/actions/user_actions'),
+    users            = require('../core/repositories/user_repository');
 
 passport.serializeUser(function(user, done) {
 	done(null, user.id);
@@ -26,7 +26,7 @@ passport.use('local-signup', new LocalStrategy({
 			var name           = req.body.name;
 			var passwordRepeat = req.body.passwordRepeat;
 
-			userService.emailSignup(name, email, password, passwordRepeat).then(function(user) {
+			userActions.signupWithEmail(name, email, password, passwordRepeat).then(function(user) {
 				done(null, user)
 			}).catch(function(err) {
 				done(err);
@@ -65,7 +65,7 @@ passport.use('facebook', new FacebookStrategy({
 			var email = profile.emails[0].value;
 			var token = token;
 
-			return userService.facebookConnect(name, email, uid, token).then(function(user) {
+			return userActions.connectFacebook(name, email, uid, token).then(function(user) {
 				return done(null, user);
 			}).catch(function(err) {
 				return done(err, null);
