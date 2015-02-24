@@ -9,11 +9,18 @@ var dotenv = require('dotenv').load(),
 function MailerService () {}
 
 _.extend(MailerService.prototype, {
-	sendWelcomeEmail: function(toEmail, name) {
-		var fromEmail = "hi@trening.es",
+	sendWelcome: function(user) {
+		var from      = "no-reply@trening.es",
 		    subject   = "Welcome to Trening!",
 				template  = "welcome";
-		return sendEmail(fromEmail, toEmail, subject, template, { name: name });
+		return sendEmail(from, user.email, subject, template, { user: user });
+	},
+
+	sendConfirmBooking: function(user, train, from, to) {
+		var from      = "no-reply@trening.es",
+		    subject   = "You can confirm your booking!",
+				template  = "confirm-booking";
+		return sendEmail(from, user.email, subject, template, { user: user, train: train, from: from, to: to });
 	}
 });
 

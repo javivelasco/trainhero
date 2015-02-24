@@ -13,3 +13,4 @@ public/**
 node_modules/**
 coverage/**
 spike*.js
+dump.rdb

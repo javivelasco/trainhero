@@ -19,6 +19,7 @@ router.post('/bookings', isLoggedIn, booking.create);
 // Routes for development
 if (process.env.NODE_ENV != 'development') {
   router.get('/emails/welcome', email.welcomePreview);
+  router.get('/emails/confirm-booking', email.confirmBooking);
 }
 
 function isLoggedIn(req, res, next) {
