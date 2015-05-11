@@ -47,7 +47,7 @@ describe('TrainService', function() {
         expect(trains[0].departure).to.eql("06:20");
         expect(trains[0].arrival).to.eql("08:27");
         expect(trains[0].price).to.eql("18.80");
-        expect(trains[0].signature).to.eql("9740d41ec84d0ca74a2b0c298c3d2edc");
+        expect(trains[0].signature).to.eql("4fae4588c27633385a38f1f11a06d2af");
         done();
       });
     });
